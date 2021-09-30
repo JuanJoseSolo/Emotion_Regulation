@@ -17,7 +17,7 @@ namespace Fuzzy_Personalities
 
         //////////////////////////////////////SITUATION SELECTION//////////////////////////////////////////
         /////////////////////////////////////                     //////////////////////////////////////////
-        public double SitSele(double Co, double Ex)
+        public float SitSele(double Co, double Ex)
         {
 
             /////////////////////////PERSONALITIES//////////////////////
@@ -56,14 +56,14 @@ namespace Fuzzy_Personalities
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
 
-            var SitSel_Res = fuzzyEngine.Defuzzify(new { Conscient = Co, Extravers = Ex });
+            var SitSel_Res = Convert.ToSingle(fuzzyEngine.Defuzzify(new { Conscient = Co, Extravers = Ex }));
 
             return SitSel_Res;
         }
 
         //////////////////////////////////////SITUTATION MODIFICATION//////////////////////////////////////////
         /////////////////////////////////////                        //////////////////////////////////////////
-        public double SitModi(double Co, double Ex, double Ne, double Ag)
+        public float SitModi(double Co, double Ex, double Ne, double Ag)
         {
 
 
@@ -113,7 +113,7 @@ namespace Fuzzy_Personalities
             fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
 
 
-            var SitMod_Res = fuzzyEngine.Defuzzify(new { Conscient = Co, Extravers = Ex, Neurotici = Ne, Agreeable = Ag });
+            var SitMod_Res = Convert.ToSingle(fuzzyEngine.Defuzzify(new { Conscient = Co, Extravers = Ex, Neurotici = Ne, Agreeable = Ag }));
 
             return SitMod_Res;
         }
@@ -121,7 +121,7 @@ namespace Fuzzy_Personalities
 
         //////////////////////////////////////ATTENTION DEPLOYMENT//////////////////////////////////////////
         /////////////////////////////////////                     //////////////////////////////////////////
-        public double Atten_Deploy(double Co, double Op, double Ne)
+        public float Atten_Deploy(double Co, double Op, double Ne)
         {
 
             /////////////////////////PERSONALITIES//////////////////////
@@ -164,14 +164,14 @@ namespace Fuzzy_Personalities
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
 
-            var AttenDeploy_Res = fuzzyEngine.Defuzzify(new { Conscient = Co, Openness = Op, Neurotici = Ne });
+            var AttenDeploy_Res = Convert.ToSingle(fuzzyEngine.Defuzzify(new { Conscient = Co, Openness = Op, Neurotici = Ne }));
 
             return AttenDeploy_Res;
         }
 
         //////////////////////////////////////COGNITIVE CHANGE///////////////////////////////////////////
         /////////////////////////////////////                ///////////////////////////////////////////
-        public double CognChange(double Ne, double Op)
+        public float CognChange(double Ne, double Op)
         {
 
             /////////////////////////PERSONALITIES//////////////////////
@@ -211,14 +211,14 @@ namespace Fuzzy_Personalities
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
 
-            var CognChange_Res = fuzzyEngine.Defuzzify(new { Neurotici = Ne, Openness = Op });
+            var CognChange_Res = Convert.ToSingle(fuzzyEngine.Defuzzify(new { Neurotici = Ne, Openness = Op }));
 
             return CognChange_Res;
         }
 
         //////////////////////////////////////RESPONSE MODULATION//////////////////////////////////////////
         /////////////////////////////////////                     ////////////////////////////////////////
-        public double RespModula(double Op, double Ex)
+        public float RespModula(double Op, double Ex)
         {
 
             /////////////////////////PERSONALITIES//////////////////////
@@ -253,9 +253,29 @@ namespace Fuzzy_Personalities
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3);
 
 
-            var RespModu_Res = fuzzyEngine.Defuzzify(new { Openness = Op, Extravers = Ex });
+            float RespModu_Res = Convert.ToSingle(fuzzyEngine.Defuzzify(new { Openness = Op, Extravers = Ex }));
 
             return RespModu_Res;
+        }
+
+        public void Personality (float Consientioness, float Extraversion, float Neouroticim, float Agreeable, float Opennes)
+        {
+            float Situation_Selection    = SitSele(Consientioness, Extraversion);
+            float Situation_Modification = SitModi(Consientioness, Extraversion, Neouroticim, Agreeable);
+            float Attention_Deployment   = Atten_Deploy(Consientioness, Opennes, Neouroticim);
+            float Cognitive_Change       = CognChange(Neouroticim, Opennes);
+            float Response_Modulation    = RespModula(Opennes, Extraversion);
+
+            Dictionary<string, float> Strategies = new Dictionary<string, float>()
+            {
+                 { "Situation Selection", Situation_Selection },{ "Situation Modification", Situation_Modification },
+                 { "Attention Deployment", Attention_Deployment },{ "Cognitive Change", Cognitive_Change },
+                 {"Response Modulation", Response_Modulation}
+            };
+            var sortedDict = from entry in Strategies orderby entry.Value ascending select entry;
+            var a =  Strategies.Keys;
+           
+            
         }
 
 

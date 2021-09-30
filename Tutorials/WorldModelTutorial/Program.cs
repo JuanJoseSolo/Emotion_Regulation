@@ -18,11 +18,11 @@ namespace WorldModelTutorial
         static void Main(string[] args)
         {
 
-            var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("../../../Examples/CiF-Tutorial/JobInterview.iat"), new GAIPS.Rage.AssetStorage());
+            //var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master/Tutorials/Examples/CiF-Tutorial/JobInterview.iat"), new GAIPS.Rage.AssetStorage());
             rpcList = new List<RolePlayCharacterAsset>();
             var wm = new WorldModelAsset();
 
-            wm.AddActionEffect((Name)"Event(Action-End, *, Speak(*,*,*,*), [t])", new EffectDTO()
+            wm.AddActionEffect((Name)"Event(Action-End, *, Speak(*,*,*,*), Carlos)", new EffectDTO()
             {
                 PropertyName = (Name)"Has(Floor)",
                 NewValue = (Name)"[t]",
@@ -122,12 +122,12 @@ namespace WorldModelTutorial
                     Console.WriteLine();
                     Console.WriteLine("Dialogue:");
                     Console.WriteLine("Current State: " + currentState);
-                    if (iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault() != null)
+                    /*if (iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault() != null)
                         Console.WriteLine(initiator.CharacterName + " says: ''" +
                                          iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault().Utterance + "'' to " + targetName);
                     else Console.WriteLine(initiator.CharacterName + " says: " + "there is no dialogue suited for this action");
 
-
+                    
                     // WORLD MODEL
                     var effects = wm.Simulate(_events.ToArray());
                     foreach (var ef in effects)
@@ -152,8 +152,8 @@ namespace WorldModelTutorial
                         }
 
                     }
-                    
-                  Console.WriteLine("Next State: " + nextState);
+                    */
+                    Console.WriteLine("Next State: " + nextState);
 
                 }
                 Console.WriteLine();

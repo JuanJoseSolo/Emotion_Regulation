@@ -39,9 +39,9 @@ namespace EmotionalDecisionMakingTutorial
             edm.AddRuleCondition(id, "LikesToFight(SELF) = True");
             var actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
             var ea = EmotionalAppraisalAsset.CreateInstance(storage);
-
             edm.Save();
 
+            /*
             using (var writer = File.CreateText("D:\\test2.json"))
             {
                 writer.Write(storage.ToJson());
@@ -55,6 +55,8 @@ namespace EmotionalDecisionMakingTutorial
             {
                 writer.Write(storage2.ToJson());
             }
+            */
+
             Console.WriteLine("Decisions: ");
             foreach (var a in actions)
             {
@@ -62,7 +64,8 @@ namespace EmotionalDecisionMakingTutorial
             }
 
             //this is how you can load the asset from a file 
-            Console.WriteLine("Loading From File: ");
+            
+            Console.WriteLine("\n\n ---------Loading From File---------- \n");
             edm.RegisterKnowledgeBase(kb);
             actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
 
