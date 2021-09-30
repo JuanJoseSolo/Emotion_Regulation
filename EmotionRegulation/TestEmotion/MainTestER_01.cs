@@ -23,12 +23,12 @@ namespace TestEmotion
         public static float  Mood_Pedro = float.NaN;
         public static float  IntensityiN_Pedro = float.NaN;
         public Strategies    _Personality;
-       
+
 
         public static void Character()
         {
             //////////////////      CREATE CHARACTER      /////////////////////   
-            
+
             ////   Character Pedro   /////
             var am_Pedro = new AM();                    //AutobiographicMemory
             var kb_Pedro = new KB((Name)"Pedro");      //KnowledgeBase
@@ -38,8 +38,9 @@ namespace TestEmotion
             /////  EmotionalDecisionMaking  /////
             var storage = new AssetStorage();
             var edm = EmotionalDecisionMakingAsset.CreateInstance(storage);
+            /////  EmotionRegulationEstrategies  /////
+            Strategies _Personalities = new Strategies();
 
-            
 
             ///////   knowledge Base and Emotion Estate   /////////
             kb_Pedro.Tell(Name.BuildName("Hate(Sarah)"      ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
@@ -51,8 +52,15 @@ namespace TestEmotion
 
             kb_Sarah.Tell(Name.BuildName("Loves(Pedro)"     ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
-            kb_Sarah.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False" ), Name.BuildName("SELF"), 1);
+            kb_Sarah.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False" ), Name.BuildName("SELF"), 1);        
             var emotionalState_Sarah = new ConcreteEmotionalState();
+
+            float Cons = 10, Extrav = 90, Neuro = 0, Openn = 0, Agree = 0;
+            string nameStrategy  = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item1;
+            float  valueStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item2;
+
+            Console.WriteLine("Name  ---------> " + nameStrategy + "\nValue ---------> " + valueStrategy);
+            Console.ReadKey();
 
             ////////////////////////    EVENTS     ///////////////////////
 

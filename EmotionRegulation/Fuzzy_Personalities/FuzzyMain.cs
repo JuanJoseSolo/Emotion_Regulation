@@ -4,12 +4,28 @@ namespace Fuzzy_Personalities
 {
     class FuzzyMain : Strategies
     {
-        public static void Main(string[] args)
+        static void Main(string[] args)
         {
 
             Strategies _Personalities = new Strategies();
-            _Personalities.Personality(15, 20, 0, 0, 15);
-                
+            float Cons = 0, Extrav = 90, Neuro = 0, Openn = 0, Agree = 0;
+            _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree);
+            //string nameStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item1;
+            //float valueStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item2;
+
+            var Situation_Selection = _Personalities.SitSele(Cons, Extrav);
+            var Situation_Modification = _Personalities.SitModi(Cons, Extrav, Neuro, Agree);
+            var Attention_Deployment = _Personalities.Atten_Deploy(Cons, Openn, Neuro);
+            var Cognitive_Change = _Personalities.CognChange(Neuro, Openn);
+            var Response_Modulation = _Personalities.RespModula(Openn, Extrav);
+            Console.WriteLine("\n   Situation Selection : " + Situation_Selection);
+            Console.WriteLine("\n   Situation Modification : " + Situation_Modification);
+            Console.WriteLine("\n   Attention Deployment : " + Attention_Deployment);
+            Console.WriteLine("\n   Cognitive Change : " + Cognitive_Change);
+            Console.WriteLine("\n   Response Modulation : " + Response_Modulation);
+            Console.ReadKey();
+
+
 
         }
 

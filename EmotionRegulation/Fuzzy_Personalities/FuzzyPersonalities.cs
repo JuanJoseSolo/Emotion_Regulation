@@ -9,8 +9,7 @@ namespace Fuzzy_Personalities
 {
     public class Strategies
     {
-
-        public Strategies()
+            public Strategies()
         {
 
         }
@@ -24,34 +23,34 @@ namespace Fuzzy_Personalities
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness = new LinguisticVariable("Openness");
+            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
 
-            var lowCon = Conscient.MembershipFunctions.AddZShaped("lowCon", 30, 10, 0, 100);
+            var lowCon    = Conscient.MembershipFunctions.AddZShaped("lowCon"    , 30, 10, 0, 100);
             var middleCon = Conscient.MembershipFunctions.AddGaussian("middleCon", 50, 10, 0, 100);
-            var highCon = Conscient.MembershipFunctions.AddSShaped("highCon", 70, 10, 0, 100);
+            var highCon   = Conscient.MembershipFunctions.AddSShaped("highCon"   , 70, 10, 0, 100);
 
-            var lowExt = Extravers.MembershipFunctions.AddZShaped("lowExt", 30, 10, 0, 100);
+            var lowExt    = Extravers.MembershipFunctions.AddZShaped("lowExt"    , 30, 10, 0, 100);
             var middleExt = Extravers.MembershipFunctions.AddGaussian("middleExt", 50, 10, 0, 100);
-            var highExt = Extravers.MembershipFunctions.AddSShaped("highExt", 70, 10, 0, 100);
+            var highExt   = Extravers.MembershipFunctions.AddSShaped("highExt"   , 70, 10, 0, 100);
 
 
             /////////////////////////ESTRATEGY///////////////////////
             var SitSelec = new LinguisticVariable("SitSelec");
-            var WeaApp = SitSelec.MembershipFunctions.AddZShaped("WeaApp", 3, 1, 0, 10);
+            var WeaApp = SitSelec.MembershipFunctions.AddZShaped("WeaApp" , 3, 1, 0, 10);
             var MidApp = SitSelec.MembershipFunctions.AddGaussian("MidApp", 5, 1, 0, 10);
-            var StrApp = SitSelec.MembershipFunctions.AddSShaped("StrApp", 7, 1, 0, 10);
+            var StrApp = SitSelec.MembershipFunctions.AddSShaped("StrApp" , 7, 1, 0, 10);
 
             ////////////////////////////RULES/////////////////////////
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon)).Then(SitSelec.Is(StrApp));
+            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon)  ).Then(SitSelec.Is(StrApp));
             var rule2 = fuzzyEngine.Rules.If(Conscient.Is(middleCon)).Then(SitSelec.Is(MidApp));
-            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon)).Then(SitSelec.Is(WeaApp));
+            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon)   ).Then(SitSelec.Is(WeaApp));
 
-            var rule4 = fuzzyEngine.Rules.If(Extravers.Is(highExt)).Then(SitSelec.Is(WeaApp));
+            var rule4 = fuzzyEngine.Rules.If(Extravers.Is(highExt)  ).Then(SitSelec.Is(WeaApp));
             var rule5 = fuzzyEngine.Rules.If(Extravers.Is(middleExt)).Then(SitSelec.Is(MidApp));
-            var rule6 = fuzzyEngine.Rules.If(Extravers.Is(lowExt)).Then(SitSelec.Is(StrApp));
+            var rule6 = fuzzyEngine.Rules.If(Extravers.Is(lowExt)   ).Then(SitSelec.Is(StrApp));
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
@@ -71,43 +70,43 @@ namespace Fuzzy_Personalities
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness = new LinguisticVariable("Openness");
+            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
 
 
 
-            var lowCon = Conscient.MembershipFunctions.AddZShaped("lowCon", 30, 10, 0, 100);
+            var lowCon    = Conscient.MembershipFunctions.AddZShaped("lowCon"    , 30, 10, 0, 100);
             var middleCon = Conscient.MembershipFunctions.AddGaussian("middleCon", 50, 10, 0, 100);
-            var highCon = Conscient.MembershipFunctions.AddSShaped("highCon", 70, 10, 0, 100);
+            var highCon   = Conscient.MembershipFunctions.AddSShaped("highCon"   , 70, 10, 0, 100);
 
-            var lowExt = Extravers.MembershipFunctions.AddZShaped("lowExt", 30, 10, 0, 100);
+            var lowExt    = Extravers.MembershipFunctions.AddZShaped("lowExt"    , 30, 10, 0, 100);
             var middleExt = Extravers.MembershipFunctions.AddGaussian("middleExt", 50, 10, 0, 100);
-            var highExt = Extravers.MembershipFunctions.AddSShaped("highExt", 70, 10, 0, 100);
+            var highExt   = Extravers.MembershipFunctions.AddSShaped("highExt"   , 70, 10, 0, 100);
 
-            var lowNeu = Neurotici.MembershipFunctions.AddZShaped("lowNeu", 30, 10, 0, 100);
+            var lowNeu    = Neurotici.MembershipFunctions.AddZShaped("lowNeu"    , 30, 10, 0, 100);
             var middleNeu = Neurotici.MembershipFunctions.AddGaussian("middleNeu", 50, 10, 0, 100);
-            var highNeu = Neurotici.MembershipFunctions.AddSShaped("highNeu", 70, 10, 0, 100);
+            var highNeu   = Neurotici.MembershipFunctions.AddSShaped("highNeu"   , 70, 10, 0, 100);
 
-            var lowAgr = Agreeable.MembershipFunctions.AddZShaped("lowAgr", 30, 10, 0, 100);
+            var lowAgr    = Agreeable.MembershipFunctions.AddZShaped("lowAgr"    , 30, 10, 0, 100);
             var middleAgr = Agreeable.MembershipFunctions.AddGaussian("middleAgr", 50, 10, 0, 100);
-            var highAgr = Agreeable.MembershipFunctions.AddSShaped("highAgr", 70, 10, 0, 100);
+            var highAgr   = Agreeable.MembershipFunctions.AddSShaped("highAgr"   , 70, 10, 0, 100);
 
             /////////////////////////ESTRATEGY///////////////////////
             var SitMod = new LinguisticVariable("SitMod");
-            var WeaApp = SitMod.MembershipFunctions.AddZShaped("WeaApp", 3, 1, 0, 10);
+            var WeaApp = SitMod.MembershipFunctions.AddZShaped("WeaApp" , 3, 1, 0, 10);
             var MidApp = SitMod.MembershipFunctions.AddGaussian("MidApp", 5, 1, 0, 10);
-            var StrApp = SitMod.MembershipFunctions.AddSShaped("StrApp", 7, 1, 0, 10);
+            var StrApp = SitMod.MembershipFunctions.AddSShaped("StrApp" , 7, 1, 0, 10);
 
             //////////////////////////RULES///////////////////////////
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon).Or(Extravers.Is(highExt))).Then(SitMod.Is(StrApp));
+            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon).Or(Extravers.Is(highExt))    ).Then(SitMod.Is(StrApp));
             var rule2 = fuzzyEngine.Rules.If(Conscient.Is(middleCon).Or(Extravers.Is(middleExt))).Then(SitMod.Is(MidApp));
-            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon).Or(Extravers.Is(lowExt))).Then(SitMod.Is(WeaApp));
+            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon).Or(Extravers.Is(lowExt))      ).Then(SitMod.Is(WeaApp));
 
-            var rule4 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu).Or(Agreeable.Is(highAgr))).Then(SitMod.Is(WeaApp));
+            var rule4 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu).Or(Agreeable.Is(highAgr))    ).Then(SitMod.Is(WeaApp));
             var rule5 = fuzzyEngine.Rules.If(Neurotici.Is(middleNeu).Or(Agreeable.Is(middleAgr))).Then(SitMod.Is(MidApp));
-            var rule6 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu).Or(Agreeable.Is(lowAgr))).Then(SitMod.Is(StrApp));
+            var rule6 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu).Or(Agreeable.Is(lowAgr))      ).Then(SitMod.Is(StrApp));
 
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
@@ -128,38 +127,38 @@ namespace Fuzzy_Personalities
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness = new LinguisticVariable("Openness");
+            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
 
-            var lowCon = Conscient.MembershipFunctions.AddZShaped("lowCon", 30, 10, 0, 100);
+            var lowCon    = Conscient.MembershipFunctions.AddZShaped("lowCon"    , 30, 10, 0, 100);
             var middleCon = Conscient.MembershipFunctions.AddGaussian("middleCon", 50, 10, 0, 100);
-            var highCon = Conscient.MembershipFunctions.AddSShaped("highCon", 70, 10, 0, 100);
-
-            var lowNeu = Neurotici.MembershipFunctions.AddZShaped("lowNeu", 30, 10, 0, 100);
+            var highCon   = Conscient.MembershipFunctions.AddSShaped("highCon"   , 70, 10, 0, 100);
+             
+            var lowNeu    = Neurotici.MembershipFunctions.AddZShaped("lowNeu"    , 30, 10, 0, 100);
             var middleNeu = Neurotici.MembershipFunctions.AddGaussian("middleNeu", 50, 10, 0, 100);
-            var highNeu = Neurotici.MembershipFunctions.AddSShaped("highNeu", 70, 10, 0, 100);
+            var highNeu   = Neurotici.MembershipFunctions.AddSShaped("highNeu"   , 70, 10, 0, 100);
 
-            var lowOpe = Openness.MembershipFunctions.AddZShaped("lowOpe", 30, 10, 0, 100);
+            var lowOpe    = Openness.MembershipFunctions.AddZShaped("lowOpe"    , 30, 10, 0, 100);
             var middleOpe = Openness.MembershipFunctions.AddGaussian("middleOpe", 50, 10, 0, 100);
-            var highOpe = Openness.MembershipFunctions.AddSShaped("highOpe", 70, 10, 0, 100);
+            var highOpe   = Openness.MembershipFunctions.AddSShaped("highOpe"   , 70, 10, 0, 100);
 
 
             /////////////////////////ESTRATEGY///////////////////////
             var AttenDepoly = new LinguisticVariable("AttenDepoly");
-            var WeaApp = AttenDepoly.MembershipFunctions.AddZShaped("WeaApp", 3, 1, 0, 10);
+            var WeaApp = AttenDepoly.MembershipFunctions.AddZShaped("WeaApp" , 3, 1, 0, 10);
             var MidApp = AttenDepoly.MembershipFunctions.AddGaussian("MidApp", 5, 1, 0, 10);
-            var StrApp = AttenDepoly.MembershipFunctions.AddSShaped("StrApp", 7, 1, 0, 10);
+            var StrApp = AttenDepoly.MembershipFunctions.AddSShaped("StrApp" , 7, 1, 0, 10);
 
             /////////////////////////////RULES////////////////////////
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon).Or(Openness.Is(highOpe))).Then(AttenDepoly.Is(StrApp));
+            var rule1 = fuzzyEngine.Rules.If(Conscient.Is(highCon).Or(Openness.Is(highOpe))    ).Then(AttenDepoly.Is(StrApp));
             var rule2 = fuzzyEngine.Rules.If(Conscient.Is(middleCon).Or(Openness.Is(middleOpe))).Then(AttenDepoly.Is(MidApp));
-            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon).Or(Openness.Is(lowOpe))).Then(AttenDepoly.Is(WeaApp));
+            var rule3 = fuzzyEngine.Rules.If(Conscient.Is(lowCon).Or(Openness.Is(lowOpe))      ).Then(AttenDepoly.Is(WeaApp));
 
-            var rule4 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu)).Then(AttenDepoly.Is(WeaApp));
+            var rule4 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu)  ).Then(AttenDepoly.Is(WeaApp));
             var rule5 = fuzzyEngine.Rules.If(Neurotici.Is(middleNeu)).Then(AttenDepoly.Is(MidApp));
-            var rule6 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu)).Then(AttenDepoly.Is(StrApp));
+            var rule6 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu)   ).Then(AttenDepoly.Is(StrApp));
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
@@ -178,35 +177,35 @@ namespace Fuzzy_Personalities
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness = new LinguisticVariable("Openness");
+            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
 
-            var lowNeu = Neurotici.MembershipFunctions.AddZShaped("lowNeu", 30, 10, 0, 100);
+            var lowNeu    = Neurotici.MembershipFunctions.AddZShaped("lowNeu"    , 30, 10, 0, 100);
             var middleNeu = Neurotici.MembershipFunctions.AddGaussian("middleNeu", 50, 10, 0, 100);
-            var highNeu = Neurotici.MembershipFunctions.AddSShaped("highNeu", 70, 10, 0, 100);
+            var highNeu   = Neurotici.MembershipFunctions.AddSShaped("highNeu"   , 70, 10, 0, 100);
 
-            var lowOpe = Openness.MembershipFunctions.AddZShaped("lowOpe", 30, 10, 0, 100);
+            var lowOpe    = Openness.MembershipFunctions.AddZShaped("lowOpe"    , 30, 10, 0, 100);
             var middleOpe = Openness.MembershipFunctions.AddGaussian("middleOpe", 50, 10, 0, 100);
-            var highOpe = Openness.MembershipFunctions.AddSShaped("highOpe", 70, 10, 0, 100);
+            var highOpe   = Openness.MembershipFunctions.AddSShaped("highOpe"   , 70, 10, 0, 100);
 
 
 
             /////////////////////////ESTRATEGY////////////////////////////
             var CognChange = new LinguisticVariable("CognChange");
-            var WeaApp = CognChange.MembershipFunctions.AddZShaped("WeaApp", 3, 1, 0, 10);
+            var WeaApp = CognChange.MembershipFunctions.AddZShaped("WeaApp" , 3, 1, 0, 10);
             var MidApp = CognChange.MembershipFunctions.AddGaussian("MidApp", 5, 1, 0, 10);
-            var StrApp = CognChange.MembershipFunctions.AddSShaped("StrApp", 7, 1, 0, 10);
+            var StrApp = CognChange.MembershipFunctions.AddSShaped("StrApp" , 7, 1, 0, 10);
 
             ///////////////////////////RULES////////////////////////////
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-            var rule1 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu)).Then(CognChange.Is(WeaApp));
+            var rule1 = fuzzyEngine.Rules.If(Neurotici.Is(highNeu)  ).Then(CognChange.Is(WeaApp));
             var rule2 = fuzzyEngine.Rules.If(Neurotici.Is(middleNeu)).Then(CognChange.Is(MidApp));
-            var rule3 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu)).Then(CognChange.Is(StrApp));
+            var rule3 = fuzzyEngine.Rules.If(Neurotici.Is(lowNeu)   ).Then(CognChange.Is(StrApp));
 
-            var rule4 = fuzzyEngine.Rules.If(Openness.Is(highOpe)).Then(CognChange.Is(StrApp));
+            var rule4 = fuzzyEngine.Rules.If(Openness.Is(highOpe)  ).Then(CognChange.Is(StrApp));
             var rule5 = fuzzyEngine.Rules.If(Openness.Is(middleOpe)).Then(CognChange.Is(MidApp));
-            var rule6 = fuzzyEngine.Rules.If(Openness.Is(lowOpe)).Then(CognChange.Is(WeaApp));
+            var rule6 = fuzzyEngine.Rules.If(Openness.Is(lowOpe)   ).Then(CognChange.Is(WeaApp));
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3, rule4, rule5, rule6);
 
@@ -225,30 +224,30 @@ namespace Fuzzy_Personalities
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness = new LinguisticVariable("Openness");
+            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
 
-            var lowExt = Extravers.MembershipFunctions.AddZShaped("lowExt", 30, 10, 0, 100);
+            var lowExt    = Extravers.MembershipFunctions.AddZShaped("lowExt"    , 30, 10, 0, 100);
             var middleExt = Extravers.MembershipFunctions.AddGaussian("middleExt", 50, 10, 0, 100);
-            var highExt = Extravers.MembershipFunctions.AddSShaped("highExt", 70, 10, 0, 100);
+            var highExt   = Extravers.MembershipFunctions.AddSShaped("highExt"   , 70, 10, 0, 100);
 
-            var lowOpe = Openness.MembershipFunctions.AddZShaped("lowOpe", 30, 10, 0, 100);
+            var lowOpe    = Openness.MembershipFunctions.AddZShaped("lowOpe"    , 30, 10, 0, 100);
             var middleOpe = Openness.MembershipFunctions.AddGaussian("middleOpe", 50, 10, 0, 100);
-            var highOpe = Openness.MembershipFunctions.AddSShaped("highOpe", 70, 10, 0, 100);
+            var highOpe   = Openness.MembershipFunctions.AddSShaped("highOpe"   , 70, 10, 0, 100);
 
 
             /////////////////////////ESTRATEGY///////////////////////
             var RespModula = new LinguisticVariable("SitSelec");
-            var WeaApp = RespModula.MembershipFunctions.AddZShaped("WeaApp", 3, 1, 0, 10);
+            var WeaApp = RespModula.MembershipFunctions.AddZShaped("WeaApp" , 3, 1, 0, 10);
             var MidApp = RespModula.MembershipFunctions.AddGaussian("MidApp", 5, 1, 0, 10);
-            var StrApp = RespModula.MembershipFunctions.AddSShaped("StrApp", 7, 1, 0, 10);
+            var StrApp = RespModula.MembershipFunctions.AddSShaped("StrApp" , 7, 1, 0, 10);
 
             ////////////////////////////RULES/////////////////////////
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
-            var rule1 = fuzzyEngine.Rules.If(Openness.Is(highOpe).Or(Extravers.Is(highExt))).Then(RespModula.Is(WeaApp));
-            var rule2 = fuzzyEngine.Rules.If(Openness.Is(middleOpe).Or(Extravers.Is(middleExt))).Then(RespModula.Is(MidApp));
-            var rule3 = fuzzyEngine.Rules.If(Openness.Is(lowOpe).Or(Extravers.Is(lowExt))).Then(RespModula.Is(StrApp));
+            var rule1 = fuzzyEngine.Rules.If(Openness.Is(highOpe).Or(Extravers.Is(highExt))    ).Then(RespModula.Is(WeaApp));
+            var rule2 = fuzzyEngine.Rules.If(Openness.Is(middleOpe).Or(Extravers.Is(middleExt))).Then(RespModula.Is(WeaApp));
+            var rule3 = fuzzyEngine.Rules.If(Openness.Is(lowOpe).Or(Extravers.Is(lowExt))      ).Then(RespModula.Is(MidApp));
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule2, rule3);
 
@@ -258,7 +257,7 @@ namespace Fuzzy_Personalities
             return RespModu_Res;
         }
 
-        public void Personality (float Consientioness, float Extraversion, float Neouroticim, float Agreeable, float Opennes)
+        public Tuple<string, float> Personality (float Consientioness, float Extraversion, float Neouroticim, float Agreeable, float Opennes)
         {
             float Situation_Selection    = SitSele(Consientioness, Extraversion);
             float Situation_Modification = SitModi(Consientioness, Extraversion, Neouroticim, Agreeable);
@@ -268,15 +267,31 @@ namespace Fuzzy_Personalities
 
             Dictionary<string, float> Strategies = new Dictionary<string, float>()
             {
-                 { "Situation Selection", Situation_Selection },{ "Situation Modification", Situation_Modification },
+                 { "Situation Selection" , Situation_Selection  },{ "Situation Modification", Situation_Modification },
                  { "Attention Deployment", Attention_Deployment },{ "Cognitive Change", Cognitive_Change },
-                 {"Response Modulation", Response_Modulation}
+                 { "Response Modulation" , Response_Modulation  }
             };
+
             var sortedDict = from entry in Strategies orderby entry.Value ascending select entry;
             var a =  Strategies.Keys;
-            Console.WriteLine("Dictionary-------> " +a.First());
-            Console.ReadKey();
+
+             
+            var myList = Strategies.ToList();
+
+            foreach(var item in sortedDict)
+            {
+                Console.WriteLine("LISTA STRA ------> " + item);
+            }
             
+
+           
+ 
+
+            string NameStrategy = a.First();
+            float value;
+            Strategies.TryGetValue(NameStrategy, out value);
+
+            return Tuple.Create(NameStrategy, value);
         }
 
 
