@@ -258,8 +258,6 @@ namespace EmotionRegulation
         public float Prueba(float a, float b)
         {
             float x = a + b;
-
-            int g = 12;
             return x;
         }
     }
