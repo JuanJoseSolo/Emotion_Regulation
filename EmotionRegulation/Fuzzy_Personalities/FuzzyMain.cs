@@ -2,13 +2,20 @@
 
 namespace Fuzzy_Personalities
 {
-    class FuzzyMain
+    class FuzzyMain : Strategies
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
 
+            Strategies _Personalities = new Strategies();
+            _Personalities.Personality(15, 20, 0, 0, 15);
+                
+
         }
+
     }
+
+
 }
 
 /*Emotion01.Character();

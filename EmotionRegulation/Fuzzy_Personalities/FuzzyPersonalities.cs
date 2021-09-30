@@ -274,7 +274,8 @@ namespace Fuzzy_Personalities
             };
             var sortedDict = from entry in Strategies orderby entry.Value ascending select entry;
             var a =  Strategies.Keys;
-           
+            Console.WriteLine("Dictionary-------> " +a.First());
+            Console.ReadKey();
             
         }
 

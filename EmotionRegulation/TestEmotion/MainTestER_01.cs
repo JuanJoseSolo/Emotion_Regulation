@@ -39,7 +39,7 @@ namespace TestEmotion
             var storage = new AssetStorage();
             var edm = EmotionalDecisionMakingAsset.CreateInstance(storage);
 
-            _Personality.
+            
 
             ///////   knowledge Base and Emotion Estate   /////////
             kb_Pedro.Tell(Name.BuildName("Hate(Sarah)"      ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
