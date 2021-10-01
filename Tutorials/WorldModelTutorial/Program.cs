@@ -9,6 +9,7 @@ using WellFormedNames;
 using WorldModel;
 using WorldModel.DTOs;
 
+
 namespace WorldModelTutorial
 {
     class Program
@@ -18,7 +19,7 @@ namespace WorldModelTutorial
         static void Main(string[] args)
         {
 
-            //var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master/Tutorials/Examples/CiF-Tutorial/JobInterview.iat"), new GAIPS.Rage.AssetStorage());
+            var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master/Tutorials/Examples/CiF-Tutorial/JobInterview.iat"), new GAIPS.Rage.AssetStorage());
             rpcList = new List<RolePlayCharacterAsset>();
             var wm = new WorldModelAsset();
 

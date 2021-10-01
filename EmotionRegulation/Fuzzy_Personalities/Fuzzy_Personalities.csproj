@@ -9,4 +9,14 @@
     <PackageReference Include="FLS" Version="1.1.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\Assets\EmotionalDecisionMaking\EmotionalDecisionMaking.csproj" />
+    <ProjectReference Include="..\..\Assets\RolePlayCharacter\RolePlayCharacter.csproj" />
+    <ProjectReference Include="..\..\Assets\WorldModel\WorldModel.csproj" />
+    <ProjectReference Include="..\..\Components\ActionLibrary\ActionLibrary.csproj" />
+    <ProjectReference Include="..\..\Components\Conditions\Conditions.csproj" />
+    <ProjectReference Include="..\..\Components\WellFormedNames\WellFormedNames.csproj" />
+    <ProjectReference Include="..\..\Utilities\Utilities\Utilities.csproj" />
+  </ItemGroup>
+
 </Project>

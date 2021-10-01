@@ -8,6 +8,8 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Assets\EmotionalAppraisal\EmotionalAppraisal.csproj" />
     <ProjectReference Include="..\..\Assets\EmotionalDecisionMaking\EmotionalDecisionMaking.csproj" />
+    <ProjectReference Include="..\..\Assets\RolePlayCharacter\RolePlayCharacter.csproj" />
+    <ProjectReference Include="..\..\Assets\WorldModel\WorldModel.csproj" />
     <ProjectReference Include="..\..\Components\ActionLibrary\ActionLibrary.csproj" />
     <ProjectReference Include="..\..\Components\AutobiographicMemory\AutobiographicMemory.csproj" />
     <ProjectReference Include="..\..\Components\GAIPS.Rage\GAIPS.Rage.csproj" />

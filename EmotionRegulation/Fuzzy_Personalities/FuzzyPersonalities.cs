@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FLS;
 
+
 namespace Fuzzy_Personalities
 {
     public class Strategies
@@ -275,14 +276,14 @@ namespace Fuzzy_Personalities
             var sortedDict = from entry in Strategies orderby entry.Value ascending select entry;
             var a =  Strategies.Keys;
 
-             
+             /*
             var myList = Strategies.ToList();
 
             foreach(var item in sortedDict)
             {
                 Console.WriteLine("LISTA STRA ------> " + item);
             }
-            
+            */
 
            
  

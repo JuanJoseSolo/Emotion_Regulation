@@ -13,6 +13,9 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.IO;
 using Fuzzy_Personalities;
+using WorldModel;
+using WorldModel.DTOs;
+using RolePlayCharacter;
 
 namespace TestEmotion
 {
@@ -37,20 +40,22 @@ namespace TestEmotion
             var kb_Sarah = new KB((Name)"Sarah");
             /////  EmotionalDecisionMaking  /////
             var storage = new AssetStorage();
-            var edm = EmotionalDecisionMakingAsset.CreateInstance(storage);
+            var edm     = EmotionalDecisionMakingAsset.CreateInstance(storage);
             /////  EmotionRegulationEstrategies  /////
             Strategies _Personalities = new Strategies();
+            var rpcList = new List<RolePlayCharacterAsset>();
+            var wm = new WorldModelAsset();
 
 
             ///////   knowledge Base and Emotion Estate   /////////
-            kb_Pedro.Tell(Name.BuildName("Hate(Sarah)"      ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Lislike(Sarah)"   ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False"  ), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Home"   ), Name.BuildName("SELF"), 1);
             var emotionalState_Pedro = new ConcreteEmotionalState();
             edm.RegisterKnowledgeBase(kb_Pedro);
 
 
-            kb_Sarah.Tell(Name.BuildName("Loves(Pedro)"     ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
+            kb_Sarah.Tell(Name.BuildName("Like(Pedro)"      ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False" ), Name.BuildName("SELF"), 1);        
             var emotionalState_Sarah = new ConcreteEmotionalState();
@@ -64,31 +69,72 @@ namespace TestEmotion
 
             ////////////////////////    EVENTS     ///////////////////////
 
+            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office)");
             var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah)");
             var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye  , Sarah)");
 
-
-           
-
             //create an action rule
-            var actionRule = new ActionRuleDTO { Action   = Name.BuildName("Kick"),
-                                                 Priority = Name.BuildName("4"), 
-                                                 Target   = (Name)"Player"
+
+            var actionRule = new ActionRuleDTO
+            {
+                Action = Name.BuildName("Kick"),
+                Priority = Name.BuildName("4"),
+                Target = (Name)"Sarah",
+                
+            };
+
+
+            var actionRule2 = new ActionRuleDTO
+            {
+                Action   = Name.BuildName("Kiss"),
+                Priority = Name.BuildName("1"),
+                Target   = (Name)"Sarah"
             };
 
 
             //add the reaction rule
-            var id = edm.AddActionRule(actionRule);
-            var rule = edm.GetActionRule(id);
+            var id  = edm.AddActionRule(actionRule);
+            var id2 = edm.AddActionRule(actionRule2);
+
+            var action = edm.GetActionRule(id);
+          
             edm.AddRuleCondition(id, "Hate(Sarah) = True");
+            edm.AddRuleCondition(id, "Current(Location) = Home");
             var actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
+            
+
+            //var actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
             edm.Save();
+
+            wm.addActionTemplate((Name)"Enter", 1);
+
+            wm.AddActionEffect((Name)"Enter", new EffectDTO()
+            {
+                PropertyName = (Name)"Current(Location)",
+                NewValue = (Name)"Office",
+                ObserverAgent = (Name)"SELF"
+            });
+
+
+            Console.WriteLine("KnowledgeBase Pedro-------> " + kb_Pedro.AskProperty((Name)"Current(Location)"));
+
+            /*var mylista = actions.ToList();
+
+            foreach (var j in mylista)
+            {
+                Console.WriteLine("Lista ----->" + j);
+            }
+            */
+
+
 
             Console.WriteLine("Decisions: ");
             foreach (var a in actions)
             {
                 Console.WriteLine(a.Name.ToString() + " p: " + a.Utility);
             }
+            Console.ReadKey();   
+
 
 
 
@@ -119,11 +165,6 @@ namespace TestEmotion
                 */
             };
             ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-
-            Console.WriteLine("\n <-----------------------------------------------------> ");
-            Console.WriteLine("Test Events ----->" + rule_Pedro.AppraisalVariables +
-                              " \n           ----->" + rule_Pedro.EventMatchingTemplate.NumberOfTerms);
-            Console.WriteLine(" <-----------------------------------------------------> \n ");
 
 
             ////////    Event 2     ///////////
@@ -204,8 +245,6 @@ namespace TestEmotion
             Console.WriteLine(" \n  Num Events occured so far: " + am_Pedro.RecallAllEvents().Count());
 
 
-
-
             //////////    Occurr New Event    //////////////------> Event 2
             ea_Pedro.AppraiseEvents(new[] { Hello_Event1, Bye_Event2 }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
             Console.WriteLine(" \n Appraising new event! '" + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\nId: "
@@ -280,7 +319,7 @@ namespace TestEmotion
         static void Main(string[] args)
         {
             Character();
-            Console.WriteLine("The emotion is: " + Emotion_Pedro);
+            
         }
     }
 }

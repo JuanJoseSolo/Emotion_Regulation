@@ -37,5 +37,6 @@ namespace ActionLibrary.DTOs
         /// The set of conditions that must be true for this action execution.
         /// </summary>
         public ConditionSetDTO Conditions { get; set; }
+		
 	}
 }
