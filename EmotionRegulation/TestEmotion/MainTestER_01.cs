@@ -13,9 +13,7 @@ using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.IO;
 using Fuzzy_Personalities;
-using WorldModel;
-using WorldModel.DTOs;
-using RolePlayCharacter;
+
 
 namespace TestEmotion
 {
@@ -38,13 +36,8 @@ namespace TestEmotion
             ////   Character Sarah  ////
             var am_Sarah = new AM();
             var kb_Sarah = new KB((Name)"Sarah");
-            /////  EmotionalDecisionMaking  /////
-            var storage = new AssetStorage();
-            var edm     = EmotionalDecisionMakingAsset.CreateInstance(storage);
             /////  EmotionRegulationEstrategies  /////
             Strategies _Personalities = new Strategies();
-            var rpcList = new List<RolePlayCharacterAsset>();
-            var wm = new WorldModelAsset();
 
 
             ///////   knowledge Base and Emotion Estate   /////////
@@ -54,7 +47,6 @@ namespace TestEmotion
 
             
             var emotionalState_Pedro = new ConcreteEmotionalState();
-            edm.RegisterKnowledgeBase(kb_Pedro);
 
             kb_Sarah.Tell(Name.BuildName("Like(Pedro)"      ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
@@ -76,67 +68,9 @@ namespace TestEmotion
             var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah)");
             var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye  , Sarah)");
             
-            //create an action rule
-
-            var actionRule = new ActionRuleDTO
-            {
-                Action = Name.BuildName("Kick"),
-                Priority = Name.BuildName("4"),
-                Target = (Name)"Sarah",
-                
-            };
-
-
-            var actionRule2 = new ActionRuleDTO
-            {
-                Action   = Name.BuildName("Kiss"),
-                Priority = Name.BuildName("1"),
-                Target   = (Name)"Sarah"
-            };
-
-
-            //add the reaction rule
-            var id  = edm.AddActionRule(actionRule);
-            var id2 = edm.AddActionRule(actionRule2);
-
-            var action = edm.GetActionRule(id);
-          
-            edm.AddRuleCondition(id, "Hate(Sarah) = True");
-            edm.AddRuleCondition(id, "Current(Location) = Home");
-            var actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
-            
-
-            //var actions = edm.Decide(Name.UNIVERSAL_SYMBOL);
-            edm.Save();
-
-            wm.addActionTemplate((Name)"Enter", 1);
-
-            wm.AddActionEffect((Name)"Enter", new EffectDTO()
-            {
-                PropertyName = (Name)"Current(Location)",
-                NewValue = (Name)"Office",
-                ObserverAgent = (Name)"SELF"
-            });
 
 
             Console.WriteLine("KnowledgeBase Pedro-------> " + kb_Pedro.AskProperty((Name)"Current(Location)"));
-
-            /*var mylista = actions.ToList();
-
-            foreach (var j in mylista)
-            {
-                Console.WriteLine("Lista ----->" + j);
-            }
-            */
-
-
-
-            Console.WriteLine("Decisions: ");
-            foreach (var a in actions)
-            {
-                Console.WriteLine(a.Name.ToString() + " p: " + a.Utility);
-            }
-            Console.ReadKey();   
 
 
 
