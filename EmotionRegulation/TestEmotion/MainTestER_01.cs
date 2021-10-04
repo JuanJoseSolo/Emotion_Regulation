@@ -27,7 +27,7 @@ namespace TestEmotion
         public static float  IntensityiN_Pedro = float.NaN;
         public Strategies    _Personality;
 
-
+ 
         public static void Character()
         {
             //////////////////      CREATE CHARACTER      /////////////////////   
@@ -51,18 +51,21 @@ namespace TestEmotion
             kb_Pedro.Tell(Name.BuildName("Lislike(Sarah)"   ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False"  ), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Home"   ), Name.BuildName("SELF"), 1);
+
+            
             var emotionalState_Pedro = new ConcreteEmotionalState();
             edm.RegisterKnowledgeBase(kb_Pedro);
-
 
             kb_Sarah.Tell(Name.BuildName("Like(Pedro)"      ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False" ), Name.BuildName("SELF"), 1);        
+            
             var emotionalState_Sarah = new ConcreteEmotionalState();
-
             float Cons = 10, Extrav = 90, Neuro = 0, Openn = 0, Agree = 0;
             string nameStrategy  = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item1;
             float  valueStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item2;
+
+
 
             Console.WriteLine("Name  ---------> " + nameStrategy + "\nValue ---------> " + valueStrategy);
             Console.ReadKey();
@@ -72,7 +75,7 @@ namespace TestEmotion
             var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office)");
             var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah)");
             var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye  , Sarah)");
-
+            
             //create an action rule
 
             var actionRule = new ActionRuleDTO
