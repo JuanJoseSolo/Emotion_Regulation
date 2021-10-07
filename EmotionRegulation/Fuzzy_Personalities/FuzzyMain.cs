@@ -1,21 +1,21 @@
 ﻿using System;
+using TestEmotion;
 
 namespace Fuzzy_Personalities
 {
-    class FuzzyMain : Strategies
+    class FuzzyMain : Events
     {
         static void Main(string[] args)
         {
-            var _Personalities = new Strategies();
+            //var _Events = new Events
+            //
 
-            float Cons = 90, Extrav = 30;
-            _Personalities.Personality_test(Cons, Extrav);
+            float Cons = 90, Extrav = 20;
 
-            Console.WriteLine("\n Variable Avoid------>> " + _Personalities.Apply + "\n Strategy---->> "
-                                                           + _Personalities.NameStrategy_test);
+            Events.Personality_test(Cons, Extrav);
 
-
-            Console.WriteLine("\n Valor---->>" + _Personalities.SitSele(Cons, Extrav));
+            Console.WriteLine("\n Variable Avoid------>> " + Events.Apply + "\n Strategy---->> "
+                                                           + Events.NameStrategy_test);
 
 
 

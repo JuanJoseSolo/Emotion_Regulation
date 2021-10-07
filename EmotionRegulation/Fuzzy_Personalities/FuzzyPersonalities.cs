@@ -13,10 +13,6 @@ namespace Fuzzy_Personalities
     public class Strategies
     {
 
-        
-        public string NameStrategy_test = string.Empty;
-        public bool Apply;
-
         public Strategies()
         {
 
@@ -309,28 +305,7 @@ namespace Fuzzy_Personalities
         }
 
 
-        public void Personality_test(float Consientioness, float Extraversion)
-        {
-            float Situation_Selection = SitSele(Consientioness, Extraversion);
-            
-            if (Situation_Selection > 4.5)
-            {
-                NameStrategy_test = "Situation Selection is applied";
-                Apply = true;
 
-            }
-            else
-            {
-                NameStrategy_test = "Situation Selection isn't applied";
-                Apply = false;
-
-            }
-    
-         return;
-
-
-
-        }
 
 
     }
