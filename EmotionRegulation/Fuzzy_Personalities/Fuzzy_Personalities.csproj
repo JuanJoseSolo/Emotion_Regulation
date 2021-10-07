@@ -17,7 +17,6 @@
     <ProjectReference Include="..\..\Components\Conditions\Conditions.csproj" />
     <ProjectReference Include="..\..\Components\WellFormedNames\WellFormedNames.csproj" />
     <ProjectReference Include="..\..\Utilities\Utilities\Utilities.csproj" />
-    <ProjectReference Include="..\TestEmotion\TestEmotion.csproj" />
   </ItemGroup>
 
 </Project>

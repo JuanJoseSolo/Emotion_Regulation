@@ -12,13 +12,12 @@ using System.Text.RegularExpressions;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.IO;
-
-//using Fuzzy_Personalities;
+using Fuzzy_Personalities;
 
 
 namespace TestEmotion
 {
-    public class MainTestER_01 : Events
+    public class MainTestER_01 : Strategies
     {
         public static string Emotion_Pedro = string.Empty;
         public static float  Intensity_Pedro = float.NaN;
@@ -27,9 +26,9 @@ namespace TestEmotion
         public static string Even = string.Empty;
 
         public static Name Event = Name.NIL_SYMBOL;
-        public Events _Personality;
+        public Strategies _Personality;
 
-        public Events avoidEventes;
+        public AvoidEventes avoidEventes;
 
         public static void Character()
         {
@@ -45,7 +44,7 @@ namespace TestEmotion
             var am_Usuario = new AM();
             var kb_Usuario = new KB((Name)"Usuario");
             /////  EmotionRegulationEstrategies  /////
-            //Strategies _Personalities = new Strategies();
+            Strategies _Personalities = new Strategies();
 
 
             ///////   knowledge Base and Emotion Estate   /////////
@@ -67,11 +66,10 @@ namespace TestEmotion
 
             ///////  FUZZY PERSONALITY   //////
             float Cons = 90, Extrav = 20;
+            _Personalities.Personality_test(Cons, Extrav);
 
-            Events.Personality_test(Cons, Extrav);
-
-            Console.WriteLine("\n Variable Avoid------>> " + Events.Apply + "\n Strategy---->> "
-                                                           + Events.NameStrategy_test);
+            Console.WriteLine("\n Variable Avoid------>> " + _Personalities.Apply + "\n Strategy---->> "
+                                                           + _Personalities.NameStrategy_test);
           
 
             ////////////////////////    EVENTS     ///////////////////////
@@ -157,7 +155,9 @@ namespace TestEmotion
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
-            Events.ChangeEvent(EnterOffice, ea_Pedro);
+
+
+            AvoidEventes.ChangeEvent(EnterOffice, ea_Pedro);
 
 
             /////////   SHOW ON THE CONSOLE  /////////////-------> Pedro's perspective
