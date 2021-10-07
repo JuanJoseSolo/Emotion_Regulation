@@ -22,9 +22,9 @@ namespace TestEmotion
             if (evento.NumberOfTerms == 6)
             {
 
-                bool s = _Personality.Apply;
+            
 
-                Console.WriteLine("Var Applied Strategy" + s);
+                Console.WriteLine("Var Applied Strategy" );
                 var Var_AvoidEvent = evento.GetNTerm(5).ToString(); ;
 
 
@@ -43,7 +43,7 @@ namespace TestEmotion
                 Console.WriteLine("Evento------> " + Hello_Event1_1.ToString());
                 Console.ReadKey();
 
-                if (s)
+                if (true)
                 {
 
                     var Events = ea.GetAllAppraisalRules().ToList();
