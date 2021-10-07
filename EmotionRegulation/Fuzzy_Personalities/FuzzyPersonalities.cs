@@ -6,11 +6,18 @@ using System.Threading.Tasks;
 using FLS;
 
 
+
+
 namespace Fuzzy_Personalities
 {
     public class Strategies
     {
-            public Strategies()
+
+        
+        public string NameStrategy_test = string.Empty;
+        public bool Apply;
+
+        public Strategies()
         {
 
         }
@@ -284,15 +291,45 @@ namespace Fuzzy_Personalities
                 Console.WriteLine("LISTA STRA ------> " + item);
             }
             */
-
-           
- 
-
             string NameStrategy = a.First();
             float value;
             Strategies.TryGetValue(NameStrategy, out value);
 
-            return Tuple.Create(NameStrategy, value);
+            float value_test; 
+            Strategies.TryGetValue("Situation Selection", out value_test);
+            string NameStrategy_test = "Situation Selection";
+
+
+            return Tuple.Create(NameStrategy_test, value_test);
+
+
+
+
+
+        }
+
+
+        public void Personality_test(float Consientioness, float Extraversion)
+        {
+            float Situation_Selection = SitSele(Consientioness, Extraversion);
+            
+            if (Situation_Selection > 4.5)
+            {
+                NameStrategy_test = "Situation Selection is applied";
+                Apply = true;
+
+            }
+            else
+            {
+                NameStrategy_test = "Situation Selection isn't applied";
+                Apply = false;
+
+            }
+    
+         return;
+
+
+
         }
 
 

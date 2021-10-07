@@ -160,6 +160,7 @@ namespace AutobiographicMemory
 
 			if (name.GetNTerm(4).IsComposed && name.GetNTerm(1).ToString() != "Property-Change")
 				throw new Exception("The fifth term of an event name cannot be a composed name.");
+
 		}
 
 		public void SwapPerspective(Name oldPerspective, Name newPerspective)

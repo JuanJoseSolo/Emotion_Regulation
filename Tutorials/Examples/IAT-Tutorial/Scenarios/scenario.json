@@ -180,7 +180,9 @@
 									"SELF":
 										{
 											"DialogueState(Pharmacist)": "Start, 1",
-											"Has(Floor)": "Coach, 1"
+											"Has(Floor)": "Coach, 1",
+											"Im(Coach)": "True, 1",
+											"Location(Casa)": "Out, 1"
 										}
 								}
 						},
@@ -291,6 +293,15 @@
 											"NewValue": "-",
 											"ObserverAgent": "[t]"
 										}]
+								}, 
+								{
+									"key": "Event(Action-End, [s], Go, [t])",
+									"value": [
+										{
+											"PropertyName": "Location(Casa)",
+											"NewValue": "In",
+											"ObserverAgent": "*"
+										}]
 								}]
 						},
 					"Priorities":
@@ -306,6 +317,18 @@
 								}, 
 								{
 									"key": "Event(Action-End, [s], Speak([cs], [ns], ChangeTarget([nt]), *), [t])",
+									"value": 1
+								}, 
+								{
+									"key": "Event(Action-End, SELF, Go, Casa)",
+									"value": 1
+								}, 
+								{
+									"key": "Event(Action-End, SELF, Go, [t])",
+									"value": 1
+								}, 
+								{
+									"key": "Event(Action-End, [s], Go, [t])",
 									"value": 1
 								}]
 						}

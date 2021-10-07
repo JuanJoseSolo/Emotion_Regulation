@@ -6,10 +6,23 @@ namespace Fuzzy_Personalities
     {
         static void Main(string[] args)
         {
+            var _Personalities = new Strategies();
 
+            float Cons = 90, Extrav = 30;
+            _Personalities.Personality_test(Cons, Extrav);
+
+            Console.WriteLine("\n Variable Avoid------>> " + _Personalities.Apply + "\n Strategy---->> "
+                                                           + _Personalities.NameStrategy_test);
+
+
+            Console.WriteLine("\n Valor---->>" + _Personalities.SitSele(Cons, Extrav));
+
+
+
+            /*
             Strategies _Personalities = new Strategies();
             float Cons = 0, Extrav = 90, Neuro = 0, Openn = 0, Agree = 0;
-            _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree);
+            _Personalities.Personality(Cons, Extrav);
             //string nameStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item1;
             //float valueStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item2;
 
@@ -24,7 +37,7 @@ namespace Fuzzy_Personalities
             Console.WriteLine("\n   Cognitive Change : " + Cognitive_Change);
             Console.WriteLine("\n   Response Modulation : " + Response_Modulation);
             Console.ReadKey();
-
+            */
 
 
         }

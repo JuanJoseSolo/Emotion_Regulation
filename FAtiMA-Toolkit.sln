@@ -123,11 +123,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Utilities", "Utilitie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RegulationTest", "RegulationTest", "{8EA682C3-143B-4448-AD6E-D870380FA362}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestEmotion", "EmotionRegulation\TestEmotion\TestEmotion.csproj", "{E0A6EA6C-7AD8-434D-8A00-AFBB1BC0E614}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestEmotion", "EmotionRegulation\TestEmotion\TestEmotion.csproj", "{E0A6EA6C-7AD8-434D-8A00-AFBB1BC0E614}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fuzzy_Personalities", "EmotionRegulation\Fuzzy_Personalities\Fuzzy_Personalities.csproj", "{6C4526C8-4A22-482A-AFDA-1CBE7BA307C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fuzzy_Personalities", "EmotionRegulation\Fuzzy_Personalities\Fuzzy_Personalities.csproj", "{6C4526C8-4A22-482A-AFDA-1CBE7BA307C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmotionRegulation", "Assets\EmotionRegulation\EmotionRegulation.csproj", "{F96DC96E-BE67-45F6-911F-F9B95B54BFB3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmotionRegulation", "Assets\EmotionRegulation\EmotionRegulation.csproj", "{F96DC96E-BE67-45F6-911F-F9B95B54BFB3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

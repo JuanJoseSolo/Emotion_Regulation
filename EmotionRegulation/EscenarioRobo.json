@@ -1,0 +1,204 @@
+{
+	"root": {
+		"classId": 0,
+		"ScenarioName": "AAAA",
+		"Description": "You are a sleep specialist and are about to meet a patient who is referred to you. In particular, this patient has had trouble sleeping recently.",
+		"Dialogues": [
+			{
+				"CurrentState": "Store",
+				"NextState": "Sale",
+				"Meaning": "StoreOwner",
+				"Style": "ToRest",
+				"Utterance": "Blah blah blah...",
+				"UtteranceId": "TTS-AA2AD13CF0D984DE67D1DAF701EFE539"
+			},
+			{
+				"CurrentState": "GaveMoney",
+				"NextState": "CallPolice",
+				"Meaning": "StoreOwner",
+				"Style": "FearConfirm",
+				"Utterance": "I most call the police!",
+				"UtteranceId": "TTS-B863D819E797C6DE24FEC2FA7D9F0B95"
+			},
+			{
+				"CurrentState": "Threatened",
+				"NextState": "GaveMoney",
+				"Meaning": "StoreOwner",
+				"Style": "Fearful",
+				"Utterance": "Of course please take all I have!",
+				"UtteranceId": "TTS-D53478822F7D6F41161B19BACAC3EAE9"
+			},
+			{
+				"CurrentState": "Threaten",
+				"NextState": "Threatened",
+				"Meaning": "John",
+				"Style": "Threat",
+				"Utterance": "Just give me all the money you have or i'll shoot you!",
+				"UtteranceId": "TTS-05A5602E6B4CF8E14C992129E3394E6B"
+			},
+			{
+				"CurrentState": "Request",
+				"NextState": "ToPay",
+				"Meaning": "John",
+				"Style": "ToBuy",
+				"Utterance": "Could you sell me a soda, please!",
+				"UtteranceId": "TTS-9D3A318079B30AB2E8CBD58F5F05F3DD"
+			},
+			{
+				"CurrentState": "Sale",
+				"NextState": "Charge",
+				"Meaning": "StoreOwner",
+				"Style": "Sell",
+				"Utterance": "Yes, one moment please",
+				"UtteranceId": "TTS-493A33FEE31BE90F99B76386A8E671AF"
+			}
+		],
+		"Characters": [
+			{
+				"KnowledgeBase": {
+					"Perspective": "John",
+					"Knowledge": {
+						"SELF": {
+							"Has(Gun)": "1, 1",
+							"Has(Money)": "5, 1",
+							"Equipped(Gun)": "False, 1",
+							"Current(Location)": "Home, 1",
+							"Location(Home)": "True, 1",
+							"Location(Store)": "False, 1",
+							"Works(Store)": "False, 1"
+						}
+					}
+				},
+				"BodyName": null,
+				"VoiceName": null,
+				"EmotionalState": {
+					"Mood": 0,
+					"initialTick": 0,
+					"EmotionalPool": [],
+					"AppraisalConfiguration": {
+						"HalfLifeDecayConstant": 0.5,
+						"EmotionInfluenceOnMoodFactor": 0.3,
+						"MoodInfluenceOnEmotionFactor": 0.3,
+						"MinimumMoodValueForInfluencingEmotions": 0.5,
+						"EmotionalHalfLifeDecayTime": 15,
+						"MoodHalfLifeDecayTime": 60
+					}
+				},
+				"AutobiographicMemory": {
+					"Tick": 0,
+					"records": []
+				},
+				"OtherAgents": {
+					"dictionary": []
+				},
+				"Goals": [
+					{
+						"Name": "GetMoney",
+						"Significance": 10,
+						"Likelihood": 0.4
+					}
+				]
+			},
+			{
+				"KnowledgeBase": {
+					"Perspective": "StoreOwner",
+					"Knowledge": {
+						"SELF": {
+							"Works(Store)": "True, 1",
+							"Current(location)": "Store, 1"
+						}
+					}
+				},
+				"BodyName": null,
+				"VoiceName": null,
+				"EmotionalState": {
+					"Mood": 0,
+					"initialTick": 0,
+					"EmotionalPool": [],
+					"AppraisalConfiguration": {
+						"HalfLifeDecayConstant": 0.5,
+						"EmotionInfluenceOnMoodFactor": 0.3,
+						"MoodInfluenceOnEmotionFactor": 0.3,
+						"MinimumMoodValueForInfluencingEmotions": 0.5,
+						"EmotionalHalfLifeDecayTime": 15,
+						"MoodHalfLifeDecayTime": 60
+					}
+				},
+				"AutobiographicMemory": {
+					"Tick": 0,
+					"records": []
+				},
+				"OtherAgents": {
+					"dictionary": []
+				},
+				"Goals": [
+					{
+						"Name": "Survive",
+						"Significance": 10,
+						"Likelihood": 0.6
+					},
+					{
+						"Name": "ToSell",
+						"Significance": 10,
+						"Likelihood": 0.6
+					}
+				]
+			}
+		],
+		"WorldModel": {
+			"Effects": {
+				"dictionary": [
+					{
+						"key": "Event(Action-End, [subject], GoTo, [place])",
+						"value": [
+							{
+								"PropertyName": "Current(Location)",
+								"NewValue": "[place]",
+								"ObserverAgent": "[subject]"
+							}
+						]
+					},
+					{
+						"key": "Event(Action-End, [subject], Equip, [object])",
+						"value": [
+							{
+								"PropertyName": "Equipped([object])",
+								"NewValue": true,
+								"ObserverAgent": "[subject]"
+							}
+						]
+					}
+				]
+			},
+			"Priorities": {
+				"dictionary": [
+					{
+						"key": "Event(Action-End, *, GoTo, [place])",
+						"value": 1
+					},
+					{
+						"key": "Event(Action-End, [subject], GoTo, [place])",
+						"value": 1
+					},
+					{
+						"key": "Event(Action-End, [subject], Equip, [object])",
+						"value": 1
+					},
+					{
+						"key": "Event(Action-End, [subject], GoToo, [place])",
+						"value": 1
+					},
+					{
+						"key": "Event(Action-End, [subject], Go, [place])",
+						"value": 1
+					}
+				]
+			}
+		}
+	},
+	"types": [
+		{
+			"TypeId": 0,
+			"ClassName": "IntegratedAuthoringTool.IntegratedAuthoringToolAsset, IntegratedAuthoringTool, Version=1.7.0.0, Culture=neutral, PublicKeyToken=null"
+		}]
+}

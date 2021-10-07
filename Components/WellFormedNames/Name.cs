@@ -51,6 +51,7 @@ namespace WellFormedNames
 	/// </remarks>
 	/// <example>
 	/// By default, Names separated in the following categories:
+	/// 
 	///		- Primitives
 	///			- John
 	///			- Dog
@@ -64,7 +65,10 @@ namespace WellFormedNames
 	///			- Likes(John)
 	///			- Size(Ball)
 	///			- Kick(Hard, Low)
+	///			
 	/// </example>
+	/// 
+
 	[Serializable]
 	public abstract partial class Name : IComparable<Name>, IEquatable<Name>
 	{

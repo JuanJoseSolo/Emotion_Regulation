@@ -23,9 +23,13 @@ namespace TestEmotion
         public static float  Intensity_Pedro = float.NaN;
         public static float  Mood_Pedro = float.NaN;
         public static float  IntensityiN_Pedro = float.NaN;
-        public Strategies    _Personality;
+        public static string Even = string.Empty;
 
- 
+        public static Name Event = Name.NIL_SYMBOL;
+        public Strategies _Personality;
+
+        public AvoidEventes avoidEventes;
+
         public static void Character()
         {
             //////////////////      CREATE CHARACTER      /////////////////////   
@@ -36,44 +40,43 @@ namespace TestEmotion
             ////   Character Sarah  ////
             var am_Sarah = new AM();
             var kb_Sarah = new KB((Name)"Sarah");
+            ////   Character Usuario  ////
+            var am_Usuario = new AM();
+            var kb_Usuario = new KB((Name)"Usuario");
             /////  EmotionRegulationEstrategies  /////
             Strategies _Personalities = new Strategies();
 
 
             ///////   knowledge Base and Emotion Estate   /////////
-            kb_Pedro.Tell(Name.BuildName("Lislike(Sarah)"   ), Name.BuildName("True"   ), Name.BuildName("SELF"), 1);
-            kb_Pedro.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False"  ), Name.BuildName("SELF"), 1);
-            kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Home"   ), Name.BuildName("SELF"), 1);
-
-            
+            kb_Pedro.Tell(Name.BuildName("like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Dislike(Usuario)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Home"), Name.BuildName("SELF"), 1);
             var emotionalState_Pedro = new ConcreteEmotionalState();
 
-            kb_Sarah.Tell(Name.BuildName("Like(Pedro)"      ), Name.BuildName("True"  ), Name.BuildName("SELF"), 1);
+            kb_Sarah.Tell(Name.BuildName("Like(Pedro)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
-            kb_Sarah.Tell(Name.BuildName("Location(Office)" ), Name.BuildName("False" ), Name.BuildName("SELF"), 1);        
-            
+            kb_Sarah.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
             var emotionalState_Sarah = new ConcreteEmotionalState();
-            float Cons = 10, Extrav = 90, Neuro = 0, Openn = 0, Agree = 0;
-            string nameStrategy  = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item1;
-            float  valueStrategy = _Personalities.Personality(Cons, Extrav, Neuro, Openn, Agree).Item2;
 
+            kb_Usuario.Tell(Name.BuildName("Dislike(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
+            kb_Usuario.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
+            kb_Usuario.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
+            var emotionalState_Usuario = new ConcreteEmotionalState();
 
+            ///////  FUZZY PERSONALITY   //////
+            float Cons = 90, Extrav = 20;
+            _Personalities.Personality_test(Cons, Extrav);
 
-            Console.WriteLine("Name  ---------> " + nameStrategy + "\nValue ---------> " + valueStrategy);
-            Console.ReadKey();
+            Console.WriteLine("\n Variable Avoid------>> " + _Personalities.Apply + "\n Strategy---->> "
+                                                           + _Personalities.NameStrategy_test);
+          
 
             ////////////////////////    EVENTS     ///////////////////////
 
-            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office)");
+            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office, 1)");
             var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah)");
             var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye  , Sarah)");
-            
-
-
-            Console.WriteLine("KnowledgeBase Pedro-------> " + kb_Pedro.AskProperty((Name)"Current(Location)"));
-
-
-
 
             ////////////////////    EMOTIONAL APPRAISAL     /////////////////
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
@@ -102,9 +105,8 @@ namespace TestEmotion
                 */
             };
             ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
+            
 
-
-            ////////    Event 2     ///////////
             appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
             {
                 new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-2)) }
@@ -124,6 +126,8 @@ namespace TestEmotion
                     Name = "Desirability", Value = (Name.BuildName(-3)) //Value = (Name.BuildName("[d]")
                 }
             };
+
+
             var rule_Sarah = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
                 //EventMatchingTemplate = (Name)"Event(Action-End, *, Hello([env],[econ]), *)"
@@ -150,6 +154,10 @@ namespace TestEmotion
                 AppraisalVariables = new AppraisalVariables(appraisalVariableDTO_Sarah)
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
+
+
+
+            AvoidEventes.ChangeEvent(EnterOffice, ea_Pedro);
 
 
             /////////   SHOW ON THE CONSOLE  /////////////-------> Pedro's perspective
@@ -180,7 +188,6 @@ namespace TestEmotion
             ///////////////////////////////////////////////////////////////////////
 
             Console.WriteLine(" \n  Num Events occured so far: " + am_Pedro.RecallAllEvents().Count());
-
 
             //////////    Occurr New Event    //////////////------> Event 2
             ea_Pedro.AppraiseEvents(new[] { Hello_Event1, Bye_Event2 }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
@@ -251,7 +258,6 @@ namespace TestEmotion
             Console.ReadKey();
 
         }
-
 
         static void Main(string[] args)
         {

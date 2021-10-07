@@ -12,12 +12,26 @@ namespace IntegratedAuthoringToolTutorial
         static void Main(string[] args)
         {
             var playerStr = IATConsts.PLAYER;
-
-            var storage = AssetStorage.FromJson(File.ReadAllText("../../../../Examples/IAT-Tutorial/Scenarios/storage.json"));
-             
-            //Loading the asset
-            var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("../../../../Examples/IAT-Tutorial/Scenarios/scenario.json"), storage);
             
+                        var storage = AssetStorage.FromJson(File.ReadAllText(
+                    @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\EmotionRegulation\ReglasRobo.json"));
+
+                         //C: \Users\JuanJoseAsus\source\repos\FAtiMA - Toolkit - master\EmotionRegulation
+
+                         //Loading the asset
+                         var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText(
+                   @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\EmotionRegulation\EscenarioRobo.json"), storage);
+    /*      
+            var storage = AssetStorage.FromJson(File.ReadAllText(
+         @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\Tutorials\Examples\IAT-Tutorial\Scenarios\storage.json"));
+
+             //C: \Users\JuanJoseAsus\source\repos\FAtiMA - Toolkit - master\EmotionRegulation
+
+             //Loading the asset
+             var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("" +
+         @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\Tutorials\Examples\IAT-Tutorial\Scenarios\scenario.json"), storage);
+
+*/
             var currentState = IATConsts.INITIAL_DIALOGUE_STATE;
             var rpc = iat.Characters.ElementAt(0);
             while (currentState != IATConsts.TERMINAL_DIALOGUE_STATE)
@@ -25,7 +39,7 @@ namespace IntegratedAuthoringToolTutorial
                 var playerDialogs = iat.GetDialogueActionsByState(currentState);
 
                 Console.WriteLine("Current Dialogue State: " + currentState);
-                Console.WriteLine("Available choices: ");
+                Console.WriteLine("Available choices: " + playerDialogs.Count());
 
                 for (int i = 0; i < playerDialogs.Count(); i++)
                 {
