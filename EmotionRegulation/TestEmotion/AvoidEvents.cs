@@ -19,11 +19,17 @@ namespace TestEmotion
     public class AvoidEvents : Strategies
     {
         public static string StrategyName = string.Empty;
+        public static string TypeVar = string.Empty;
+        public static int count;
         public static bool StrategyApplied;
-    
+        public static bool flag = false;
+        public static List<Name> EvTemList = new List<Name>();
+        public static Name changedName = Name.NIL_SYMBOL;
+
+
         public static void StrategyTest(float Consientioness, float Extraversion, KB Character)
         {
-           
+                       
             Console.WriteLine(" \n Name Character" + Character.Perspective);
             Strategies strategies = new Strategies();
             float Situation_Selection = strategies.SitSele(Consientioness, Extraversion);
@@ -46,6 +52,8 @@ namespace TestEmotion
 
         public static Tuple<Name, EmotionalAppraisalAsset> ChangeEvent(Name evento, EmotionalAppraisalAsset ea_Character)
         {
+            dynamic TestSending2 = Name.NIL_SYMBOL;
+
             if (evento.NumberOfTerms == 6)
             {
                            
@@ -57,129 +65,120 @@ namespace TestEmotion
                 Console.WriteLine("\nCurrent Event------> " + evento);
                 Console.WriteLine("Current Event is Avoided------> " + Var_AvoidEvent);
 
-                //remove the last term
+                //remove the last term (True or False)
                 var ListEvent = evento.GetLiterals().ToList();
                 ListEvent.RemoveAt(5);
-              
-                //reconstructed event for to send
-                var EventSent = Name.BuildName(ListEvent);
-                Console.WriteLine("Event Sent------> " + EventSent.ToString()+"\n");
-
-                //modify of Appraisal variables specify of event
+                var EvWithout = Name.BuildName(ListEvent);
+                var TestSending = Name.BuildName("Event(Action-End, Pedro, TestBye, Sarah)");
+                Console.WriteLine("Event without Aviod Value------> " + EvWithout.ToString()+"\n");
                 
-                if (StrategyApplied && Var_AvoidEvent)
+                for (int jj = 0; jj < ea_Character.GetAllAppraisalRules().ToList().Count; jj++)
                 {
-                    /*
-                    foreach (var FindEvent in ea_Character.GetAllAppraisalRules())
+                    var EventTemplate = ea_Character.GetAllAppraisalRules().ElementAt(jj).EventMatchingTemplate;
+
+                    if (EventTemplate.GetNTerm(3).ToString().Equals(Var_EventName))
                     {
-                        Console.WriteLine("AppraisalRulesBy eaCharacter = " + FindEvent.EventMatchingTemplate);
-                        
-                        if (FindEvent.EventMatchingTemplate.GetNTerm(3).Equals((Name)Var_EventName))
-                        {
-
-                            var EMT = FindEvent.EventMatchingTemplate;
-                            var A = FindEvent.EventMatchingTemplate.GetTerms().ToList();
-                            A.RemoveAt(3);
-                            A.Insert(3, Name.BuildName("Not-" + Var_EventName));
-                            var Namechange = Name.BuildName(A);
-
-                            //Appraisal Variables
-
-                            //var newEvenChara = ea_Character;
-                            /////// EVENT 3 //////
-                            var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
-                            {
-                                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "NewTest" , Value = (Name.BuildName(0)) }
-                            };
-                            var rule = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
-                            {
-                                EventMatchingTemplate = Namechange,
-                                AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
-                            };
-                            //newEvenChara.AddOrUpdateAppraisalRule(rule);
+                        //Build new event with a word NOT
+                        EvTemList = EventTemplate.GetTerms().ToList();
+                        EvTemList.RemoveAt(3);
+                        EvTemList.Insert(3, Name.BuildName("Not-" + Var_EventName));
+                        changedName = Name.BuildName(EvTemList);
+                        //Get Appraisal Var. values
+                        var SplitVar = ea_Character.GetAllAppraisalRules().ElementAt(jj).AppraisalVariables;
+                        var Splitd = SplitVar.ToString().Split("=");
+                        TypeVar = Splitd[0];
+                        float ValueVar = float.Parse(Splitd[1]);
+                        flag = true;
+                        count = jj;
+                    }
+                }
 
 
-
-                        }
-                    }*/
+                //modify of Appraisal variables specify of a event
+                if (StrategyApplied && Var_AvoidEvent && flag)
+                {
                     //Search in ea_Character Appraisal rules
+                   /*
                     for (int j = 0; j < ea_Character.GetAllAppraisalRules().ToList().Count; j++)
                     {
                         var EventTemplate = ea_Character.GetAllAppraisalRules().ElementAt(j).EventMatchingTemplate;
-
+                        
                         if (EventTemplate.GetNTerm(3).ToString().Equals(Var_EventName))
                         {
-                            //Change Event
+                            //Build new event with a word NOT
                             var EvTemList = EventTemplate.GetTerms().ToList();
                             EvTemList.RemoveAt(3);
                             EvTemList.Insert(3, Name.BuildName("Not-" + Var_EventName));
                             var changedName = Name.BuildName(EvTemList);
+                            //Get Appraisal Var. values
                             var SplitVar = ea_Character.GetAllAppraisalRules().ElementAt(j).AppraisalVariables;
-                            var testSplit = SplitVar.ToString().Split("=");
-
-                            string TypeVar = testSplit[0];
-                            float ValueVar = float.Parse(testSplit[1]);
-
+                            var Splitd = SplitVar.ToString().Split("=");
+                            string TypeVar = Splitd[0];
+                            float ValueVar = float.Parse(Splitd[1]);
+                            */
+                            //New Appraisal variables
                             var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                             {
-                                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = TypeVar , Value = (Name.BuildName(0)) }
+                                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() 
+                                { 
+                                    Name = TypeVar , Value = (Name.BuildName(0)) 
+                                }
                             };
                             var rule = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                             {
                                 EventMatchingTemplate = changedName,
                                 AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                             };
-                            ea_Character.AddOrUpdateAppraisalRule(rule);
-
+                            ea_Character.AddOrUpdateAppraisalRule(rule); //update new ARule
+                            
+                            //Finding a specific new ARule
+                            var NewEvMaTe = ea_Character.GetAllAppraisalRules().ElementAt(count + 2);///Check this option
+                            //To remove old event and inserted the new
                             var ea_CharacterList = ea_Character.GetAllAppraisalRules().ToList();
-
-                            //var DeleteAR = ea_Character.GetAllAppraisalRules();
-                            var xx = ea_Character.GetAllAppraisalRules().ElementAt(j + 2);
-                            ea_CharacterList.RemoveAt(j);
-                            ea_CharacterList.Insert(j, xx);
-                            ea_CharacterList.RemoveAt(j + 2);
+                            ea_CharacterList.RemoveAt(count);
+                            ea_CharacterList.Insert(count, NewEvMaTe);
+                            //To remove the new EMT from the last position
+                            ea_CharacterList.RemoveAt(count + 2);
                             var deleteRules = ea_Character.GetAllAppraisalRules().ToList();
 
-                            var BeforeDel = ea_Character.GetAllAppraisalRules();
-                            foreach (var evv in BeforeDel)
+                            /*
+                            var BeforeDel = ea_Character.GetAllAppraisalRules();                            
+                            foreach (var oldEMT in BeforeDel)
                             {
-                                Console.WriteLine("Before_Removed----> "+evv.EventMatchingTemplate);
+                                Console.WriteLine("Before_Removed----> "+oldEMT.EventMatchingTemplate);
 
                             }
-
+                            */
+                            //Remove all Appraisal Rules from ea_Character
                             ea_Character.RemoveAppraisalRules(deleteRules);
-
+                            /*
                             var ApRul = ea_Character.GetAllAppraisalRules();
-                            foreach (var bb in ApRul)
+                            foreach (var newEMT in ApRul)
                             {
-                                Console.WriteLine("Delete....." + bb.EventMatchingTemplate);
+                                Console.WriteLine("Delete....." + newEMT.EventMatchingTemplate);
 
                             }
-
+                            */
+                            //To insert the new EMT into ea_Character
                             for (int ff = 0; ff < ea_CharacterList.Count; ff++)
                             {
                                 ea_Character.AddOrUpdateAppraisalRule(ea_CharacterList[ff]);
                             }
+                            
+                            foreach (var newEMT2 in ea_Character.GetAllAppraisalRules())
+                            {
+                                Console.WriteLine("After Delete....." + newEMT2.EventMatchingTemplate);
 
-                            //var asset = BuildTestAsset();
-
-                            //var ea_Character2 = new EmotionalAppraisal.AppraisalRules.ReactiveAppraisalDerivator();
-
-
-
-                            //Console.WriteLine("\n ea_CharacterSend------> " + ea_CharacterList.ElementAt(j).EventMatchingTemplate);
-
-
-                        }
-
+                            }
+                            
+                            //return Tuple.Create(changedName, ea_Character);
+                       // }
                         
-                    }
+                    //}
                 }
-
-                return Tuple.Create(EventSent, ea_Character);
+                return Tuple.Create(changedName, ea_Character);
             }
             else { return Tuple.Create(evento, ea_Character);}
-
         }
     }
 }
