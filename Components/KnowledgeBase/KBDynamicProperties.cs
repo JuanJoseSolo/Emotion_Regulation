@@ -3,9 +3,10 @@ using System.Linq;
 using KnowledgeBase.DTOs;
 using WellFormedNames;
 
+
 namespace KnowledgeBase
 {
-	public partial class KB : IDynamicPropertiesRegistry
+	public partial class KB : IDynamicPropertiesRegistry 
 	{
 		private DynamicPropertyRegistry _registry;
 

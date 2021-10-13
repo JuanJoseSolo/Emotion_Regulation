@@ -283,14 +283,6 @@ namespace Fuzzy_Personalities
             var sortedDict = from entry in Strategies orderby entry.Value ascending select entry;
             var a =  Strategies.Keys;
 
-             /*
-            var myList = Strategies.ToList();
-
-            foreach(var item in sortedDict)
-            {
-                Console.WriteLine("LISTA STRA ------> " + item);
-            }
-            */
             string NameStrategy = a.First();
             float value;
             Strategies.TryGetValue(NameStrategy, out value);
@@ -301,10 +293,6 @@ namespace Fuzzy_Personalities
 
 
             return Tuple.Create(NameStrategy_test, value_test);
-
-
-
-
 
         }
 

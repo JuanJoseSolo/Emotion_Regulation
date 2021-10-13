@@ -18,7 +18,7 @@ namespace Tests.EmotionalAppraisal
 
         private Dictionary<int, List<Name>> events;
 
-
+        
         private void BuildDataSet()
         {
 
@@ -177,15 +177,52 @@ namespace Tests.EmotionalAppraisal
         {
             var asset = BuildTestAsset();
 
+
+            var a = asset.GetAllAppraisalRules();
+            foreach(var j in a)
+            {
+                Console.WriteLine(j.EventMatchingTemplate);
+
+            }
+
+
+            Console.WriteLine("\n");
             List<AppraisalRuleDTO> rules = new List<AppraisalRuleDTO>();
 
             foreach (var r in asset.GetAllAppraisalRules())
+            {
                 rules.Add(r);
+                
+            }
+                
 
             asset.RemoveAppraisalRules(rules);
+            
 
+            var asetDEl = asset.GetAllAppraisalRules();
+            foreach (var bb in asetDEl)
+            {
+                Console.WriteLine("borrado....."+bb.EventMatchingTemplate);
+                
+            }
 
             Assert.IsEmpty(asset.GetAllAppraisalRules());
+
+            for(int ff=0; ff < rules.Count; ff++)
+            {
+                asset.AddOrUpdateAppraisalRule(rules[ff]);
+            }
+
+
+            var NewRueless = asset.GetAllAppraisalRules();
+            foreach (var bbb in NewRueless)
+            {
+                Console.WriteLine("News....." + bbb.EventMatchingTemplate);
+
+            }
+
+
+
         }
 
 
