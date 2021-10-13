@@ -34,17 +34,17 @@ namespace TestEmotion
             //////////////////      CREATE CHARACTER      /////////////////////   
 
             ////   Character Pedro   /////
-            var am_Pedro = new AM(); //AutobiographicMemory
-            var kb_Pedro = new KB((Name)"Pedro");      //KnowledgeBase
+            var am_Pedro = new AM();
+            var kb_Pedro = new KB((Name)"Pedro"); 
             ////   Character Sarah  ////
             var am_Sarah = new AM();
             var kb_Sarah = new KB((Name)"Sarah");
             ////   Character Usuario  ////
             var am_Usuario = new AM();
             var kb_Usuario = new KB((Name)"Usuario");
-            /////  EmotionRegulationEstrategies  /////
-            Strategies _Personalities = new Strategies();
 
+            /////  EmotionRegulation  /////
+            Strategies _Personalities = new Strategies();
 
             ///////   knowledge Base and Emotion Estate   /////////
             kb_Pedro.Tell(Name.BuildName("like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
@@ -63,50 +63,36 @@ namespace TestEmotion
             kb_Usuario.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
             var emotionalState_Usuario = new ConcreteEmotionalState();
 
-
-
             ///////  FUZZY PERSONALITY   ////// 
-            ///
             float Cons = 70, Extrav = 10;
 
             AvoidEvents.StrategyTest(Cons, Extrav, kb_Pedro);
             Console.WriteLine("\n Variable Avoid------>> " + AvoidEvents.StrategyApplied + "\n Strategy---->> "
                                                            + AvoidEvents.StrategyName);
-
             ////////////////////////    EVENTS     ///////////////////////
 
-            var EnterOffice = Name.BuildName("Event(Action-End, Pedro, Enter, Office)");
-            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah)");
-            var Bye_Event2 = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah, True)");
+            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
+            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah,True)");
+            var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah,True)");
 
-            ////////////////////    EMOTIONAL APPRAISAL     /////////////////
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
             EmotionalAppraisalAsset ea_Sarah = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
-
-
 
             ////////// EVENT 1 ///////
             var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
             {
                 new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
                 {
-                    Name = "Desirability", Value = (Name.BuildName(4)) //Value = (Name.BuildName("[d]") //---> "INSTEAD 4"
+                    Name = "Desirability", Value = (Name.BuildName(4)) 
                 }
             };
             var rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
-                //EventMatchingTemplate = (Name)"Event(Action-End, *, Hello([env],[econ]), *)" //-----> "NECESSARY FOR [D]"
+   
                 EventMatchingTemplate = (Name)"Event(Action-End, *, Hello, *)",
                 AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
-                /*---->///"NECESSARY FOR [D]"
-                Conditions = new Conditions.DTOs.ConditionSetDTO() 
-                {
-                    ConditionSet = new string[] { "Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]" } 
-                }
-                */
             };
             ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-
 
             /////// EVENT 2 //////
             appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
@@ -120,11 +106,10 @@ namespace TestEmotion
             };
             ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
 
-
             /////// EVENT 3 //////
             appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
             {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-3)) }
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(3)) }
             };
             rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
@@ -133,26 +118,18 @@ namespace TestEmotion
             };
             ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
 
-
             /////////   EVENT 1  (Sarah) //////////
             var appraisalVariableDTO_Sarah = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
             {
                 new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
                 {
-                    Name = "Desirability", Value = (Name.BuildName(-3)) //Value = (Name.BuildName("[d]")
+                    Name = "Desirability", Value = (Name.BuildName(-3))
                 }
             };
             var rule_Sarah = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
-                //EventMatchingTemplate = (Name)"Event(Action-End, *, Hello([env],[econ]), *)"
                 EventMatchingTemplate = (Name)"Event(Action-End, *, Hello, *)",
                 AppraisalVariables = new AppraisalVariables(appraisalVariableDTO_Sarah),
-                /*
-                Conditions = new Conditions.DTOs.ConditionSetDTO() 
-                {
-                    ConditionSet = new string[] { "Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]" } 
-                }
-                */
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
@@ -170,34 +147,21 @@ namespace TestEmotion
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
             //it sends events and appraisal variables
-            var ea_Pedro_Received = AvoidEvents.ChangeEvent(Bye_Event2, ea_Pedro).Item2;
-            var EventReceived = AvoidEvents.ChangeEvent(Bye_Event2, ea_Pedro).Item1;
+            var ea_Pedro_Received = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro).Item2;
+            var EventReceived = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro).Item1;
 
+            /*
             foreach (var CharacterNew in ea_Pedro_Received.GetAllAppraisalRules())
             {
                 Console.WriteLine("ea_CharacterReceived------> " + CharacterNew.EventMatchingTemplate);
             }
-
-            /*
-           Console.WriteLine("Event Received----->>>" + EventReceived);
-           Console.WriteLine("eaPedro " + 
-               ea_Pedro.GetAllAppraisalRules().ElementAt(2).AppraisalVariables + 
-               " eaReceived " + Received_ea_New.GetAllAppraisalRules().ElementAt(2).AppraisalVariables);
            */
 
-
-
-
-            /////////   SHOW ON THE CONSOLE  /////////////-------> Pedro's perspective
+            /////////  CONSOLE  /////////////-------> Pedro's perspective
 
             ///////////   Event 1  //////////////
             //ea_Pedro.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
             ea_Pedro_Received.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-
-            foreach (var AM_Pedro in am_Pedro.RecallAllEvents()) 
-            { 
-                Console.WriteLine("Inside of am_Pedro---->> " + AM_Pedro.EventName);
-            }
             Console.WriteLine(" \n Pedro's perspective ");
             Console.WriteLine(" \n Events occured so far: "
                 + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
@@ -212,7 +176,7 @@ namespace TestEmotion
             Console.ReadKey();
 
             /*
-            ////////////     TEST SEND EMOTION     ////////////////////////////////
+            ////////////     TEST TO SEND EMOTION     ////////////////////////////////
             Emotion_Pedro = emotionalState_Pedro.GetStrongestEmotion().EmotionType;
             Intensity_Pedro = emotionalState_Pedro.GetStrongestEmotion().Intensity;
             Mood_Pedro = emotionalState_Pedro.Mood;
