@@ -15,7 +15,7 @@ using EmotionalAppraisal.DTOs;
 
 namespace TestEmotion
 {
-    
+    //Commit02
     public class AvoidEvents : Strategies
     {
         public static string StrategyName = string.Empty;
@@ -25,7 +25,7 @@ namespace TestEmotion
         public static bool flag = false;
         public static List<Name> EvTemList = new List<Name>();
         public static Name changedName = Name.NIL_SYMBOL;
-        //Commit1
+        
 
         public static void StrategyTest(float Consientioness, float Extraversion, KB Character)
         {
