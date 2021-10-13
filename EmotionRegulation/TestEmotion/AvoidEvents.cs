@@ -25,7 +25,7 @@ namespace TestEmotion
         public static bool flag = false;
         public static List<Name> EvTemList = new List<Name>();
         public static Name changedName = Name.NIL_SYMBOL;
-
+        //Commit
 
         public static void StrategyTest(float Consientioness, float Extraversion, KB Character)
         {
