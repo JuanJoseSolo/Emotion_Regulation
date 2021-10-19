@@ -18,8 +18,6 @@ namespace TestEmotion
             
         }
 
-        public static string StrategyName2;
-        public static bool StrategyApplied2;
         public static Strategies strategies = new();
         public static ValueEst SelectStrategy(float Consientioness, float Extraversion,float Neuroticism, float Openness, float Agreeableness)
         {
