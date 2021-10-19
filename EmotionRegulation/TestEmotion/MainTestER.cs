@@ -16,35 +16,29 @@ using Fuzzy_Personalities;
 
 namespace TestEmotion
 {
-    public class MainTestER_01 : Strategies
+    public class MainTestER
     {
-        public static string Emotion_Pedro = string.Empty;
-        public static float  Intensity_Pedro = float.NaN;
-        public static float  Mood_Pedro = float.NaN;
-        public static float  IntensityiN_Pedro = float.NaN;
-        public static string Even = string.Empty;
-
-        public static Name Event = Name.NIL_SYMBOL;
-        public Strategies _Personality;
-
-        public AvoidEvents avoidEventes;
-
+        /*
+        public string Emotion_Pedro = string.Empty;
+        public float  Intensity_Pedro = float.NaN;
+        public float  Mood_Pedro = float.NaN;
+        public float  IntensityiN_Pedro = float.NaN;
+        public string Even = string.Empty;
+        //public Name Event = Name.NIL_SYMBOL;
+        */
         public static void Character()
         {
             //////////////////      CREATE CHARACTER      /////////////////////   
 
             ////   Character Pedro   /////
             var am_Pedro = new AM();
-            var kb_Pedro = new KB((Name)"Pedro"); 
+            var kb_Pedro = new KB((Name)"Pedro");
             ////   Character Sarah  ////
             var am_Sarah = new AM();
             var kb_Sarah = new KB((Name)"Sarah");
             ////   Character Usuario  ////
             var am_Usuario = new AM();
             var kb_Usuario = new KB((Name)"Usuario");
-
-            /////  EmotionRegulation  /////
-            Strategies _Personalities = new Strategies();
 
             ///////   knowledge Base and Emotion Estate   /////////
             kb_Pedro.Tell(Name.BuildName("like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
@@ -63,17 +57,11 @@ namespace TestEmotion
             kb_Usuario.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
             var emotionalState_Usuario = new ConcreteEmotionalState();
 
-            ///////  FUZZY PERSONALITY   ////// 
-            float Cons = 70, Extrav = 10;
-
-            AvoidEvents.StrategyTest(Cons, Extrav, kb_Pedro);
-            Console.WriteLine("\n Variable Avoid------>> " + AvoidEvents.StrategyApplied + "\n Strategy---->> "
-                                                           + AvoidEvents.StrategyName);
             ////////////////////////    EVENTS     ///////////////////////
 
-            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
-            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah,True)");
-            var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah,True)");
+            var EnterOffice = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
+            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah,False)");
+            var Bye_Event2 = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah)");
 
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
             EmotionalAppraisalAsset ea_Sarah = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
@@ -83,12 +71,12 @@ namespace TestEmotion
             {
                 new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
                 {
-                    Name = "Desirability", Value = (Name.BuildName(4)) 
+                    Name = "Desirability", Value = (Name.BuildName(4))
                 }
             };
             var rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
-   
+
                 EventMatchingTemplate = (Name)"Event(Action-End, *, Hello, *)",
                 AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
             };
@@ -146,22 +134,20 @@ namespace TestEmotion
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
+
+
             //it sends events and appraisal variables
-            var ea_Pedro_Received = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro).Item2;
-            var EventReceived = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro).Item1;
+            
+            var NewData = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro);
 
-            /*
-            foreach (var CharacterNew in ea_Pedro_Received.GetAllAppraisalRules())
-            {
-                Console.WriteLine("ea_CharacterReceived------> " + CharacterNew.EventMatchingTemplate);
-            }
-           */
+            var New_ea_Pedro = NewData.NewEA;
+            var New_Event = NewData.NewEvent;
 
-            /////////  CONSOLE  /////////////-------> Pedro's perspective
-
+ 
+            
             ///////////   Event 1  //////////////
             //ea_Pedro.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-            ea_Pedro_Received.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
+            New_ea_Pedro.AppraiseEvents(new[] { New_Event }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
             Console.WriteLine(" \n Pedro's perspective ");
             Console.WriteLine(" \n Events occured so far: "
                 + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
@@ -174,8 +160,8 @@ namespace TestEmotion
                     + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity)));
 
             Console.ReadKey();
-
             /*
+            
             ////////////     TEST TO SEND EMOTION     ////////////////////////////////
             Emotion_Pedro = emotionalState_Pedro.GetStrongestEmotion().EmotionType;
             Intensity_Pedro = emotionalState_Pedro.GetStrongestEmotion().Intensity;
@@ -246,10 +232,10 @@ namespace TestEmotion
                     + string.Concat(emotionalState_Sarah.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
 
             Console.WriteLine(" \nNum Events occured so far (Sarah's perspective): " + am_Sarah.RecallAllEvents().Count());
-            */
+            
             ea_Sarah.Save();
             ea_Pedro_Received.Save();
-
+            */
             Console.ReadKey();
 
         }
