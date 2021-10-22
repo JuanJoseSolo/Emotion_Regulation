@@ -8,7 +8,7 @@ using Fuzzy_Personalities;
 namespace TestEmotion
 {
     //Commit02
-    public class AvoidEvents
+    public class EmotionRegulation
     {
         
         public struct Values

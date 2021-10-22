@@ -8,7 +8,7 @@ using EmotionalAppraisal;
 
 namespace TestEmotion
 {
-    class RebuildEvent : AvoidEvents
+    class RebuildEvent : EmotionRegulation
     {
         public struct EventsConstruc
         {

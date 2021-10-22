@@ -128,7 +128,7 @@ namespace TestEmotion
 
             //it sends events and appraisal variables
 
-            var NewData = AvoidEvents.ChangeEvent(Bye_Event2, ea_Pedro);
+            var NewData = EmotionRegulation.ChangeEvent(Bye_Event2, ea_Pedro);
 
             var New_ea_Pedro = NewData.NewEA;
             var New_Event = NewData.NewEvent;
