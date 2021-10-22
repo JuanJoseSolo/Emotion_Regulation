@@ -72,16 +72,11 @@ namespace Fuzzy_Personalities
         /////////////////////////////////////                        //////////////////////////////////////////
         public float SitModi(double Co, double Ex, double Ne, double Ag)
         {
-
-
             /////////////////////////PERSONALITIES//////////////////////
             var Conscient = new LinguisticVariable("Conscient");
             var Extravers = new LinguisticVariable("Extravers");
             var Neurotici = new LinguisticVariable("Neurotici");
-            var Openness  = new LinguisticVariable("Openness" );
             var Agreeable = new LinguisticVariable("Agreeable");
-
-
 
             var lowCon    = Conscient.MembershipFunctions.AddZShaped("lowCon"    , 30, 10, 0, 100);
             var middleCon = Conscient.MembershipFunctions.AddGaussian("middleCon", 50, 10, 0, 100);

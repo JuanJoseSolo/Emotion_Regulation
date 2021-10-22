@@ -18,14 +18,6 @@ namespace TestEmotion
 {
     public class MainTestER
     {
-        /*
-        public string Emotion_Pedro = string.Empty;
-        public float  Intensity_Pedro = float.NaN;
-        public float  Mood_Pedro = float.NaN;
-        public float  IntensityiN_Pedro = float.NaN;
-        public string Even = string.Empty;
-        //public Name Event = Name.NIL_SYMBOL;
-        */
         public static void Character()
         {
             //////////////////      CREATE CHARACTER      /////////////////////   
@@ -60,8 +52,8 @@ namespace TestEmotion
             ////////////////////////    EVENTS     ///////////////////////
 
             var EnterOffice = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
-            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah,False)");
-            var Bye_Event2 = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah)");
+            var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah, False)");
+            var Bye_Event2 = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah,False)");
 
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
             EmotionalAppraisalAsset ea_Sarah = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
@@ -134,17 +126,17 @@ namespace TestEmotion
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
-
-
             //it sends events and appraisal variables
-            
-            var NewData = AvoidEvents.ChangeEvent(Hello_Event1, ea_Pedro);
+
+            var NewData = AvoidEvents.ChangeEvent(Bye_Event2, ea_Pedro);
 
             var New_ea_Pedro = NewData.NewEA;
             var New_Event = NewData.NewEvent;
 
- 
-            
+            Console.WriteLine("\n------------------Regreo a FAtiMA--------------------\n\n "
+                                + "Evento = " + New_Event + "\n New EA: "
+                                + New_ea_Pedro.GetAllAppraisalRules().ElementAt(1).AppraisalVariables);
+            /*
             ///////////   Event 1  //////////////
             //ea_Pedro.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
             New_ea_Pedro.AppraiseEvents(new[] { New_Event }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);

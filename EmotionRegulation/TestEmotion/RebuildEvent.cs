@@ -22,27 +22,40 @@ namespace TestEmotion
 
         public static List<Name> EvTemList;
 
+        public static Name ReName(Name events)
+        {
+            var ListEvent = events.GetLiterals().ToList();
+            for (int j = 5; j <= ListEvent.Count; j++ )
+            {
+                ListEvent.RemoveAt(5); 
+               
+            }
+            
+            var EventFati = Name.BuildName(ListEvent);
+            return EventFati;
+        }
+
         public static EventsConstruc BuildEvent(Name events, EmotionalAppraisalAsset ea, bool Est)
         {
             EventsConstruc ConstrEve = new();
 
             //obtain the last term of the events
-            Console.WriteLine("\n------------------------RebuildEvent---------------------------");
+            Console.WriteLine("\n-----------------RebuildEvent-------------------------");
             ConstrEve.Var_AvoidEvent = bool.Parse(events.GetNTerm(5).ToString());
                 
             Console.WriteLine("\nCurrent Event with 6 term------> " + events);
             Console.WriteLine("Current Event is Avoided------> " + ConstrEve.Var_AvoidEvent);
 
             //remove the last term (True or False)
-            var ListEvent = events.GetLiterals().ToList();
-            ListEvent.RemoveAt(5);
-            var Var_EventName = ListEvent[3].ToString();
-            ConstrEve.EventFati = Name.BuildName(ListEvent);
+            ConstrEve.EventFati = ReName(events);
             
+            var ListEvent = ConstrEve.EventFati.GetLiterals().ToList();
+
+            var Var_EventName = ListEvent[3].ToString();
             for (int j = 0; j < ea.GetAllAppraisalRules().ToList().Count; j++)
             {
                 var EventTemplate = ea.GetAllAppraisalRules().ElementAt(j).EventMatchingTemplate;
-                //ConstrEve.Var_AvoidEvent
+            
                 if ((EventTemplate.GetNTerm(3).ToString().Equals(Var_EventName)) && Est && ConstrEve.Var_AvoidEvent)
                 {
                     //Build new eventTemplate with a word NOT
