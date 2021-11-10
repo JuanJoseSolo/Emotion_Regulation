@@ -150,8 +150,10 @@ namespace ActionLibrary
                 Id = this.Id,
                 Layer = this.Layer,
                 Target = this.Target,
-                Priority = this.Priority
-            });
+                Priority = this.Priority,
+
+
+			});
         }
 
         public virtual void GetObjectData(ISerializationData dataHolder, ISerializationContext context)

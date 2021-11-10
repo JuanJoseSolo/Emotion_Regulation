@@ -16,6 +16,7 @@ namespace TestEmotion
             public Name EventFati;
             public Name EventTemplate;
             public string TypeVar;
+            public float ValueVar;
             public int Index;
 
         }
@@ -35,7 +36,7 @@ namespace TestEmotion
             return EventFati;
         }
 
-        public static EventsConstruc BuildEvent(Name events, EmotionalAppraisalAsset ea, bool Est)
+        public static EventsConstruc BuildEvent(Name events, EmotionalAppraisalAsset ea, AppliedStrategies.ValueEst Est)
         {
             EventsConstruc ConstrEve = new();
 
@@ -54,26 +55,31 @@ namespace TestEmotion
             var Var_EventName = ListEvent[3].ToString();
             for (int j = 0; j < ea.GetAllAppraisalRules().ToList().Count; j++)
             {
+
                 var EventTemplate = ea.GetAllAppraisalRules().ElementAt(j).EventMatchingTemplate;
-            
-                if ((EventTemplate.GetNTerm(3).ToString().Equals(Var_EventName)) && Est && ConstrEve.Var_AvoidEvent)
+                            
+                if ((EventTemplate.GetNTerm(3).ToString().Equals(Var_EventName)) && Est.StrategyApplied && ConstrEve.Var_AvoidEvent)
                 {
-                    //Build new eventTemplate with a word NOT
-                    EvTemList = EventTemplate.GetTerms().ToList();
-                    ListEvent.RemoveAt(3);
-                    EvTemList.RemoveAt(3);
-                    var NEwNAmeEvent = Name.BuildName("Not-" + Var_EventName);
-                    EvTemList.Insert(3, NEwNAmeEvent);
-                    ListEvent.Insert(3, NEwNAmeEvent);
-                    ConstrEve.EventTemplate = Name.BuildName(EvTemList);
-                    ConstrEve.EventFati = Name.BuildName(ListEvent);
-                    
+                    if (Est.StrategyName == "Situation Selection") 
+                    {
+                        //Build new eventTemplate with a word NOT
+                        EvTemList = EventTemplate.GetTerms().ToList();
+                        ListEvent.RemoveAt(3);
+                        EvTemList.RemoveAt(3);
+                        var NEwNAmeEvent = Name.BuildName("Not-" + Var_EventName);
+                        EvTemList.Insert(3, NEwNAmeEvent);
+                        ListEvent.Insert(3, NEwNAmeEvent);
+                        ConstrEve.EventTemplate = Name.BuildName(EvTemList);
+                        ConstrEve.EventFati = Name.BuildName(ListEvent);
+                    }
+
                     //Get Appraisal Var. values
                     var SplitVar = ea.GetAllAppraisalRules().ElementAt(j).AppraisalVariables;
-                    var Splitd = SplitVar.ToString().Split("=");
+                    var Splitd   = SplitVar.ToString().Split("=");
                     ConstrEve.TypeVar = Splitd[0];
-                    float ValueVar = float.Parse(Splitd[1]);
+                    ConstrEve.ValueVar = float.Parse(Splitd[1]);
                     ConstrEve.Index = j;
+
                 }
 
             }

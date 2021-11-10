@@ -32,12 +32,21 @@ namespace TestEmotion
             var am_Usuario = new AM();
             var kb_Usuario = new KB((Name)"Usuario");
 
+            //// Actions
+            var storage = new AssetStorage();
+            var edm = EmotionalDecisionMakingAsset.CreateInstance(storage);
+
+
             ///////   knowledge Base and Emotion Estate   /////////
-            kb_Pedro.Tell(Name.BuildName("like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Dislike(Usuario)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Location(Office)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
             kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Home"), Name.BuildName("SELF"), 1);
             var emotionalState_Pedro = new ConcreteEmotionalState();
+
+            //kb_Pedro.Tell((Name)"LikesToFight(SELF)", (Name)"True");
+            edm.RegisterKnowledgeBase(kb_Pedro);
+            
 
             kb_Sarah.Tell(Name.BuildName("Like(Pedro)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
             kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
@@ -51,9 +60,9 @@ namespace TestEmotion
 
             ////////////////////////    EVENTS     ///////////////////////
 
-            var EnterOffice = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
+            var EnterOffice  = Name.BuildName("Event(Action-End, Pedro, Enter, Office, True)");
             var Hello_Event1 = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah, False)");
-            var Bye_Event2 = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah,False)");
+            var Bye_Event2   = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah,True)");
 
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
             EmotionalAppraisalAsset ea_Sarah = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
@@ -77,7 +86,7 @@ namespace TestEmotion
             /////// EVENT 2 //////
             appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
             {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-2)) }
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-6)) }
             };
             rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
@@ -126,17 +135,17 @@ namespace TestEmotion
             };
             ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
 
-            //it sends events and appraisal variables
+            var NewData = EmotionRegulation.ChangeEvent(Bye_Event2, ea_Pedro,edm);
 
-            var NewData = EmotionRegulation.ChangeEvent(Bye_Event2, ea_Pedro);
+
 
             var New_ea_Pedro = NewData.NewEA;
-            var New_Event = NewData.NewEvent;
-
+            var New_Event    = NewData.NewEvent;
+            
             Console.WriteLine("\n------------------Regreo a FAtiMA--------------------\n\n "
                                 + "Evento = " + New_Event + "\n New EA: "
-                                + New_ea_Pedro.GetAllAppraisalRules().ElementAt(1).AppraisalVariables);
-            /*
+                                + New_ea_Pedro.GetAllAppraisalRules().ElementAt(2).AppraisalVariables);
+            
             ///////////   Event 1  //////////////
             //ea_Pedro.AppraiseEvents(new[] { EventReceived }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
             New_ea_Pedro.AppraiseEvents(new[] { New_Event }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
@@ -151,6 +160,7 @@ namespace TestEmotion
             Console.WriteLine("  Active Emotions \n  "
                     + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity)));
 
+            ea_Pedro.Save();
             Console.ReadKey();
             /*
             
@@ -228,8 +238,7 @@ namespace TestEmotion
             ea_Sarah.Save();
             ea_Pedro_Received.Save();
             */
-            Console.ReadKey();
-
+            
         }
 
         static void Main(string[] args)

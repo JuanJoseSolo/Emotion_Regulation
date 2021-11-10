@@ -29,10 +29,11 @@ namespace ActionLibrary.DTOs
 		/// The priority of the action.
 		/// </summary>
         public Name Priority { get; set; }
-        /// <summary>
-        /// The layer associated to the action (e.g. verbal, nonverbal)
-        /// </summary>
-        public Name Layer { get; set; }
+
+		/// <summary>
+		/// The layer associated to the action (e.g. verbal, nonverbal)
+		/// </summary>
+		public Name Layer { get; set; }
         /// <summary>
         /// The set of conditions that must be true for this action execution.
         /// </summary>

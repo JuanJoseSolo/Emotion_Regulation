@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FLS" Version="1.1.6" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Assets\EmotionalAppraisal\EmotionalAppraisal.csproj" />
     <ProjectReference Include="..\..\Assets\EmotionalDecisionMaking\EmotionalDecisionMaking.csproj" />
     <ProjectReference Include="..\..\Assets\RolePlayCharacter\RolePlayCharacter.csproj" />

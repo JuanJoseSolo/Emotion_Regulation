@@ -15,14 +15,21 @@ using System.Text.Json;
 
 namespace EmotionalDecisionMakingTutorial
 {
+
+
     class Program
     {
+
+
         //This is a small console program to exemplify the main functionality of the Emotional Decision Making Asset
         static void Main(string[] args)
         {
             //First we construct a new instance of the EmotionalDecisionMakingAsset class
             var storage = new AssetStorage();
             var edm = EmotionalDecisionMakingAsset.CreateInstance(storage);
+
+
+
 
             //Then, we have to register an existing knowledge base to the asset so it can check for 
             //beliefs are true

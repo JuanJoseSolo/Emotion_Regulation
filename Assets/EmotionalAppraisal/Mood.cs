@@ -55,7 +55,7 @@ namespace EmotionalAppraisal
         
             var delta = (tick - this._tickT0);
 		
-			double lambda = Math.Log(config.HalfLifeDecayConstant)/ config.MoodHalfLifeDecayTime;
+			double lambda = Math.Log(config.HalfLifeDecayConstant) / config.MoodHalfLifeDecayTime;
 			_intensity = (float)(this._intensityATt0 * Math.Exp(lambda*delta));
 
             if (Math.Abs(this._intensity) < config.MinimumMoodValueForInfluencingEmotions)
