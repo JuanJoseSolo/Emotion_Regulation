@@ -10,45 +10,58 @@ using EmotionalDecisionMaking;
 using ActionLibrary.DTOs;
 using AutobiographicMemory;
 using KnowledgeBase;
+using ERconfiguration;
 
 namespace EmotionRegulationAsset
 {
-    /// <summary>
-    /// Class Emotion regulation Asset
-    /// </summary>
+
     class EmotionRegulation
     {
         private dynamic iDActions;
         
         public Name EventFatima { get; set; }
         private bool EventAvoid { get; set; }
-        public EmotionalAppraisalAsset NewEA_character { get; set; }
+        public EmotionalAppraisalAsset NewEA_character { get; private set; }
+        public EmotionalDecisionMakingAsset NewEdm_character { get; private set; }
         public bool AppliedStategy { get; set; }
-       
+
+        private static string IdeAction { get; set; }
+        private static Name EventWaction { get; set; }
+        public Name eventWithActionID { get; set; }
+
 
         private dynamic IDActions { get => iDActions; set => iDActions = value; }
         private PersonalityTraits Trait { get; set; }
-
-        public EmotionRegulation(EmotionalAppraisalAsset ea_character, PersonalityTraits trait)
+        public List<Name> ListEvents { get; private set; }
+        public double ObjetiveEmotion { get; private set; }
+        public Dictionary<string,string> RelatedEvents { get; private set; }
+        //public Tuple<string, bool> RelatedEventsToFatima { get; private set; }
+        public (string,string) RelatedEventsToFatima { get; private set; }
+        public EmotionRegulation(
+            List<Name> ListEvents_ER, EmotionalAppraisalAsset ea_character,
+            PersonalityTraits trait, Dictionary<string,string> RelatedEvents, double objetiveEmotion)
         {
             this.NewEA_character = ea_character;
             this.Trait = trait;
+            this.ListEvents = ListEvents_ER;
+            this.ObjetiveEmotion = objetiveEmotion;
+            this.RelatedEvents = RelatedEvents;
+            this.NewEdm_character = new();
+            
+
             EventFatima = Name.NIL_SYMBOL;
             AppliedStategy = false;
             EventAvoid = false;
             IDActions = String.Empty;
 
         }
-        /// <summary>
-        /// Estructura de datos para almacenar diferentes tipos de variables
-        /// </summary>
+
         private struct DataName
         {
             public Name EventTypeFatima { get; set; }
             public bool EventIsAvoid { get; set; }
 
         }
-
         private struct EventAppraisalValues
         {
             public string AppraisalType { get; set; }
@@ -56,24 +69,46 @@ namespace EmotionRegulationAsset
             public int index { get; set; }
         }
 
-        DataName dataName = new();
-        EventAppraisalValues EventAppraisal = new();
+        public void CheckEvents()
+        {
+            List<Name> NewEvenstList = new();
+            var ERevents = this.ListEvents;
+            /*
+            var EventsToEvaluate = ERevents.Where(e => e.ToString().EndsWith("True)") || e.ToString().EndsWith("False)"));
+            var index = 0;
+            List<int> Indexs = new();
+            foreach (var ev in ERevents)
+            {
+                if (ev.ToString().EndsWith("True)") || ev.ToString().EndsWith("False)"))
+                    Indexs.Add(index); 
+                index += 1;
+            }
+            index = 0;
+            */
+                foreach (var d in ERevents)
+                {
+                Console.WriteLine(d);
+                SituationSelection(d); NewEvenstList.Add(EventFatima);
 
-        /// <summary>
-        /// Strategy situation selection
-        /// </summary>
-        /// <param name="events"></param>
-        /// <param name="ea_character"></param>
-        /// <param name="trait"></param>
-        /// <returns>True value if the strategy is applied, other wise, returns false.</returns>
+                
+                //foreach (var e in EventsToEvaluate) { SituationSelection(e); NewEvenstList.Add(EventFatima); }
+                }
+            
+
+            //foreach (var j in Indexs) { ERevents.RemoveAt(j);ERevents.Insert(j, NewEvenstList.ElementAt(index)); index += 1; }
+            //this.ListEvents = ERevents;
+        }
+
         public bool SituationSelection(Name events)
         {
-            Console.WriteLine("\n---------------------public bool SituationSelection()-------------------------");
-  
+
+            Console.WriteLine("\n---------------------SituationSelection-------------------------");
+            AppliedStategy = false;
             var NewEvent = ReName(events);
             EventFatima = NewEvent.EventTypeFatima;
-            Console.WriteLine("\nEvent Value: " + NewEvent.EventIsAvoid);
-            Console.WriteLine("Tried Apply Estrategy------> " + this.Trait.NameStrategy + "\n");
+            Console.WriteLine("Event name: " + events.GetNTerm(3));
+            Console.WriteLine("Defined value event: " + NewEvent.EventIsAvoid);
+            Console.WriteLine("Personality type can apply: " + this.Trait.NameStrategy + "\n");
             
 
             if (this.Trait.NameStrategy == "Situation Selection" && NewEvent.EventIsAvoid)
@@ -101,74 +136,114 @@ namespace EmotionRegulationAsset
             return AppliedStategy;
         }
 
-        public bool SituationModification(EmotionalDecisionMakingAsset edm, float EmotionLimit)
+        public bool SituationModification(EmotionalDecisionMakingAsset edm_Character, Name events, float EmotionLimit)
         {
-            Console.WriteLine("\n---------------------public bool SituationModification()-------------------------");
-            
-            Program ActionIDtoEvent = new();//obtener los Id's de las acciones y eventos de main()
-            var ActionID = ActionIDtoEvent.eventWithActionID.GetTerms().Where(n => n.ToString().Length == 36).FirstOrDefault();
-            //find the event related to the id action
-            var ExistsActionRelated = edm.GetAllActionRules().Select(r => r.Id.ToString().Equals(ActionID.ToString())).FirstOrDefault();
-
-            var newEvent = ReName(ActionIDtoEvent.eventWithActionID);
+            RelatedEventsToFatima = (string.Empty, string.Empty);
+            this.NewEdm_character = edm_Character;
+            var newEvent = ReName(events);
             EventFatima = newEvent.EventTypeFatima;
-            Console.WriteLine("\nAction related: " + EventFatima);
-            Console.WriteLine("\nTried Apply Estrategy------> " + this.Trait.NameStrategy + "\n");
-            var eventName = EventFatima.GetLiterals().ElementAt(3);
-            var Event = EventMatchingName(this.NewEA_character, eventName);
+            AppliedStategy = false;
+            Console.WriteLine("\n--------------------SituationModification-----------------------");
+            /*
+            //shows if exists some definied actions for ER 
+            if (this.RelatedEvents.Count != 0)
+                foreach (var er in this.RelatedEvents) {
+                    Console.WriteLine(" Event: " + er.Value + " ---> Action: " + er.Key); }
+            else Console.WriteLine("False");
+            */
+            //finds the appraisal value of event
+            var eventName = events.GetLiterals().ElementAt(3).ToString();
+            var Event     = EventMatchingName(this.NewEA_character, (Name)eventName);
 
-            if (this.Trait.NameStrategy == "Situation Modification" && ExistsActionRelated && Event.AppraisalValue < -3)
+            Console.WriteLine("\nEvent name: " + eventName);
+            Console.WriteLine("Personality type can apply: " + this.Trait.NameStrategy + "\n");
+            //obtains a couple of event/action with current event
+            var NameEventsRelated = this.RelatedEvents.Where(k => k.Value.Equals(eventName));
+            Console.WriteLine("\nAre there related events ? : " + NameEventsRelated.FirstOrDefault().Key);
+            
+            //Console.WriteLine(this.Trait.NameStrategy +" "+  NameEventsRelated.ToList().Count + " " + Event.AppraisalValue);
+            if (this.Trait.NameStrategy == "Situation Modification" && NameEventsRelated.ToList().Count != 0 && Event.AppraisalValue < -1)
             {
-                var action = edm.GetAllActionRules();
-                Console.WriteLine("\n Decisions: ");
-                Console.WriteLine("\n Action is: " + action.FirstOrDefault().Action.ToString());
-
-                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(Event.index).EventMatchingTemplate;
-
-                float prom = ((Trait.Neuroticism + Trait.Agreeableness) / 2);
-      
-                var sig = (Event.AppraisalValue) / (1 + Math.Exp(-(prom / Math.Abs(Event.AppraisalValue)) + (Math.Abs(Event.AppraisalValue))));
-                var tanh = (Math.Abs((Event.AppraisalValue/2)) * (Math.Tanh(-(2*prom-100)/50))) - (Math.Abs(Event.AppraisalValue / 2));
+                //finds actions related with the specific event
+                var RelatedActions = this.NewEdm_character.GetAllActionRules().Where(a => a.Action.ToString().Equals(NameEventsRelated.FirstOrDefault().Key));
                 
-                Console.WriteLine("Valor caluculado Tanh: " + tanh);
-                Console.WriteLine("Valor caluculado Sigmoide: " + sig);
-
-                var ValueModified = (float)tanh;
-                if (ValueModified >= EmotionLimit)
+                foreach (var AedmCharacter in RelatedActions) 
                 {
-                   UpdateEmotionalAppraisal(this.NewEA_character, Event.AppraisalType, ValueModified, EventTemplate, Event.index);
-                   AppliedStategy = true;
+                    Console.WriteLine(" \n Trying to apply strategy  ");
+                    float prom = ((Trait.Neuroticism + Trait.Agreeableness) / 2);
+                    var tanh = (Math.Abs((Event.AppraisalValue / 2)) * (Math.Tanh(-(2 * prom - 100) / 50))) - (Math.Abs(Event.AppraisalValue / 2));
+                    var ValueModified = (float)tanh;
+                    var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(Event.index).EventMatchingTemplate;
+                    
+                    if (ValueModified >= EmotionLimit)
+                    {
+                        var actionTo = AedmCharacter.Action.ToString();
+                        Console.WriteLine(" Decision: " + actionTo);
+                        UpdateEmotionalAppraisal(this.NewEA_character, Event.AppraisalType, ValueModified, EventTemplate, Event.index);
+                        AppliedStategy = true;
+                        RelatedEventsToFatima = (eventName,actionTo);
+                        
+                        break;
+                    }
+                    else { Console.WriteLine(" \n Failed due to the defined threshold"); }
                 }
             }
-            /// Console
             Console.WriteLine("\nSituation Modification was applied: " + AppliedStategy);
             return AppliedStategy;
         }
 
-        public bool AttentionDeployment(Name Event, AM am_Character)
+        public bool AttentionDeployment(Name Event, AM am_Character, float EmotionLimit)
         {
-            Console.WriteLine("\n---------------------public bool AttentionDeployment()-------------------------");
+            Console.WriteLine("\n---------------------AttentionDeployment------------------------");
 
-
+            var target = Event.GetNTerm(4);
             var NewEvent = ReName(Event);
             EventFatima = NewEvent.EventTypeFatima;
-            Console.WriteLine("\nTried Apply Estrategy------> " + this.Trait.NameStrategy + "\n");
+            Console.WriteLine("Personality type can apply: " + this.Trait.NameStrategy + "\n");
 
-            foreach (var recalledEvent in am_Character.RecallAllEvents())
+            if (this.Trait.NameStrategy == "Attentional Deployment")
             {
-                Console.WriteLine("\nEventos en la memoria : " + recalledEvent.EventName);
-                Console.WriteLine("Emoción registrada : " + recalledEvent.LinkedEmotions.Single());
-                Console.WriteLine("Id : " + recalledEvent.Id);
 
+                //Eventos ocurridos 
+                foreach (var recalledEvent in am_Character.RecallAllEvents())
+                {
+                    Console.WriteLine("\nEventos en la memoria : " + recalledEvent.EventName);
+                    Console.WriteLine("Emoción registrada : " + recalledEvent.LinkedEmotions.Single());
+                    Console.WriteLine("Id : " + recalledEvent.Id);
+                }
+
+                List<float> valuesEvents = new();
+                var NameEvents = from E in am_Character.RecallAllEvents() select E.EventName;
+                var EventRelated = NameEvents.Where(e => e.GetNTerm(4) == target).Select(a => a.GetNTerm(3));
+
+                foreach (var n in EventRelated)
+                {
+                    Console.WriteLine("\n Evento relacionado con el target = " + n);
+                    var EventValues = EventMatchingName(NewEA_character, n);
+                    valuesEvents.Add(EventValues.AppraisalValue);
+                    Console.WriteLine("Valor de los eventos relacionados: " + EventValues.AppraisalValue);
+                }
+
+                var calculado = valuesEvents.Sum() / valuesEvents.Count;
+                Console.WriteLine("\n Valoración promedio de los eventos positivos " + calculado);
+
+                var eventName = EventFatima.GetLiterals().ElementAt(3);
+                var EventToER = EventMatchingName(this.NewEA_character, eventName);
+                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(EventToER.index).EventMatchingTemplate;
+
+                var tanh = (Math.Abs((EventToER.AppraisalValue / 2)) * (Math.Tanh((2 * calculado - 10) / 5))) - (Math.Abs(EventToER.AppraisalValue / 2));
+
+                Console.WriteLine("\nvalor de salida de la función Tanh = " + tanh);
+                Console.WriteLine("valor máximo negativo del usuario  = " + EmotionLimit);
+
+                var ValueModified = (float)tanh;
+                if (ValueModified >= EmotionLimit)
+                {
+                    UpdateEmotionalAppraisal(this.NewEA_character, EventToER.AppraisalType, ValueModified, EventTemplate, EventToER.index);
+                    AppliedStategy = true;
+                }
             }
-
-
-            var EventoNuevo = from E in am_Character.RecallAllEvents() select E.EventName;
-
-            var id = EventoNuevo.Where(e => e.GetNTerm(3) == (Name)"FallDown").FirstOrDefault();
-
-            Console.WriteLine("\n\n Evento positivo = " + id);
-
+            Console.WriteLine("\nAttentional Deployment was applied: " + AppliedStategy);
             return AppliedStategy;
         }
 
@@ -221,29 +296,16 @@ namespace EmotionRegulationAsset
                 character.AddOrUpdateAppraisalRule(ea_CharacterList[i]);
             }
         }
-        /*
-        private AppraisalValues GetValuesAppraisal(EmotionalAppraisalAsset character, int index)
-        {
-           
-            var SplitAppraisalVar = character.GetAllAppraisalRules().ElementAt(index).AppraisalVariables;
-            var AppraisalVariable = SplitAppraisalVar.ToString().Split("=");
-            appraisal.Type  = AppraisalVariable[0].Trim();
-            appraisal.Value = float.Parse(AppraisalVariable[1].Trim());
-
-            return appraisal;
-        }
-        */
-        /// <summary>
-        /// Rebuilt events name for sent to FAtiMA core.
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns>New rebuilt name event: Event(Action-End, subject, event, target)</returns>
+        
         private DataName ReName(Name events)
         {
+            DataName dataName = new();
+            
             if (events.NumberOfTerms > 5)
             {
-                dataName.EventIsAvoid = bool.Parse(events.GetNTerm(5).ToString());
-                IDActions = events.GetTerms().FirstOrDefault(n => n.ToString().Length == 36);
+                if(events.GetNTerm(5).ToString().Length > 10) { IDActions = events.GetTerms().FirstOrDefault(n => n.ToString().Length == 36); }
+                if(events.GetNTerm(5).ToString().Length < 6) { dataName.EventIsAvoid = bool.Parse(events.GetNTerm(5).ToString());}
+                    
                 var ListEvent = events.GetLiterals().ToList();
                 for (int j = 5; j <= ListEvent.Count; j++)
                 {
@@ -252,17 +314,14 @@ namespace EmotionRegulationAsset
                 }
                 dataName.EventTypeFatima = Name.BuildName(ListEvent);
             }
+            else { dataName.EventTypeFatima = events; return dataName; }
             return dataName;
         }
 
-        /// <summary>
-        /// Find the match event in the emotional appraisal character
-        /// </summary>
-        /// <param name="ea_character"></param>
-        /// <param name="eventName">Name of the event to find in emotional appraisal character</param>
-        /// <returns>The index by the event name</returns>
+
         private EventAppraisalValues EventMatchingName(EmotionalAppraisalAsset ea_character,Name eventName)
-        {   
+        {
+            EventAppraisalValues EventAppraisal = new();
             for (int j = 0; j < ea_character.GetAllAppraisalRules().ToList().Count; j++) //find a specific event
             {
                 var EventTemplate = ea_character.GetAllAppraisalRules().ElementAt(j).EventMatchingTemplate;
@@ -278,6 +337,32 @@ namespace EmotionRegulationAsset
             EventAppraisal.AppraisalType = AppraisalVariable[0].Trim();
             EventAppraisal.AppraisalValue = float.Parse(AppraisalVariable[1].Trim());
             return EventAppraisal;
+        }
+
+        private void EventAction(EmotionalDecisionMakingAsset edm_Character, Name E)
+        {
+
+            Console.WriteLine("\n------------------------void EventAction()------------------------\n");
+            foreach(var Eve in this.NewEA_character.GetAllAppraisalRules()) 
+            {
+
+            }
+            
+            /*
+            foreach(var RE in this.RelatedEvents)
+                edm_Character.GetAllActionRules().Where(a => a.)
+            */
+
+            var idEvent = this.NewEA_character.GetAllAppraisalRules().Where(
+                n => n.EventMatchingTemplate.GetNTerm(3).ToString().Equals("Bye")).FirstOrDefault().Id.ToString();
+
+            //IdeAction = edm_Character.GetAllActionRules().Where(n => n.Action.ToString().Equals("ToHug")).FirstOrDefault());//.Id.ToString();
+
+            var IDitem = E.GetLiterals().ToList();
+            IDitem.Add(Name.BuildName(IdeAction));
+            eventWithActionID = Name.BuildName(IDitem);
+            return;
+
         }
     }
 }

@@ -306,7 +306,7 @@ namespace EmotionRegulationAsset
         /// <param name="Agreeableness"></param>
         public void FuzzyAppliedStrategy()
         {
-            Console.WriteLine("\n------------------------public void FuzzyAppliedStrategy()------------------------\n");
+            //Console.WriteLine("\n------------------------FuzzyAppliedStrategy------------------------\n");
             
             switch ((this.Cons, this.Extra, this.Neur, this.Ope, this.Agre))
             {
@@ -314,10 +314,11 @@ namespace EmotionRegulationAsset
                 case ( >= 0, >= 0, >= 0, >= 0, >= 0) when (this.Neur == 0) && (this.Ope == 0) && (this.Agre == 0):
 
                     string Situation_Selection = FuzzySituationSelection();
+                    /*
                     Console.WriteLine("Valor Defuzzify rules: " + outputDefuzzify);
                     Console.WriteLine("Situation Selection is: " + Situation_Selection);
                     Console.WriteLine("Valor de pertencia de StrApplied: " + valorPertenenciaStrApp);
-
+                    */
                     if (Situation_Selection is "StrApplied")
                     {
                         NameStrategy   = "Situation Selection";
@@ -326,7 +327,7 @@ namespace EmotionRegulationAsset
                     }
                     else
                     {
-                        NameStrategy   = "Situation Selection isn't applied";
+                        NameStrategy   = "Not Situation Selection";
                         ApplyEstrategy = false;
                     }
                     break;
@@ -334,11 +335,11 @@ namespace EmotionRegulationAsset
                 case ( >= 0, >= 0, >= 0, >= 0, >= 0) when (this.Ope == 0):
 
                     string Situation_Modification = FuzzySituationModification();
-
+                    /*
                     Console.WriteLine("Valor Defuzzify rules: " + outputDefuzzify);
                     Console.WriteLine("Situation Modification is: " + Situation_Modification);
                     Console.WriteLine("Valor de pertencia de StrApplied: " + valorPertenenciaStrApp);
-
+                    */
                     if (Situation_Modification is "StrApplied")
                     {
                         NameStrategy = "Situation Modification";
@@ -346,7 +347,7 @@ namespace EmotionRegulationAsset
                     }
                     else
                     {
-                        NameStrategy = "Situation Modification isn't applied";
+                        NameStrategy = "Not Situation Modification";
                         ApplyEstrategy = false;
                     }
                     break;
@@ -354,11 +355,11 @@ namespace EmotionRegulationAsset
                 case ( >= 0, >= 0, >= 0, >= 0, >= 0) when (this.Ope != 0):
 
                     string Attentional_Deployment = FuzzySituationModification();
-
+                    /*
                     Console.WriteLine("Valor Defuzzify rules: " + outputDefuzzify);
                     Console.WriteLine("Attentional Deployment is: " + Attentional_Deployment);
                     Console.WriteLine("Valor de pertencia de StrApplied: " + valorPertenenciaStrApp);
-
+                    */
                     if (Attentional_Deployment is "StrApplied")
                     {
                         NameStrategy = "Attentional Deployment";
@@ -366,7 +367,7 @@ namespace EmotionRegulationAsset
                     }
                     else
                     {
-                        NameStrategy = "Attentional Deployment isn't applied";
+                        NameStrategy = "Not Attentional Deployment";
                         ApplyEstrategy = false;
                     }
                     break;

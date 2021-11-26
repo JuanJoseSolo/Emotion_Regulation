@@ -123,7 +123,7 @@ namespace WorldModelTutorial
                     Console.WriteLine();
                     Console.WriteLine("Dialogue:");
                     Console.WriteLine("Current State: " + currentState);
-                    /*if (iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault() != null)
+                    if (iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault() != null)
                         Console.WriteLine(initiator.CharacterName + " says: ''" +
                                          iat.GetDialogueActions(action.Parameters[0], action.Parameters[1], action.Parameters[2], action.Parameters[3]).FirstOrDefault().Utterance + "'' to " + targetName);
                     else Console.WriteLine(initiator.CharacterName + " says: " + "there is no dialogue suited for this action");
@@ -153,7 +153,7 @@ namespace WorldModelTutorial
                         }
 
                     }
-                    */
+                    
                     Console.WriteLine("Next State: " + nextState);
 
                 }

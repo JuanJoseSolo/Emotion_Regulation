@@ -28,11 +28,20 @@ namespace EmotionalAppraisalTutorial
 
             //The following lines add an appraisal rule that will make the kickEvent be perceived as undesirable
             //Normally, these rules should be authored using the AuthoringTool provided with the asset but they can also be added dynamically
-            var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>() { new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName("[d]")) } };
-            var rule = new EmotionalAppraisal.DTOs.AppraisalRuleDTO() { EventMatchingTemplate =
-                (Name)"Event(Action-End, *, Hello([env],[econ]), *)", AppraisalVariables =
-                new AppraisalVariables(appraisalVariableDTO), Conditions =
-                new Conditions.DTOs.ConditionSetDTO() { ConditionSet = new string[] { "Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]" } } };
+            var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>() 
+            { 
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO(){ Name = "Desirability", Value = (Name.BuildName("[d]")) } 
+            };
+            var rule = new EmotionalAppraisal.DTOs.AppraisalRuleDTO() 
+            { 
+                EventMatchingTemplate =(Name)"Event(Action-End, *, Hello([env],[econ]), *)", 
+                AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
+                Conditions = new Conditions.DTOs.ConditionSetDTO() 
+            
+                { 
+                    ConditionSet = new string[] { "Math(Math(Math([env], Minus, [econ]), Div, Math([env], Plus, [econ])), Times, 10) = [d]" } 
+                } 
+            };
 
             ea.AddOrUpdateAppraisalRule(rule);
 
