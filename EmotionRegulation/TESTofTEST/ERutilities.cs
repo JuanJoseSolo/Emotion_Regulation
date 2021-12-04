@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WellFormedNames;
 
 namespace ERconfiguration
 {
@@ -27,6 +28,11 @@ namespace ERconfiguration
             var RelatedEvent = SpecialCharacter[1].Trim();
             (string, string) EventsActions = (RelatedAction, RelatedEvent);
             return EventsActions;
+        }
+
+        void EventRelatedEvent(Name Events)
+        {
+
         }
 
 
