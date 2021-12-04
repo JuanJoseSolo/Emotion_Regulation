@@ -13,18 +13,16 @@ namespace ERconfiguration
         public string RelatedAction { get; private set; }
         */
 
-  
-
         public ERutilities()
         {
 
         }
 
 
-        public (string, string) SplitAction(string actionName)
+        public (string relatedAction, string eventName) SplitAction(string actionEvent)
         {
             
-            var SpecialCharacter = actionName.Split("|");
+            var SpecialCharacter = actionEvent.Split("|");
             var RelatedAction = SpecialCharacter[0].Trim();
             var RelatedEvent = SpecialCharacter[1].Trim();
             (string, string) EventsActions = (RelatedAction, RelatedEvent);

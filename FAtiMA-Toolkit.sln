@@ -129,6 +129,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERconfiguration", "EmotionR
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmotionRegulationAsset", "EmotionRegulation\EmotionRegulationAsset\EmotionRegulationAsset.csproj", "{DE338386-45AE-4F89-87EC-CB68692C77CC}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Graphics", "EmotionRegulation\Graphics\Graphics.pyproj", "{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -781,6 +783,14 @@ Global
 		{DE338386-45AE-4F89-87EC-CB68692C77CC}.Release|x64.Build.0 = Release|Any CPU
 		{DE338386-45AE-4F89-87EC-CB68692C77CC}.Release|x86.ActiveCfg = Release|Any CPU
 		{DE338386-45AE-4F89-87EC-CB68692C77CC}.Release|x86.Build.0 = Release|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Release|ARM.ActiveCfg = Release|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Release|x64.ActiveCfg = Release|Any CPU
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -828,6 +838,7 @@ Global
 		{F96DC96E-BE67-45F6-911F-F9B95B54BFB3} = {C929932E-8ED8-4B6E-960E-4C4695E39CC1}
 		{BB01D26C-B14A-4296-A0CE-3D4FC632143E} = {8EA682C3-143B-4448-AD6E-D870380FA362}
 		{DE338386-45AE-4F89-87EC-CB68692C77CC} = {8EA682C3-143B-4448-AD6E-D870380FA362}
+		{098B824E-A7E9-4F0E-A933-1C6A7A4A1DF4} = {7CFC42CF-F4A6-43E4-8BA0-AA10FF77C76B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1E271D37-CF67-4C38-A712-8F2304D4FE38}

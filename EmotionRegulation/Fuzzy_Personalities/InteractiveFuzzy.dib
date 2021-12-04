@@ -1,0 +1,46 @@
+#!csharp
+
+#r "nuget: FLS, 116"
+
+#!csharp
+
+public bool CognitiveChange()
+{
+    return true;
+}
+
+#!csharp
+
+using System;
+using SystemCollectionsGeneric;
+using SystemLinq;
+using SystemText;
+using SystemThreadingTasks;
+using FLS;
+
+#!csharp
+
+var LVconscientiousness = new LinguisticVariable("conscientiousness");
+
+var lowConscientiousness   = LVconscientiousness.MembershipFunctions.AddZShaped("lowConscientiousness", 30, 10, 0, 100);
+var middleConscientiousness = LVconscientiousness.MembershipFunctions.AddGaussian("middleConscientiousness", 50, 10, 0, 100);
+var highConscientiousness  = LVconscientiousness.MembershipFunctions.AddSShaped("highConscientiousness", 70, 10, 0, 100);
+
+var Strategy1 = new LinguisticVariable("SituationSelection");
+
+var WeaklyApplied   = Strategy1.MembershipFunctions.AddZShaped("WeaklyApplied", 3, 1, 0, 10);
+var LightlyApplied  = Strategy1.MembershipFunctions.AddGaussian("LightlyApplied", 5, 1, 0, 10);
+var StronglyApplied = Strategy1.MembershipFunctions.AddSShaped("StronglyApplied", 7, 1, 0, 10);
+
+
+IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
+
+var rule1 = fuzzyEngine.Rules.If(LVconscientiousness.Is(highConscientiousness)).Then(Strategy1.Is(StronglyApplied));
+var rule2 = fuzzyEngine.Rules.If(LVconscientiousness.Is(middleConscientiousness)).Then(Strategy1.Is(LightlyApplied));
+var rule3 = fuzzyEngine.Rules.If(LVconscientiousness.Is(lowConscientiousness)).Then(Strategy1.Is(WeaklyApplied));
+
+
+fuzzyEngine.Rules.Add(rule1,rule2,rule3);
+
+
+var Defuzzification= fuzzyEngine.Defuzzify(new {conscientiousness=1});

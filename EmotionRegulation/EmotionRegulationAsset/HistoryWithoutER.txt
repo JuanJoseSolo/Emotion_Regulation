@@ -1,0 +1,231 @@
+
+-------------------------------MAIN---------------------------------
+
+Knownledge Base Pedro: Like(Sarah) Value = True
+Knownledge Base Pedro: Dislike(Usuario) Value = True
+Knownledge Base Pedro: Current(Location) Value = Office
+
+
+Knownledge Base Sarah: Current(Location) Value = Office
+Knownledge Base Sarah: See(Someone) Value = False
+
+=====> Do you want to use Emotion Regulation Asset? -----> y/N
+
+PAST EVENTS:
+----------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+
+  Mood on tick '1': 0
+  Active Emotions
+
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+
+  Mood on tick '122': 0
+  Active Emotions
+
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+
+  Mood on tick '243': 0
+  Active Emotions
+
+----------------------------------------------------
+
+
+
+ ACTUAL EVENTS:
+--------------------------------------------------------------------
+ Character: PEDRO
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+
+  Mood on tick '364': -1.482771
+  Active Emotions
+  Distress: 4.774208
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+
+  Mood on tick '365': -1.1824807
+  Active Emotions
+  Distress: 4.5586123 Love: 0.91203475
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+
+  Mood on tick '366': 0
+  Active Emotions
+  Distress: 4.3527527 Love: 0.8708487 Love: 2.334832
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+
+  Mood on tick '367': 1.4531156
+  Active Emotions
+  Distress: 4.1561894 Love: 0.8315226 Love: 2.2293947 Love: 4.678724
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+
+  Mood on tick '368': 0
+  Active Emotions
+  Distress: 3.9685025 Love: 0.7939724 Love: 2.1287189 Love: 4.46744 Distress: 4.3579597
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 8 Event: Event(Action-End, Pedro, Congrat, Sarah)
+
+  Mood on tick '369': 0.5931084
+  Active Emotions
+  Distress: 3.7892914 Love: 0.7581178 Love: 2.0325892 Love: 4.265698 Distress: 4.161161 Joy: 1.9096832
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 8 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 9 Event: Event(Action-End, Pedro, Bye, Sarah)
+
+  Mood on tick '370': -1.4368169
+  Active Emotions
+  Distress: 3.6181731 Love: 0.72388244 Love: 1.9408008 Love: 4.0730658 Distress: 3.97325 Joy: 1.823445 Distress: 6.5139937
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 8 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 9 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Fired, Boss)
+
+  Mood on tick '371': -3.0012574
+  Active Emotions
+  Distress: 3.454782 Love: 0.69119304 Love: 1.8531573 Love: 3.8891325 Distress: 3.7938242 Joy: 1.7411011 Distress: 6.219832 Hate: 5.090304
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 8 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 9 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Fired, Boss)
+ Id: 11 Event: Event(Action-End, Pedro, Crash, Car)
+
+  Mood on tick '372': -5.102087
+  Active Emotions
+  Distress: 3.29877 Love: 0.6599799 Love: 1.7694716 Love: 3.7135057 Distress: 3.6225011 Joy: 1.6624758 Distress: 5.9389544 Hate: 4.8604336 Hate: 6.8752193
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, Office)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, Office)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWork, Boss)
+ Id: 3 Event: Event(Action-End, Pedro, Enter, Office)
+ Id: 4 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 5 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 6 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 8 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 9 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Fired, Boss)
+ Id: 11 Event: Event(Action-End, Pedro, Crash, Car)
+ Id: 12 Event: Event(Action-End, Pedro, Profits, Cash)
+
+  Mood on tick '373': -3.1249645
+  Active Emotions
+  Distress: 3.1498027 Love: 0.6301763 Love: 1.6895652 Love: 3.5458095 Distress: 3.4589148 Joy: 1.587401 Distress: 5.670761 Hate: 4.6409445 Hate: 6.5647454 Joy: 6.177227
+
+Check decay emotion? y/N
+----------------------------------------------------------------
+
+C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\EmotionRegulation\EmotionRegulationAsset\bin\Debug\net5.0\EmotionRegulationAsset.exe (process 15808) exited with code 0.
+To automatically close the console when debugging stops, enable Tools->Options->Debugging->Automatically close the console when debugging stops.
+Press any key to close this window . . .
