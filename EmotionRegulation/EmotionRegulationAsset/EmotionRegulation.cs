@@ -24,7 +24,7 @@ namespace EmotionRegulationAsset
         public EmotionalAppraisalAsset NewEA_character { get; private set; }
         public EmotionalDecisionMakingAsset NewEdm_character { get; private set; }
         public AM NewAm_character { get; private set; }
-        public List<List<Name>> LalternativeEvents { get; private set; }
+        public List<Name> LalternativeEvents { get; private set; }
 
         public bool AppliedStrategy { get; private set; }
 
@@ -49,7 +49,7 @@ namespace EmotionRegulationAsset
             AM am_Character,
             PersonalityTraits personalityTraits,
             Dictionary<string, string> relatedActions,
-            List<List<Name>> AlternativeEvents,
+            List<Name> AlternativeEvents,
             double objetiveEmotion)
         {
             this.NewEA_character = ea_character;
@@ -120,7 +120,7 @@ namespace EmotionRegulationAsset
                 AppliedStrategy = true;
                 Console.WriteLine(" \nNew event: " + EventFatima.GetNTerm(3));
             }
-            else { Console.WriteLine("\n Strategy not applied due to :\n Apply Strategy is ===> " 
+            else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> "
                 + ApplyStrategy + " or : Event Is Avoided is ===> " + NewEvent.IsAvoided); }
             ///Console
             Console.WriteLine("\nSituation Selection could be applied: " + AppliedStrategy);
@@ -177,7 +177,7 @@ namespace EmotionRegulationAsset
 
                 foreach (var AedmCharacter in ActionsEDM) 
                 {
-                    var avg = ((Personality.Neuroticism + Personality.Agreeableness) / 2);
+                    var avg = ((this.Personality.Neuroticism + this.Personality.Agreeableness) / 2);
                     var tanh = (Math.Abs((Event.AppraisalValue / 2)) * (Math.Tanh(-(2 * avg - 100) / 50))) - (Math.Abs(Event.AppraisalValue / 2));
                     ModifiedValue = (float)tanh;
 
@@ -195,9 +195,9 @@ namespace EmotionRegulationAsset
                     else { Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion)); }
                 }
             }
-            else { Console.WriteLine("\n Strategy not applied due to :\n Apply Strategy is ===> " + ApplyStrategy +
+            else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
                 ", or : Exist Related Actions is ===> " + existRelatedActions+ ", or :\n " +
-                " Defined Event Appraisal Value is greater than -5 " + (Event.AppraisalValue < -5) + " is " + Event.AppraisalValue); }
+                "Defined Event Appraisal Value is greater than -5 : " + (Event.AppraisalValue < -5) + ", is " + Event.AppraisalValue); }
             Console.WriteLine("\nSituation Modification could be applied: " + AppliedStrategy);
             return AppliedStrategy;
         }
@@ -224,7 +224,6 @@ namespace EmotionRegulationAsset
             //Only when the current event is negative
             var CurrentEventValue = EventMatchingName(this.NewEA_character,events);
             IEnumerable<Name> RelatedEvent = Enumerable.Empty<Name>();
-
             if (CurrentEventValue.AppraisalValue < 0) 
             {
                 var EventNameAM = this.NewAm_character.RecallAllEvents().Select(ep => ep.EventName);
@@ -268,17 +267,20 @@ namespace EmotionRegulationAsset
                 }
                 else { Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ValueModified >= this.ObjetiveEmotion)); }
             }
-            else { Console.WriteLine("\n Strategy not applied due to :\n Apply Strategy is ===> " + ApplyStrategy +
-                                            ", or Exist Event Related is ===> " + ExistEventRelated); }
+            else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
+                                            ", or Exist Event Related is ===> " + ExistEventRelated); 
+            }
             
             Console.WriteLine("\n Attention Deployment could be applied : " + AppliedStrategy);
             return AppliedStrategy;
         }
-        
+
         // Cognitive Change
-        public bool CognitiveChange(Name events)
+        public bool CognitiveChange(Name events, ConcreteEmotionalState emotionalStateCharacter)
         {
-            List<float> ListEventsValue = new();
+
+            Console.WriteLine("\n---------------------Cognitive Change------------------------");
+            List<float> LAlternativeEventsValue = new();
 
             AppliedStrategy = false;
             //check personality
@@ -292,22 +294,59 @@ namespace EmotionRegulationAsset
             var NewEvent = ReName(events);
             EventFatima = NewEvent.EventTypeFatima;
 
-            var existAlternativeEvents = this.LalternativeEvents.Any();
+            //Bucar eventos para reinterpretar
+            var AlternativeEventsName = this.LalternativeEvents.Where(
+                e => e.GetNTerm(4)== EventFatima.GetNTerm(3));
+
+            var existAlternativeEvents = AlternativeEventsName.Any();
+            var target = EventFatima.GetNTerm(4).ToString();
+
+            Console.WriteLine("\nEvent name: " + eventName +
+               "                          Target: " + target);
+            Console.WriteLine("\nCould it've any reinterpretation ? : " + existAlternativeEvents);
 
             if (ApplyStrategy && existAlternativeEvents)
-            {/*
+            {
+                Console.WriteLine(" \n In progress...  ");
+                Console.WriteLine(" reinterpreting the event...  ");
                 //Obtiene el valor de la valoracion de los eventos relacionados
-                foreach (var Ae in this.LalternativeEvents)
+                foreach (var Ae in AlternativeEventsName)
                 {
                     var AlternativeEvents = this.NewEA_character.GetAllAppraisalRules().Select(
-                    e => e.EventMatchingTemplate).Where(ee => ee.GetNTerm(3) == Ae.GetNTerm(3)).FirstOrDefault().GetNTerm(3);
+                    e => e.EventMatchingTemplate).Where(eM => eM.GetNTerm(3) == Ae.GetNTerm(3)).FirstOrDefault().GetNTerm(3);
                     var EventValues = EventMatchingName(this.NewEA_character, Ae.GetNTerm(3));
-                    ListEventsValue.Add(EventValues.AppraisalValue);
+                    Console.WriteLine("\n '"+ Ae.GetNTerm(3)+"'");
+                    LAlternativeEventsValue.Add(EventValues.AppraisalValue);
                 }
-                var averange = ListEventsValue.Average();*/
+
+                var averange = LAlternativeEventsValue.Average();
+                var mood = emotionalStateCharacter.Mood;
+
+                var testValor1 = (averange + (this.Personality.Openness * 0.1))/2;
+                var ValueTest = (mood  + (-this.Personality.Neuroticism * 0.1))/2;
+
+                var EventToER = EventMatchingName(this.NewEA_character,eventName);
+                var tanh = (Math.Abs((EventToER.AppraisalValue / 2)) * (Math.Tanh((2 * testValor1 - 10) / 5))) - (Math.Abs(EventToER.AppraisalValue / 2));
+                var ModifiedValue = (float)tanh + (float)ValueTest;
+
+                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(
+                                    EventToER.index).EventMatchingTemplate;
+
+                if (ModifiedValue >= this.ObjetiveEmotion)
+                {
+                    UpdateEmotionalAppraisal(this.NewEA_character, EventToER.AppraisalType, ModifiedValue, EventTemplate, EventToER.index);
+                    AppliedStrategy = true;
+                }
+                else { Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion)); }
+            }
+            else
+            {
+                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
+                                        ", or Exist Alternative Event is ===> " + existAlternativeEvents);
             }
 
-            return false;
+            Console.WriteLine("\n Attention Deployment could be applied : " + AppliedStrategy);
+            return AppliedStrategy;
         }
 
         //Response Modulation

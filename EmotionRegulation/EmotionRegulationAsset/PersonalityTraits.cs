@@ -39,9 +39,7 @@ namespace EmotionRegulationAsset
         { 
             get; private set;
         }
-        /// <summary>
-        /// /
-        /// </summary>
+   
         public FLS.LinguisticVariable LVconscientiousness { get; private set; }
         public FLS.LinguisticVariable LVextraversion { get; private set; }
         public FLS.LinguisticVariable LVneuroticism { get; private set; }
@@ -65,6 +63,7 @@ namespace EmotionRegulationAsset
         public FLS.MembershipFunctions.IMembershipFunction highAgreeableness { get; private set; }
 
 
+        public PersonalityTraits() { }
 
         public PersonalityTraits(
             float Conscientiousness,
@@ -117,8 +116,6 @@ namespace EmotionRegulationAsset
             OutputDefuzzify = 0.0f;
 
         }
-
-        //public float outputDefuzzify { get => OutputDefuzzify; }
 
         public List<string> Traitspersonalities()
         {
