@@ -19,33 +19,32 @@ using RolePlayCharacter;
 using EmotionalAppraisal.OCCModel;
 using ERconfiguration;
 using SpreadsheetLight;
-
 using System.Diagnostics;
+using EmotionalAppraisal.DTOs;
 
 namespace EmotionRegulationAsset
 {
     class Program
     {
-        public static List<(string, string)> ActionToFatima = new();
         public static List<(string events, string strategy)> Results = new();
         public static string path { get; set; }
         static void Main(string[] args)
         {
-            Console.WriteLine("\n-------------------------------MAIN---------------------------------\n");
-
-            List<IAction> _actions = new List<IAction>(); //***
+            var Origen = "C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master/EmotionRegulation/EmotionRegulationAsset/Results/";
             var ER_utilities = new ERutilities();
             var StrategyWasApplied = new Boolean();
             var _Personality = new PersonalityTraits();
+            
             //Pedro   
             var am_Pedro = new AM();
             var kb_Pedro = new KB((Name)"Pedro");
             var storage = new AssetStorage();
             var edm_Pedro = EmotionalDecisionMakingAsset.CreateInstance(storage);
-            var wm = new WorldModelAsset();
             var emotionalState_Pedro = new ConcreteEmotionalState();
             var rpc_Pedro = new RolePlayCharacterAsset();
             EmotionalAppraisalAsset ea_Pedro = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
+
+            var wm = new WorldModelAsset();
 
             //Sarah
             var am_Sarah = new AM();
@@ -94,10 +93,12 @@ namespace EmotionRegulationAsset
             KBaseSarah();
 
             //Past events
-            var Party = Name.BuildName("Event(Action-End, Pedro, Party, x)");
-            var Workmates = Name.BuildName("Event(Action-End, Pedro, Workmates, x)");
-            var Jobs = Name.BuildName("Event(Action-End, Pedro, OtherWork, x)");
-            //Events of the day
+            var Party = Name.BuildName("Event(Action-End, Pedro, Party, Office)");//Office
+            var Workmates = Name.BuildName("Event(Action-End, Pedro, Workmates, Office)");//Office
+            var Jobs = Name.BuildName("Event(Action-End, Pedro, OtherWorks, Boss)");//Boss
+            var AnotherBye = Name.BuildName("Event(Action-End, Pedro, AnotherBye, Sarah)");//Sarah
+
+            //Events
             var TalktoBoss = Name.BuildName("Event(Action-End, Pedro, Talk, Boss)");
             var Hello = Name.BuildName("Event(Action-End, Sarah, Hello, Pedro)");
             var Discussion = Name.BuildName("Event(Action-End, Pedro, Discussion, Others)");
@@ -108,13 +109,14 @@ namespace EmotionRegulationAsset
             var Fired = Name.BuildName("Event(Action-End, Pedro, Fired, Boss)");
             var Crash = Name.BuildName("Event(Action-End, Pedro, Crash, Car)");
             var Profits = Name.BuildName("Event(Action-End, Pedro, Profits, Cash)");
-
+            var Fly = Name.BuildName("Event(Action-End, Pedro, Fly, Sky)");
 
             //SequenceEvents
-            List<Name> PastCharacterEvents = new() { Party,Workmates, Jobs };
+            List<Name> PastCharacterEvents = new() { Party, Workmates, AnotherBye };
             List<Name> CharacterEvents = new() 
             {
-                TalktoBoss, Hello, Conversation, Hug, Discussion, Congrat, Bye, Fired, Crash, Profits
+                TalktoBoss, Hello, Conversation, Hug, Discussion, Congrat, Bye, Fired, Crash, Profits,
+                Fly
             };
 
             //Appraisal events and Action configuarations
@@ -157,7 +159,22 @@ namespace EmotionRegulationAsset
                 rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                 {
 
-                    EventMatchingTemplate = (Name)"Event(Action-End, *, OtherWork, Boss)",
+                    EventMatchingTemplate = (Name)"Event(Action-End, *, OtherWorks, Boss)",
+                    AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
+                };
+                ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
+                // EVENT = AnotherBye
+                appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
+                {
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+                {
+                    Name = "Desirability", Value = (Name.BuildName(3))
+                }
+                };
+                rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
+                {
+
+                    EventMatchingTemplate = (Name)"Event(Action-End, *, AnotherBye, Sarah)",
                     AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
                 };
                 ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
@@ -167,6 +184,7 @@ namespace EmotionRegulationAsset
                 /////// EVENT = ENTER //////
                 var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                 {
+                    
                 new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-5)) }
                 };
                 var rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
@@ -195,7 +213,7 @@ namespace EmotionRegulationAsset
                 /////// EVENT = BYE //////
                 appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                 {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-7)) }
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(-5)) }
                 };
                 rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                 {
@@ -256,7 +274,7 @@ namespace EmotionRegulationAsset
                 /////// EVENT = Fired //////
                 appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                 {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Like", Value = (Name.BuildName(-7)) }
+                new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Like", Value = (Name.BuildName(-8)) }
                 };
                 rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                 {
@@ -287,228 +305,91 @@ namespace EmotionRegulationAsset
                     AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                 };
                 ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-            }
-            
-            void SarahEvents()
-            {
-                /////// EVENT = HELLO //////
-                var appraisalVariableDTO_Sarah = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
+                ////// EVENT = Fly //////
+                appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                 {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
-                { Name = "Desirability", Value = (Name.BuildName(1)) }
+                    new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+                    {
+                        Name = OCCAppraisalVariables.PRAISEWORTHINESS,
+                        Value = (Name.BuildName(-6)),
+                        Target = (Name)"SELF"
+                    },
+                    new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+                    {
+                        Name = OCCAppraisalVariables.DESIRABILITY,
+                        Value = (Name.BuildName(-6)),
+                    }
                 };
-                var rule_Sarah = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
+                rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                 {
-                    EventMatchingTemplate = (Name)"Event(Action-End, *, Hello, *)",
-                    AppraisalVariables = new AppraisalVariables(appraisalVariableDTO_Sarah),
+                    EventMatchingTemplate = (Name)"Event(Action-End, *, Fly, *)",
+                    AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
                 };
-                ea_Sarah.AddOrUpdateAppraisalRule(rule_Sarah);
+                ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
             }
             void PedroActions()
             {
-                //Action 1
-                var EnterOffice = new ActionRuleDTO
+                //Action for the event: Eat 
+                var Eat = new ActionRuleDTO
                 {
-                    Action = Name.BuildName("EnterFaster"),
+                    Action = Name.BuildName("Eat"),
                     Priority = Name.BuildName("1"),
                     Target = (Name)"Office",
                 };
-                var actype = EnterOffice.GetType();
-                var id = edm_Pedro.AddActionRule(EnterOffice);
-                var ruleEDM = edm_Pedro.GetActionRule(id);
-                edm_Pedro.AddRuleCondition(id, "Current(Location) = Office");
+                var idER_Enter = edm_Pedro.AddActionRule(Eat);
+                edm_Pedro.AddRuleCondition(idER_Enter, "Current(Location) = Office");
                 edm_Pedro.Save();
-
-                //OtherActions
-                Console.WriteLine("\nPerspective: Pedro");
-                //Action 1
-                var Action1 = new ActionRuleDTO
-                {
-                    Action = Name.BuildName("Action1"),
-                    Priority = Name.BuildName("1"),
-                    Target = (Name)"Office",
-                };
-                
-                var idAction1 = edm_Pedro.AddActionRule(EnterOffice);
-                edm_Pedro.AddRuleCondition(idAction1, "Current(Location) = Office");
-                edm_Pedro.Save();
-                //Action 2
-                var Action2 = new ActionRuleDTO
-                {
-                    Action = Name.BuildName("Action2"),
-                    Priority = Name.BuildName("1"),
-                    Target = (Name)"Office",
-                };
-
-                var idAction2 = edm_Pedro.AddActionRule(EnterOffice);
-                edm_Pedro.AddRuleCondition(idAction2, "Current(Location) = Office");
-                edm_Pedro.Save();
-                //Action 2
-                var Action3 = new ActionRuleDTO
-                {
-                    Action = Name.BuildName("Action3"),
-                    Priority = Name.BuildName("1"),
-                    Target = (Name)"Office",
-                };
-
-                var idAction3 = edm_Pedro.AddActionRule(EnterOffice);
-                edm_Pedro.AddRuleCondition(idAction3, "Current(Location) = Office");
-                edm_Pedro.Save();
-
             }
-            void SarahActions()
-            {
-                Console.WriteLine("\nPerspective: Sarah");
-                //Action 1
-                var Hello = new ActionRuleDTO
-                {
-                    Action = Name.BuildName("Hello"),
-                    Priority = Name.BuildName("1"),
-                    Target = (Name)"Pedro",
-                };
-                var actype = Hello.GetType();
-                var id = edm_Sarah.AddActionRule(Hello);
-                //var ruleEDM = edm_Sarah.GetActionRule(id);
-                edm_Sarah.AddRuleCondition(id, "Current(Location) = Office");
-                //edm_Sarah.AddRuleCondition(id, "Event(Action-End) = Not-Enter");
-                edm_Sarah.Save();
-                var Layer = Hello.Layer;
-
-
-                var decisions = edm_Sarah.Decide(Layer);
-                _actions.Add(decisions.FirstOrDefault());
-                foreach (var decision in decisions)
-                {
-                    Console.WriteLine("Decisions = " + decision.Name);
-                }
-            }
-            void SarahAction() 
-            {
-
-                //Action 2
-                var AnnouncePromotion = new ActionRuleDTO
-                {
-                    Action = Name.BuildName("AnnouncePromotion"),
-                    Priority = Name.BuildName("1"),
-                    Target = (Name)"Pedro",
-                };
-                var actype = AnnouncePromotion.GetType();
-                var id = edm_Sarah.AddActionRule(AnnouncePromotion);
-                var ruleEDM = edm_Sarah.GetActionRule(id);
-                edm_Sarah.AddRuleCondition(id, "Current(Location) = Office");
-                edm_Sarah.Save();
-                var Layer = AnnouncePromotion.Layer;
-
-
-                var decisions = edm_Sarah.Decide(Layer);
-
-                foreach (var decision in decisions)
-                {
-                    Console.WriteLine("Decisions = " + decision.Name);
-                }
-
-            }
-            void WorldModel()
-            {
-                
-                //// WORLD MODEL
-                var effectList = new List<EffectDTO>();
-                var _eventTemplate = WellFormedNames.Name.BuildName(
-                (Name)AMConsts.EVENT,
-                (Name)"Action-End",
-                (Name)"[s]",
-                (Name)"Enter",
-                (Name)"[O]");
-
-                wm.addActionTemplate(_eventTemplate, 1);
-
-                effectList.Add(new EffectDTO()
-                {
-                    PropertyName = (Name)"Current(Location)",
-                    NewValue = (Name)"Casa",
-                    ObserverAgent = (Name)"[s]"
-                });
-
-
-                var changed = new[] { EventHelper.ActionEnd(rpc_Sarah.CharacterName.ToString(), "Enter", "Office") };
-                rpc_Sarah.Perceive(changed);
-                rpc_Sarah.Perceive(CharacterEvents);
-                var decisions = rpc_Pedro.Decide();
-                _actions.Add(decisions.FirstOrDefault());
-                foreach (var act in decisions)
-                {
-                    Console.WriteLine(rpc_Pedro.CharacterName + " has this action: " + act.Name);
-
-                }
-
-
-                wm.AddActionEffectsDTOs(_eventTemplate, effectList);
-
-                var efects = wm.Simulate(CharacterEvents.ToArray()).ElementAt(0);
-
-                var a1 = EventHelper.ActionEnd("Pedro", "Enter", "Office");
-                var a  = EventHelper.PropertyChange(efects.PropertyName, efects.NewValue, (Name)"Pedro");
-
-                //Console.WriteLine("Efectos = " + efects);
-                Console.WriteLine("Efectos = " + a1);
-                //Console.WriteLine("Efectos = " + a);
-
-                foreach (var be in kb_Pedro.GetAllBeliefs())
-                {
-                    Console.WriteLine("Believes: " +be.Value);
-                }
-                
-            }
-
             PedroActions();
 
             //--------------------//
             Console.WriteLine("\n=====> Do you want to use Emotion Regulation Asset? -----> y/N ");
-            var Decision = Console.ReadLine();
-            //var Decision = "y";
-            EmotionRegulation emotionRegulationSimulated = new();
+            //var Decision = Console.ReadLine();
+            var Decision = "y";
 
+            EmotionRegulation emotionRegulationSimulated = new();
             if (Decision == "y")
             {
                 //Emotional Appraisal Events, Creates events in character memory
                 PedroEventEvaluation();
                 PastEventEvaluation();
-                PastEventSimulation();
+                //PastEventSimulation();
 
-        ///Para la primera estrategia: Selección de la situación.
-        ///
-        ///Cuando se va a hacer uso del modelo de regulación emocional, los eventos del escenario deberán de ser declarados siguiendo
-        ///la siguiente estructura: si el agente puede evitar el evento ('seleccionar la situación') debido a las características del
-        ///entorno, el último parametro deberá indicarse con un valor booleano True, de lo contrarío deberá indicarse con un valor 
-        ///False o no contar con un valor definido.
-        ///
-        ///
-        ///Para la segunda estrategia: Modificación de la situación.
-        ///
-        ///Para que el agente sea capaz de aplicar la segunda estrategia, el evento deberá tener una (o más) acción(es) relacionada(s)
-        ///que le permitirán reaccionar al evento y de esta forma modificar su situación (ejerciendo la mejor acción a este evento). 
-        ///Además, este esvento deberá contar una valoración relativamente negativa, por el momento, esta valoración negativa deberá 
-        ///ser menor o igual a: -5.
-        ///
-        ///
-        ///Para la tercera estrategia: Despliegue de la atención.
-        ///
-        ///Esta estrategia podrá ser aplicada siempre que existan eventos (por el momento, positivos) en la memoria del agente que
-        ///esten relacionados con el agente objetivo causante del evento.
-        ///
-        ///Además, las estrategias de regulación podrán ser aplicadas o no, según sea el tipo de personalidad configurado en el agente.
+                ///Para la primera estrategia: Selección de la situación.
+                ///
+                ///Cuando se va a hacer uso del modelo de regulación emocional, los eventos del escenario deberán de ser declarados siguiendo
+                ///la siguiente estructura: si el agente puede evitar el evento ('seleccionar la situación') debido a las características del
+                ///entorno, el último parametro deberá indicarse con un valor booleano True, de lo contrarío deberá indicarse con un valor 
+                ///False o no contar con un valor definido.
+                ///
+                ///
+                ///Para la segunda estrategia: Modificación de la situación.
+                ///
+                ///Para que el agente sea capaz de aplicar la segunda estrategia, el evento deberá tener una (o más) acción(es) relacionada(s)
+                ///que le permitirán reaccionar al evento y de esta forma modificar su situación (ejerciendo la mejor acción a este evento). 
+                ///Además, este esvento deberá contar una valoración relativamente negativa, por el momento, esta valoración negativa deberá 
+                ///ser menor o igual a: -5.
+                ///
+                ///
+                ///Para la tercera estrategia: Despliegue de la atención.
+                ///
+                ///Esta estrategia podrá ser aplicada siempre que existan eventos (por el momento, positivos) en la memoria del agente que
+                ///esten relacionados con el agente objetivo causante del evento.
+                ///
+                ///Además, las estrategias de regulación podrán ser aplicadas o no, según sea el tipo de personalidad configurado en el agente.
 
                 ////Events For Emotion Regulation Asset
-                var TalktoBoss_ER = Name.BuildName("Event(Action-End, Pedro, Talk, Boss, [True-True])");
-                var Hello_ER = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah, [False-False])");
-                var Discussion_ER = Name.BuildName("Event(Action-End, Pedro, Discussion, Others, [True-False])");
-                var Bye_ER   = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah, [False-False])");
-                var Congrat_ER = Name.BuildName("Event(Action-End, Pedro, Congrat, Sarah,[False-False])");
-                var Conversation_ER = Name.BuildName("Event(Action-End, Pedro, Conversation, Sarah,[False-False])");
-                var Hug_ER = Name.BuildName("Event(Action-End, Pedro, Hug, Sarah,[False-False])");
-                var Fired_ER = Name.BuildName("Event(Action-End, Pedro, Fired, Boss, [False-False])");
-                var Crash_ER = Name.BuildName("Event(Action-End, Pedro, Crash, Car,[False-False])");
-                var Profits_ER = Name.BuildName("Event(Action-End, Pedro, Profits, Cash,[False-False])");
+                var TalktoBoss_ER = Name.BuildName("Event(Action-End, Pedro, Talk, Boss, [True])");
+                var Hello_ER = Name.BuildName("Event(Action-End, Pedro, Hello, Sarah, [False])");
+                var Discussion_ER = Name.BuildName("Event(Action-End, Pedro, Discussion, Others, [True])");
+                var Bye_ER = Name.BuildName("Event(Action-End, Pedro, Bye, Sarah, [False])");
+                var Congrat_ER = Name.BuildName("Event(Action-End, Pedro, Congrat, Sarah, [False])");
+                var Conversation_ER = Name.BuildName("Event(Action-End, Pedro, Conversation, Sarah, [False])");
+                var Hug_ER = Name.BuildName("Event(Action-End, Pedro, Hug, Sarah, [False])");
+                var Fired_ER = Name.BuildName("Event(Action-End, Pedro, Fired, Boss, [False])");
+                var Crash_ER = Name.BuildName("Event(Action-End, Pedro, Crash, Car, [False])");
+                var Profits_ER = Name.BuildName("Event(Action-End, Pedro, Profits, Cash, [False])");
+                var Fly_ER = Name.BuildName("Event(Action-End, Pedro, Fly, Sky, [False])");
 
                 //Action for Emotion Regulation
                 Dictionary<string, string> Dictionary_relatedActionEvent = new();
@@ -577,14 +458,15 @@ namespace EmotionRegulationAsset
                     Dictionary_relatedEvents.Add(DiccEventActionFired.relatedAction, DiccEventActionFired.eventName);
                     */
                 }
-                ActionPedro_ER();
+                //ActionPedro_ER();
 
-                //Events for alternative events
+                //Events for alternative events (cognitive change strategy)
                 var Event1 = Name.BuildName("Event(Action-End, Pedro, FindNewJob, Fired)");
                 var Event2 = Name.BuildName("Event(Action-End, Pedro, MeetNewPeople, Fired)");
                 var Event3 = Name.BuildName("Event(Action-End, Pedro, BetterSalary, Fired)");
                 var Event4 = Name.BuildName("Event(Action-End, Pedro, BetterSalary, Talk)");
                 var Event5 = Name.BuildName("Event(Action-End, Pedro, NewCar, Crash)");
+                var Event6 = Name.BuildName("Event(Action-End, Pedro, ShewillBack, Bye)");
                 void EventReinterpret()
                 {
                     /////// EVENT = Event1 //////
@@ -620,21 +502,21 @@ namespace EmotionRegulationAsset
                         AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                     };
                     ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-                    /////// EVENT = Event4 //////
+                    /////// EVENT = Event4 ////// (Esta relacionado con better salary)
                     appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                     {
-                        new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(10)) }
+                        new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(1)) }
                     };
                     rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                     {
-                        EventMatchingTemplate = (Name)"Event(Action-End, *, A, *)",
+                        EventMatchingTemplate = (Name)"Event(Action-End, *, Better___Sal, *)",
                         AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                     };
                     ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-                    /////// EVENT = Event5 //////
+                    /////// EVENT = Event5 ////// 
                     appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                     {
-                        new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(10)) }
+                        new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "Desirability", Value = (Name.BuildName(9)) }
                     };
                     rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
                     {
@@ -642,113 +524,74 @@ namespace EmotionRegulationAsset
                         AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                     };
                     ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
+                    /////// EVENT = Event6 ////// 
+                    appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
+                    {
+                        new EmotionalAppraisal.DTOs.AppraisalVariableDTO() { Name = "like", Value = (Name.BuildName(6)) }
+                    };
+                    rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
+                    {
+                        EventMatchingTemplate = (Name)"Event(Action-End, *, ShewillBack, *)",
+                        AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
+                    };
+                    ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
                 }
-                EventReinterpret();
 
+                EventReinterpret();
                 List<Name> LAlternativeEvents = new()
                 {
-                    Event1,Event2,Event3,Event4,Event5
+                    // Event1, Event2, Event3, Event4, Event5, Event6
                 };
 
                 //List of events for the Emotion Regulation Asset
                 List<Name> List_EventsER = new()
                 {
                     TalktoBoss_ER, Hello_ER, Conversation_ER, Hug_ER, Discussion_ER, Congrat_ER, 
-                    Bye_ER, Fired_ER, Crash_ER, Profits_ER
+                    Bye_ER, Fired_ER, Crash_ER, Profits_ER, Fly_ER
+
                 };
 
                 //Personalities
-                //Cons = 20, Extrav = 25, Neuro = 15, Oppen = 12, Agree = 30;
-                float Cons = 20, Extrav = 25, Neuro = 15, Oppen = 92, Agree = 30;
-                PersonalityTraits personalityTraitsPedro = new(Cons, Extrav, Neuro, Oppen, Agree);
+                ///// C = 20, E = 25, N = 15, O = 12, A = 30; // max=95
+                float C = 100, E = 0, N = 15, O = 0, A = 30;
+                PersonalityTraits personalityTraitsPedro = new(C, E, N, O, A);
                     personalityTraitsPedro.FuzzyAppliedStrategyTest();
+                
                 //Personality information for Data frame 
                 _Personality = personalityTraitsPedro;
 
                 //Emotion Regulation Asset
                 EmotionRegulation emotionRegulation = new(
-                   ea_Pedro, edm_Pedro, am_Pedro, personalityTraitsPedro, 
-                   Dictionary_relatedActionEvent, LAlternativeEvents, -4);
+                   ea_Pedro, edm_Pedro, am_Pedro, emotionalState_Pedro, 
+                   personalityTraitsPedro, Dictionary_relatedActionEvent, 
+                   LAlternativeEvents, 3);
 
                 //path df
                 string DominantPerson = personalityTraitsPedro.DominantPersonality;
-                path = "C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master" +
-                        "/EmotionRegulation/EmotionRegulationAsset/"+ DominantPerson + ".xlsx";
+                path = Origen + DominantPerson + ".xlsx";
 
                 //return control to Fatima
                 emotionRegulationSimulated = emotionRegulation;
                 CharacterEvents = List_EventsER;
-
+                //Simulate events
                 EvaluationSeveralEvents();
             }
             else
             {
                 //Events without ERA
-                path = "C:/Users/JuanJoseAsus/source/repos/FAtiMA-Toolkit-master/EmotionRegulation/EmotionRegulationAsset" +
-                    "/NormalEvents.xlsx";
+                path = Origen + "NormalEvents.xlsx";
                 PastEventSimulation();
                 PastEventEvaluation();
                 PedroEventEvaluation();                
                 EvaluationSeveralEvents();
             }
 
-            //Events Evaluation
-            void FewEventsActions()
-            {
-                Console.WriteLine("\nEvent one: ");
-                ea_Pedro.AppraiseEvents(new[] { TalktoBoss }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-                Console.WriteLine(" \n Pedro's perspective ");
-                Console.WriteLine(" \n Events occured so far: "
-                    + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
-                    + e.Id + " Event: " + e.EventName.ToString())));
-
-                am_Pedro.Tick++;
-                emotionalState_Pedro.Decay(am_Pedro.Tick);
-                Console.WriteLine(" \n  Mood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
-                Console.WriteLine("  Active Emotions \n  "
-                        + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                ea_Pedro.Save();
-                
-                if (TalktoBoss.GetNTerm(3).Equals((Name)"Enter"))
-                {
-                    SarahActions();
-
-                    Console.WriteLine("\nEvent Two: ");
-                    ea_Pedro.AppraiseEvents(new[] { Hello }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-                    Console.WriteLine(" \n Pedro's perspective ");
-                    Console.WriteLine(" \n Events occured so far: "
-                        + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
-                        + e.Id + " Event: " + e.EventName.ToString())));
-
-                    am_Pedro.Tick++;
-                    emotionalState_Pedro.Decay(am_Pedro.Tick);
-                    Console.WriteLine(" \n  Mood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
-                    Console.WriteLine("  Active Emotions \n  "
-                            + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                    ea_Pedro.Save();
-
-                    Console.WriteLine("\nEvent Two: ");
-                    ea_Sarah.AppraiseEvents(new[] { Hello }, emotionalState_Sarah, am_Sarah, kb_Sarah, null);
-                    Console.WriteLine(" \n Sarah's perspective ");
-                    Console.WriteLine(" \n Events occured so far: "
-                        + string.Concat(am_Sarah.RecallAllEvents().Select(e => "\n Id: "
-                        + e.Id + " Event: " + e.EventName.ToString())));
-
-                    am_Sarah.Tick++;
-                    emotionalState_Sarah.Decay(am_Sarah.Tick);
-                    Console.WriteLine(" \n  Mood on tick '" + am_Sarah.Tick + "': " + emotionalState_Sarah.Mood);
-                    Console.WriteLine("  Active Emotions \n  "
-                            + string.Concat(emotionalState_Sarah.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                    ea_Sarah.Save();
-                }
-                Console.ReadKey();
-            }
             void EvaluationSeveralEvents()
             {                
                 //Data frama
                 string pathFile = AppDomain.CurrentDomain.DynamicDirectory + path;
-                SLDocument oSLDocument = new SLDocument();
-                System.Data.DataTable df = new System.Data.DataTable();
+                SLDocument oSLDocument = new();
+                System.Data.DataTable df = new();
                 //columnas
                 df.Columns.Add("MOOD     ", typeof(float));
                 df.Columns.Add("EMOTION  ", typeof(string));
@@ -759,23 +602,31 @@ namespace EmotionRegulationAsset
                 df.Columns.Add(" STRATEGIES RELATED ", typeof(string));
                 df.Columns.Add(" DOMINANT PERSONALITY ", typeof(string));
 
+                Console.WriteLine("\n\n\n\n  Events simulations .  . . . ");
+                //Console.ReadKey();
                 Console.WriteLine("\n ACTUAL EVENTS: ");
-                Console.WriteLine("--------------------------------------------------------------------");
+                //Console.WriteLine("--------------------------------------------------------------------");
                 Console.WriteLine(" Character: "+ kb_Pedro.Perspective.ToString().ToUpper());
-
+                
                 var index = 0;
+                int eventNum = 0;
+
                 foreach (var events in CharacterEvents)
                 {
-                    var evento = events;
-                    if (Decision == "y")
+                    //Extract result information to dictionario
+                    var Event = emotionRegulationSimulated.ReName(events).EventTypeFatima; //aux
+                    var eventToevaluated = Event.GetNTerm(3).ToString();
+                    var strategy = string.Empty;
+                    var result = (string.Empty, string.Empty);
+                    eventNum++;
+
+                    Console.WriteLine("\n\n                         EVENT: " + eventNum);
+                    //Console.ReadKey();
+                    float IsNegative = emotionRegulationSimulated.EventMatchingName(ea_Pedro, Event.GetNTerm(3)).AppraisalValue;
+                    
+                    if (Decision == "y" && IsNegative < 0)
                     {
-                        //Extract result inforation to dictionario
-                        var eventToevaluated = evento.GetNTerm(3).ToString();
-                        var strategy = string.Empty;
-                        var result = (string.Empty, string.Empty);
-
-                        StrategyWasApplied = emotionRegulationSimulated.SituationSelection(evento);
-
+                        StrategyWasApplied = emotionRegulationSimulated.SituationSelection(Event);
                         if (StrategyWasApplied)
                         {
                             strategy = "Situation Selection";
@@ -783,74 +634,84 @@ namespace EmotionRegulationAsset
                         }
                         if (!StrategyWasApplied)
                         {
-                            StrategyWasApplied = emotionRegulationSimulated.SituationModification(evento);
+                            StrategyWasApplied = emotionRegulationSimulated.SituationModification(Event);
                             strategy = "Situation Modification";
                             result = (eventToevaluated, strategy);
 
                         }
                         if (!StrategyWasApplied)
                         {
-                            StrategyWasApplied = emotionRegulationSimulated.AttentionDeployment(evento);
+                            StrategyWasApplied = emotionRegulationSimulated.AttentionDeployment(Event);
                             strategy = "Attention Deployment";
                             result = (eventToevaluated, strategy);
 
                         }
                         if (!StrategyWasApplied)
                         {
-                            StrategyWasApplied = emotionRegulationSimulated.CognitiveChange(evento, emotionalState_Pedro);
+                            StrategyWasApplied = emotionRegulationSimulated.CognitiveChange(Event);
                             strategy = "Cognitive Change";
                             result = (eventToevaluated, strategy);
                         }
-                        if (!StrategyWasApplied)
-                        {
-                            string message = "The agent couldn't apply any strategy for the event : ";
-                            Console.WriteLine(" \n  " + message.ToUpper() +
-                                               evento.GetNTerm(3).ToString().ToUpper());
-                            strategy = "None";
-                            result = (eventToevaluated, strategy);
-                        }
-
-                        Results.Add(result);
-                        Console.WriteLine("\n-------------------------- RESUMEN ----------------------------\n ");
-                        foreach (var r in Results)
-                            Console.WriteLine(r);
-                        Console.WriteLine("\n----------------------------------------------------------------");
-
-                        ea_Pedro = emotionRegulationSimulated.NewEA_character;
+                        ea_Pedro  = emotionRegulationSimulated.NewEA_character;
                         edm_Pedro = emotionRegulationSimulated.NewEdm_character;
-                        am_Pedro = emotionRegulationSimulated.NewAm_character;
-
-                        evento = emotionRegulationSimulated.EventFatima;
-
+                        am_Pedro  = emotionRegulationSimulated.NewAm_character;
+                        emotionalState_Pedro = emotionRegulationSimulated.NewEmotionalState_Character;
+                        Event     = emotionRegulationSimulated.EventFatima;
                     }
 
                     //Fatima Simulation
-                    ea_Pedro.AppraiseEvents(new[] { evento }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
+                    Console.WriteLine("\n----------------------------------------------------------------");
+
+                    ea_Pedro.AppraiseEvents(new[] { Event }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
+                    Console.WriteLine(" \n Pedro's perspective ");
                     Console.WriteLine(" \n Events occured so far: "
                         + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
                         + e.Id + " Event: " + e.EventName.ToString())));
-                    //Simulate actions (No configurado adecuadamente)
-                    if (ActionToFatima.Select(e => e.Item1 == evento.GetNTerm(3).ToString()).FirstOrDefault())
+
+                    if (!StrategyWasApplied && IsNegative < 0 && Decision == "y")
                     {
-                        var eve = ActionToFatima.Where(e => e.Item1 == evento.GetNTerm(3).ToString()).FirstOrDefault();
-                        var v = edm_Pedro.Decide(Name.UNIVERSAL_SYMBOL);
-                        Console.WriteLine(" Action: " + v.Where(d => d.Name.ToString() == eve.Item2).FirstOrDefault());
+                        StrategyWasApplied = emotionRegulationSimulated.Test4(Event);
+                        strategy = "Response Modulation";
+                        result = (eventToevaluated, strategy);
                     }
+                    if (!StrategyWasApplied)
+                    {
+                        if (IsNegative < 0) 
+                        {
+                            string message = "The agent couldn't apply any strategy for the event : ";
+                            Console.WriteLine(" \n  " + message.ToUpper() +
+                                               Event.GetNTerm(3).ToString().ToUpper()); 
+                        }
+                        strategy = "None";
+                        result = (eventToevaluated, strategy);
+                    }
+                    if(!(Decision == "y" && IsNegative < 0)){ strategy = "None";result = (eventToevaluated, strategy);}
+                    
+                    //Show results strategies
+                    Results.Add(result);
+                    Console.WriteLine("\n-------------------------- RESUMEN ----------------------------\n ");
+                    foreach (var r in Results)
+                        Console.WriteLine(r);
+
+                    //Fatima Simulation
                     am_Pedro.Tick++;
                     emotionalState_Pedro.Decay(am_Pedro.Tick);
                     Console.WriteLine(" \n  Mood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
                     Console.WriteLine("  Active Emotions \n  "
-                                + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                    
-                    //write in data frame
+                    + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
+                    ea_Pedro.Save();
+                    Console.WriteLine("\n----------------------------------------------------------------");
+
+                    //writing in data frame
                     var EmotionName = emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType).LastOrDefault();
                     var Toexcel = Results.Select(r => r.strategy);
                     var s = (Toexcel.Any());
+
                     if (!string.IsNullOrEmpty(EmotionName) && s )
                     {
                         df.Rows.Add(emotionalState_Pedro.Mood,
                             EmotionName,
-                            emotionalState_Pedro.GetAllEmotions().Select(e => e.Intensity).LastOrDefault(), evento.GetNTerm(3).ToString(),
+                            emotionalState_Pedro.GetAllEmotions().Select(e => e.Intensity).LastOrDefault(), Event.GetNTerm(3).ToString(),
                             Toexcel.ElementAt(index),null,null,null);
                     }
                     else
@@ -860,109 +721,45 @@ namespace EmotionRegulationAsset
                         {
                             df.Rows.Add(emotionalState_Pedro.Mood,
                                 EmotionName,
-                                emotionalState_Pedro.GetAllEmotions().Select(e => e.Intensity).LastOrDefault(), evento.GetNTerm(3).ToString(),
+                                emotionalState_Pedro.GetAllEmotions().Select(e => e.Intensity).LastOrDefault(), Event.GetNTerm(3).ToString(),
                                null, null, null, null);
                         }
                         else 
                         {
                             df.Rows.Add(emotionalState_Pedro.Mood,
                                     "--",
-                                    0.0, evento.GetNTerm(3).ToString(), Toexcel.ElementAt(index), null, null, null);
+                                    0.0, Event.GetNTerm(3).ToString(), Toexcel.ElementAt(index), null, null, null);
                         }
                     }
 
-                    //Console.WriteLine("\nCheck decay emotion? y/N");
-                    /*
-                    if (Console.ReadLine() == "y")
-                    {
-                        Console.WriteLine("How long? ");
-                        var tick = Console.ReadLine();
-                        var t = int.Parse(tick);
-                        for (int i = 0; i < t; i++)
-                        {
-                            am_Pedro.Tick++;
-                            emotionalState_Pedro.Decay(am_Pedro.Tick);
-                            Console.WriteLine("\nMood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
-                            Console.WriteLine("Active Emotions: " + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity)));
-                        }
-                    }
-
-                    */
                     index++;
-                    ea_Pedro.Save();
-                    Console.WriteLine("----------------------------------------------------------------");
+                    //Console.WriteLine("----------------------------------------------------------------");
                     Console.WriteLine(" ====> NEXT EVENT...");
-                    Console.ReadKey();
                 }
+
                 //New columns in data set
                 var DominantPersonality = _Personality.DominantPersonality;
                 var StrategyPower = _Personality.DStrategyAndPower;
                 var PersonalitiesType = _Personality.List_PersonalityType;
-                foreach (var personality in PersonalitiesType)
+                var IsNull = _Personality.TfuzzyResults.PersonalityType == null;
+                if (!IsNull)
                 {
+                    foreach (var personality in PersonalitiesType)
+                    {
 
-                    df.Rows.Add(null, null, null, null, null, personality);
+                        df.Rows.Add(null, null, null, null, null, personality);
+                    }
+                    foreach (var strategy in StrategyPower)
+                    {
+                        df.Rows.Add(null, null, null, null, null, null, strategy);
+                    }
+                    df.Rows.Add(null, null, null, null, null, null, null, DominantPersonality);
                 }
-                foreach(var strategy in StrategyPower)
-                {
-                    df.Rows.Add(null, null, null, null, null, null, strategy);
-                }
-                df.Rows.Add(null, null, null, null, null, null, null, DominantPersonality);
+                
                 //save information of data frame
                 oSLDocument.ImportDataTable(1, 1, df, true);
                 oSLDocument.SaveAs(pathFile);
                 
-            }
-            
-            void FewEventsActionsER()
-            {
-                Console.WriteLine("\nEvent one: ");
-                ea_Pedro.AppraiseEvents(new[] { TalktoBoss }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-                Console.WriteLine(" \n Pedro's perspective ");
-                Console.WriteLine(" \n Events occured so far: "
-                    + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
-                    + e.Id + " Event: " + e.EventName.ToString())));
-
-                am_Pedro.Tick++;
-                emotionalState_Pedro.Decay(am_Pedro.Tick);
-                Console.WriteLine(" \n  Mood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
-                Console.WriteLine("  Active Emotions \n  "
-                        + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                ea_Pedro.Save();
-
-                if (TalktoBoss.GetNTerm(3).Equals((Name)"Enter"))
-                {
-                    SarahActions();
-
-                    Console.WriteLine("\nEvent Two: ");
-                    ea_Pedro.AppraiseEvents(new[] { Hello }, emotionalState_Pedro, am_Pedro, kb_Pedro, null);
-                    Console.WriteLine(" \n Pedro's perspective ");
-                    Console.WriteLine(" \n Events occured so far: "
-                        + string.Concat(am_Pedro.RecallAllEvents().Select(e => "\n Id: "
-                        + e.Id + " Event: " + e.EventName.ToString())));
-
-                    am_Pedro.Tick++;
-                    emotionalState_Pedro.Decay(am_Pedro.Tick);
-                    Console.WriteLine(" \n  Mood on tick '" + am_Pedro.Tick + "': " + emotionalState_Pedro.Mood);
-                    Console.WriteLine("  Active Emotions \n  "
-                            + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                    ea_Pedro.Save();
-
-                    Console.WriteLine("\nEvent Two: ");
-                    ea_Sarah.AppraiseEvents(new[] { Hello }, emotionalState_Sarah, am_Sarah, kb_Sarah, null);
-                    Console.WriteLine(" \n Sarah's perspective ");
-                    Console.WriteLine(" \n Events occured so far: "
-                        + string.Concat(am_Sarah.RecallAllEvents().Select(e => "\n Id: "
-                        + e.Id + " Event: " + e.EventName.ToString())));
-
-                    am_Sarah.Tick++;
-                    emotionalState_Sarah.Decay(am_Sarah.Tick);
-                    Console.WriteLine(" \n  Mood on tick '" + am_Sarah.Tick + "': " + emotionalState_Sarah.Mood);
-                    Console.WriteLine("  Active Emotions \n  "
-                            + string.Concat(emotionalState_Sarah.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-                    ea_Sarah.Save();
-                }
-                Console.ReadKey();
             }
             void PastEventSimulation()
             {
@@ -991,7 +788,6 @@ namespace EmotionRegulationAsset
                     }
                 }
                 Console.WriteLine("----------------------------------------------------\n\n");
-
             }
         }
     }

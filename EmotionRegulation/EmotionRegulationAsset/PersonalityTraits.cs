@@ -9,16 +9,12 @@ namespace EmotionRegulationAsset
 {
     class PersonalityTraits
     {
-        //public float valorPertenenciaStrApp { get; set; }
         public string StrategyName { get; private set; }
-
-        public bool ApplyEstrategy { get; set; }
         public double Conscientiousness { get; set; }
         public double Extraversion { get; set; }
         public double Neuroticism { get; set; }
         public double Openness { get; set; }
         public double Agreeableness { get; set; }
-
         public string DominantPersonality { get; private set; }
 
         public string StrategyPower { get; private set; }
@@ -32,14 +28,10 @@ namespace EmotionRegulationAsset
         public List<string> List_PersonalityType { get; private set; }
 
 
-        public (string personalityType, Dictionary<string,double> dic) TdicPersonalityType { get; private set; }
+        //public (string personalityType, Dictionary<string,double> dic) TdicPersonalityType { get; private set; }
 
         private float OutputDefuzzify { get; set; }
-        public (string personality, string strategyName, string strategyPower) Tpersonality 
-        { 
-            get; private set;
-        }
-   
+
         public FLS.LinguisticVariable LVconscientiousness { get; private set; }
         public FLS.LinguisticVariable LVextraversion { get; private set; }
         public FLS.LinguisticVariable LVneuroticism { get; private set; }
@@ -79,11 +71,11 @@ namespace EmotionRegulationAsset
             this.Openness = Openness;
             this.Agreeableness = Agreeableness;
 
-            this.List_StrategyName  = new();
+            this.List_StrategyName = new();
             this.List_StrategyPower = new();
             this.DominantPersonality = string.Empty;
             this.StrategyPower = string.Empty;
-            this.TdicPersonalityType = (string.Empty, new());
+            //this.TdicPersonalityType = (string.Empty, new());
             this.List_PersonalityType = new();
             this.TfuzzyResults = (new(), new(), new());
             this.DStrategyAndPower = new();
@@ -112,7 +104,6 @@ namespace EmotionRegulationAsset
 
 
             StrategyName = string.Empty;
-            ApplyEstrategy = false;
             OutputDefuzzify = 0.0f;
 
         }
@@ -120,32 +111,32 @@ namespace EmotionRegulationAsset
         public List<string> Traitspersonalities()
         {
             //List<string> List_PersonalityType = new();
-            
+
             this.LVconscientiousness = new LinguisticVariable("conscientiousness");
-            this.LVextraversion      = new LinguisticVariable("extraversion");
-            this.LVneuroticism       = new LinguisticVariable("neuroticism");
-            this.LVopenness          = new LinguisticVariable("openness");
-            this.LVagreeableness     = new LinguisticVariable("agreeableness");
+            this.LVextraversion = new LinguisticVariable("extraversion");
+            this.LVneuroticism = new LinguisticVariable("neuroticism");
+            this.LVopenness = new LinguisticVariable("openness");
+            this.LVagreeableness = new LinguisticVariable("agreeableness");
 
-            this.lowConscientiousness    = this.LVconscientiousness.MembershipFunctions.AddZShaped("lowConscientiousness", 30, 10, 0, 100);
+            this.lowConscientiousness = this.LVconscientiousness.MembershipFunctions.AddZShaped("lowConscientiousness", 30, 10, 0, 100);
             this.middleConscientiousness = this.LVconscientiousness.MembershipFunctions.AddGaussian("middleConscientiousness", 50, 10, 0, 100);
-            this.highConscientiousness   = this.LVconscientiousness.MembershipFunctions.AddSShaped("highConscientiousness", 70, 10, 0, 100);
+            this.highConscientiousness = this.LVconscientiousness.MembershipFunctions.AddSShaped("highConscientiousness", 70, 10, 0, 100);
 
-            this.lowExtraversion    = this.LVextraversion.MembershipFunctions.AddZShaped("lowExtraversion", 30, 10, 0, 100);
+            this.lowExtraversion = this.LVextraversion.MembershipFunctions.AddZShaped("lowExtraversion", 30, 10, 0, 100);
             this.middleExtraversion = this.LVextraversion.MembershipFunctions.AddGaussian("middleExtraversion", 50, 10, 0, 100);
-            this.highExtraversion   = this.LVextraversion.MembershipFunctions.AddSShaped("highExtraversion", 70, 10, 0, 100);
+            this.highExtraversion = this.LVextraversion.MembershipFunctions.AddSShaped("highExtraversion", 70, 10, 0, 100);
 
-            this.lowNeuroticism    = this.LVneuroticism.MembershipFunctions.AddZShaped("lowNeuroticism", 30, 10, 0, 100);
+            this.lowNeuroticism = this.LVneuroticism.MembershipFunctions.AddZShaped("lowNeuroticism", 30, 10, 0, 100);
             this.middleNeuroticism = this.LVneuroticism.MembershipFunctions.AddGaussian("middleNeuroticism", 50, 10, 0, 100);
-            this.highNeuroticism   = this.LVneuroticism.MembershipFunctions.AddSShaped("highNeuroticism", 70, 10, 0, 100);
+            this.highNeuroticism = this.LVneuroticism.MembershipFunctions.AddSShaped("highNeuroticism", 70, 10, 0, 100);
 
-            this.lowOpenness    = this.LVopenness.MembershipFunctions.AddZShaped("lowOpenness", 30, 10, 0, 100);
+            this.lowOpenness = this.LVopenness.MembershipFunctions.AddZShaped("lowOpenness", 30, 10, 0, 100);
             this.middleOpenness = this.LVopenness.MembershipFunctions.AddGaussian("middleOpenness", 50, 10, 0, 100);
-            this.highOpenness   = this.LVopenness.MembershipFunctions.AddSShaped("highOpenness", 70, 10, 0, 100);
+            this.highOpenness = this.LVopenness.MembershipFunctions.AddSShaped("highOpenness", 70, 10, 0, 100);
 
-            this.lowAgreeableness    = this.LVagreeableness.MembershipFunctions.AddZShaped("lowAgreeableness", 30, 10, 0, 100);
+            this.lowAgreeableness = this.LVagreeableness.MembershipFunctions.AddZShaped("lowAgreeableness", 30, 10, 0, 100);
             this.middleAgreeableness = this.LVagreeableness.MembershipFunctions.AddGaussian("middleAgreeableness", 50, 10, 0, 100);
-            this.highAgreeableness   = this.LVagreeableness.MembershipFunctions.AddSShaped("highAgreeableness", 70, 10, 0, 100);
+            this.highAgreeableness = this.LVagreeableness.MembershipFunctions.AddSShaped("highAgreeableness", 70, 10, 0, 100);
 
             Dictionary<string, double> Dic_PersonalityType1 = new()
             {
@@ -206,9 +197,9 @@ namespace EmotionRegulationAsset
         //situation selection
         public (List<string> personality, List<string> strategyName, List<string> strategyPower) FuzzySituationSelection()
         {
-            this.StrategyName  = string.Empty;
+            this.StrategyName = string.Empty;
             this.StrategyPower = string.Empty;
-            
+
             var SituationSelection = new LinguisticVariable("SituationSelection");
             var WeaklyApplied = SituationSelection.MembershipFunctions.AddZShaped("WeaklyApplied", 3, 1, 0, 10);
             var LightlyApplied = SituationSelection.MembershipFunctions.AddGaussian("LightlyApplied", 5, 1, 0, 10);
@@ -225,17 +216,17 @@ namespace EmotionRegulationAsset
             var rule6 = fuzzyEngine.Rules.If(this.LVextraversion.Is(this.lowExtraversion)).Then(SituationSelection.Is(StronglyApplied));
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
-            
+
             this.OutputDefuzzify = Convert.ToSingle(
-                fuzzyEngine.Defuzzify(new { 
-                    conscientiousness = this.Conscientiousness, 
+                fuzzyEngine.Defuzzify(new {
+                    conscientiousness = this.Conscientiousness,
                     extraversion = this.Extraversion }));
 
             Dictionary<string, double> DstrategyLinguisticResult = new();
 
-            DstrategyLinguisticResult.Add("Weakly",  WeaklyApplied.Fuzzify((double)this.OutputDefuzzify));
+            DstrategyLinguisticResult.Add("Weakly", WeaklyApplied.Fuzzify((double)this.OutputDefuzzify));
             DstrategyLinguisticResult.Add("Lightly", LightlyApplied.Fuzzify((double)this.OutputDefuzzify));
-            DstrategyLinguisticResult.Add("Strongly",StronglyApplied.Fuzzify((double)this.OutputDefuzzify));
+            DstrategyLinguisticResult.Add("Strongly", StronglyApplied.Fuzzify((double)this.OutputDefuzzify));
 
             this.StrategyPower = DstrategyLinguisticResult.Aggregate(
                 (LinguisticVariableName, r) => LinguisticVariableName.Value > r.Value ? LinguisticVariableName : r).Key;
@@ -285,8 +276,8 @@ namespace EmotionRegulationAsset
                 conscientiousness = this.Conscientiousness,
                 extraversion = this.Extraversion,
                 neuroticism = this.Neuroticism,
-                agreeableness  = this.Agreeableness }));
-            
+                agreeableness = this.Agreeableness }));
+
             Dictionary<string, double> LinguisticResult = new()
             {
                 { "Weakly", WeaklyApplied.Fuzzify((double)this.OutputDefuzzify) },
@@ -307,7 +298,7 @@ namespace EmotionRegulationAsset
         }
 
         ////Attention deployment
-        public (List<string> personality, List<string>strategyName, List<string> strategyPower) FuzzyAttentionalDeployment()
+        public (List<string> personality, List<string> strategyName, List<string> strategyPower) FuzzyAttentionalDeployment()
         {
             this.StrategyName = string.Empty;
             this.StrategyPower = string.Empty;
@@ -317,7 +308,7 @@ namespace EmotionRegulationAsset
             var WeaklyApplied = AttentionalDeployment.MembershipFunctions.AddZShaped("WeaklyApplied", 3, 1, 0, 10);
             var LightlyApplied = AttentionalDeployment.MembershipFunctions.AddGaussian("LightlyApplied", 5, 1, 0, 10);
             var StronglyApplied = AttentionalDeployment.MembershipFunctions.AddSShaped("StronglyApplied", 7, 1, 0, 10);
-           
+
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
             //both strategies are not opposites each other
@@ -335,9 +326,9 @@ namespace EmotionRegulationAsset
             fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
 
             this.OutputDefuzzify = Convert.ToSingle(fuzzyEngine.Defuzzify(new {
-                conscientiousness = this.Conscientiousness, 
-                neuroticism = this.Neuroticism, 
-                openness = this.Openness}));
+                conscientiousness = this.Conscientiousness,
+                neuroticism = this.Neuroticism,
+                openness = this.Openness }));
 
             Dictionary<string, double> LinguisticResult = new()
             {
@@ -348,7 +339,7 @@ namespace EmotionRegulationAsset
             this.StrategyPower = LinguisticResult.Aggregate(
                 (LinguisticVariableName, r) => LinguisticVariableName.Value > r.Value ? LinguisticVariableName : r).Key;
             this.List_StrategyPower.Add(this.StrategyPower);
-           
+
             this.StrategyName = "Attention Deployment";
             this.List_StrategyName.Add(this.StrategyName);
 
@@ -369,7 +360,7 @@ namespace EmotionRegulationAsset
             var WeaklyApplied = CognitiveChange.MembershipFunctions.AddZShaped("WeaklyApplied", 3, 1, 0, 10);
             var LightlyApplied = CognitiveChange.MembershipFunctions.AddGaussian("LightlyApplied", 5, 1, 0, 10);
             var StronglyApplied = CognitiveChange.MembershipFunctions.AddSShaped("StronglyApplied", 7, 1, 0, 10);
-            
+
             IFuzzyEngine fuzzyEngine = new FuzzyEngineFactory().Default();
 
             //both strategies are not opposites each other
@@ -382,8 +373,8 @@ namespace EmotionRegulationAsset
 
             fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
 
-            this.OutputDefuzzify = Convert.ToSingle(fuzzyEngine.Defuzzify(new { 
-                neuroticism = this.Neuroticism, 
+            this.OutputDefuzzify = Convert.ToSingle(fuzzyEngine.Defuzzify(new {
+                neuroticism = this.Neuroticism,
                 openness = this.Openness }));
 
             Dictionary<string, double> LinguisticResult = new()
@@ -396,9 +387,10 @@ namespace EmotionRegulationAsset
                 (LinguisticVariableName, r) => LinguisticVariableName.Value > r.Value ? LinguisticVariableName : r).Key;
             this.List_StrategyPower.Add(this.StrategyPower);
 
-            
-            this.StrategyName = "Cognitive Change"; this.List_StrategyName.Add(this.StrategyName); 
-                
+
+            this.StrategyName = "Cognitive Change"; 
+            this.List_StrategyName.Add(this.StrategyName);
+
             this.TfuzzyResults = (this.List_PersonalityType, this.List_StrategyName, this.List_StrategyPower);
             return this.TfuzzyResults;
         }
@@ -426,11 +418,21 @@ namespace EmotionRegulationAsset
             var rule3 = fuzzyEngine.Rules.If(this.LVextraversion.Is(this.lowExtraversion).And(
                 this.LVopenness.Is(this.lowOpenness))).Then(ResponseModulation.Is(StronglyApplied));
 
-            fuzzyEngine.Rules.Add(rule1, rule2, rule3);
+            //both strategies are not opposites each other
+            var rule4 = fuzzyEngine.Rules.If(this.LVconscientiousness.Is(this.highConscientiousness).And(
+                this.LVneuroticism.Is(this.highNeuroticism))).Then(ResponseModulation.Is(StronglyApplied));
+            var rule5 = fuzzyEngine.Rules.If(this.LVconscientiousness.Is(this.middleConscientiousness).And(
+                this.LVneuroticism.Is(this.middleNeuroticism))).Then(ResponseModulation.Is(LightlyApplied));
+            var rule6 = fuzzyEngine.Rules.If(this.LVconscientiousness.Is(this.lowConscientiousness).And(
+                this.LVneuroticism.Is(this.lowNeuroticism))).Then(ResponseModulation.Is(WeaklyApplied));
+
+            fuzzyEngine.Rules.Add(rule1, rule2, rule3, rule4, rule5, rule6);
 
             this.OutputDefuzzify = Convert.ToSingle(fuzzyEngine.Defuzzify(new {
                 openness = this.Openness,
-                extraversion = this.Extraversion }));
+                extraversion = this.Extraversion,
+                conscientiousness = this.Conscientiousness,
+                neuroticism = this.Neuroticism}));
             //Personality openness have a slove to lightly
             Dictionary<string, double> LinguisticResult = new()
             {
@@ -440,12 +442,12 @@ namespace EmotionRegulationAsset
             };
             this.StrategyPower = LinguisticResult.Aggregate(
                 (LinguisticVariableName, r) => LinguisticVariableName.Value > r.Value ? LinguisticVariableName : r).Key;
-
+            /*
             var OpennessSpecialCase = this.List_PersonalityType.Where(p => p == "High Openness").FirstOrDefault();
             if (OpennessSpecialCase== "High Openness") { this.StrategyPower = "Weakly"; this.List_StrategyPower.Add(this.StrategyPower); } else 
             { this.List_StrategyPower.Add(this.StrategyPower); }
-            
-
+            */
+            this.List_StrategyPower.Add(this.StrategyPower);
 
             this.StrategyName = "Response Modulation";
             this.List_StrategyName.Add(StrategyName);
@@ -453,8 +455,6 @@ namespace EmotionRegulationAsset
             this.TfuzzyResults = (this.List_PersonalityType, this.List_StrategyName, this.List_StrategyPower);
             return this.TfuzzyResults;
         }
-
-
 
         //Evaluation of personalities
         public void FuzzyAppliedStrategyTest()
@@ -479,6 +479,7 @@ namespace EmotionRegulationAsset
                     var (_, _, _) = FuzzySituationSelection();
                     var (_, _, _) = FuzzySituationModification();
                     var (_, _, _) = FuzzyAttentionalDeployment();
+                    var (_, _, _) = FuzzyResponseModulation();
 
 
                     var strategyforCharacterName = TfuzzyResults.strategyName;
@@ -516,6 +517,7 @@ namespace EmotionRegulationAsset
                     var (_, _, _) = FuzzySituationModification();
                     var (_, _, _) = FuzzyAttentionalDeployment();
                     var (_, _, _) = FuzzyCognitiveChange();
+                    var (_, _, _) = FuzzyResponseModulation();
 
                     var strategyforCharacterName = TfuzzyResults.strategyName;
                     var strategyPower = TfuzzyResults.strategyPower;
@@ -572,16 +574,24 @@ namespace EmotionRegulationAsset
             if (isNull) { } else 
             {
                 var ISplitPersonality2 = IDominatPersonality2.Split(" ");
-                if ((ISplitPersonality2[1] == "Conscientiousness") || (ISplitPersonality2[1] == "Extraversion") || (ISplitPersonality2[1] == "Neuroticism"))
-                {
-                    var (_, _, _) = FuzzySituationModification();
+                if ((ISplitPersonality2[1] == "Conscientiousness") ||
+                    (ISplitPersonality2[1] == "Extraversion")      ||
+                    (ISplitPersonality2[1] == "Neuroticism")       ||
+                    (ISplitPersonality2[1] == "Openness")          ||
+                    (ISplitPersonality2[1] == "Agreeableness"))
 
-                    var strategyforCharacterName = TfuzzyResults.strategyName;
+                {
+                    /*
+                    var (_, _, _) = FuzzySituationSelection();
+                    var (_, _, _) = FuzzySituationModification();
+                    var (_, _, _) = FuzzyAttentionalDeployment();
+                    */
+                    var strategyforCharacter = TfuzzyResults.strategyName;
                     var strategyPower = TfuzzyResults.strategyPower;
                     int index = 0;
-
+                    /*
                     Console.WriteLine("\n Personality type can apply : \n");
-                    foreach (var Strategy in strategyforCharacterName)
+                    foreach (var Strategy in strategyforCharacter)
                     {
                         Console.WriteLine("  " + Strategy + " ===> " + strategyPower.ElementAt(index));
                         
@@ -591,7 +601,7 @@ namespace EmotionRegulationAsset
                         }
                         index++;
 
-                    }
+                    }*/
                 }
             }
         }

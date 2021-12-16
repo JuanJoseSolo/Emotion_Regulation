@@ -17,8 +17,6 @@ namespace Tests.EmotionalAppraisal
     {
 
         private Dictionary<int, List<Name>> events;
-
-        
         private void BuildDataSet()
         {
 

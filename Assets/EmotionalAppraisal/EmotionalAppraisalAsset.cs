@@ -201,18 +201,6 @@ namespace EmotionalAppraisal
             }
         }
 
-
-        /*
-        public void RemoveAppraisalRulesMy(IEnumerable<AppraisalRuleDTO> appraisalRules)
-        {
-            
-            for (int j =0; j < appraisalRules.ToList().Count; j++)
-            {
-                var s = appraisalRules.ElementAt(j);
-                m_appraisalDerivator.RemoveAppraisalRule(s.Id);
-            }
-        }
-        */
         /// <summary>
         /// Removes an emotional disposition from the asset.
         /// </summary>

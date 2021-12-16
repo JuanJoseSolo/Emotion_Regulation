@@ -1,0 +1,310 @@
+Knownledge Base Pedro: Like(Sarah) Value = True
+Knownledge Base Pedro: Dislike(Usuario) Value = True
+Knownledge Base Pedro: Current(Location) Value = Office
+
+
+Knownledge Base Sarah: Current(Location) Value = Office
+Knownledge Base Sarah: See(Someone) Value = False
+
+=====> Do you want to use Emotion Regulation Asset? -----> y/N
+
+
+PAST EVENTS:
+----------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+
+  Mood on tick '1': 0
+  Active Emotions
+
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+
+  Mood on tick '122': 0
+  Active Emotions
+
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+
+  Mood on tick '243': 0
+  Active Emotions
+
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+
+  Mood on tick '364': 0
+  Active Emotions
+
+----------------------------------------------------
+
+
+
+
+
+
+  Events simulations .  . . .
+
+ ACTUAL EVENTS:
+--------------------------------------------------------------------
+ Character: PEDRO
+
+
+                         EVENT: 1
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+
+  Mood on tick '485': -1.482771
+  Active Emotions
+  Distress: 4.774208
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 2
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+
+  Mood on tick '486': -0.9748928
+  Active Emotions
+  Distress: 4.5586123 Love: 1.5804238
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 3
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+
+  Mood on tick '487': 0
+  Active Emotions
+  Distress: 4.3527527 Love: 1.5090543 Love: 2.394296
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 4
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+
+  Mood on tick '488': 1.4531156
+  Active Emotions
+  Distress: 4.1561894 Love: 1.440908 Love: 2.2861733 Love: 4.678724
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 5
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+
+  Mood on tick '489': 0
+  Active Emotions
+  Distress: 3.9685025 Love: 1.3758389 Love: 2.1829336 Love: 4.46744 Distress: 4.3579597
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 6
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 9 Event: Event(Action-End, Pedro, Congrat, Sarah)
+
+  Mood on tick '490': 0.5931084
+  Active Emotions
+  Distress: 3.7892914 Love: 1.3137081 Love: 2.0843558 Love: 4.265698 Distress: 4.161161 Joy: 1.9096832
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 7
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 9 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Bye, Sarah)
+
+  Mood on tick '491': -1.4368169
+  Active Emotions
+  Distress: 3.6181731 Love: 1.2543832 Love: 1.9902295 Love: 4.0730658 Distress: 3.97325 Joy: 1.823445 Distress: 6.5139937
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 8
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 9 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 11 Event: Event(Action-End, Pedro, Fired, Boss)
+
+  Mood on tick '492': -3.0012574
+  Active Emotions
+  Distress: 3.454782 Love: 1.1977372 Love: 1.900354 Love: 3.8891325 Distress: 3.7938242 Joy: 1.7411011 Distress: 6.219832 Hate: 5.090304
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 9
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 9 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 11 Event: Event(Action-End, Pedro, Fired, Boss)
+ Id: 12 Event: Event(Action-End, Pedro, Crash, Car)
+
+  Mood on tick '493': -5.102087
+  Active Emotions
+  Distress: 3.29877 Love: 1.1436493 Love: 1.814537 Love: 3.7135057 Distress: 3.6225011 Joy: 1.6624758 Distress: 5.9389544 Hate: 4.8604336 Hate: 6.8752193
+----------------------------------------------------------------
+ ====> NEXT EVENT...
+
+
+                         EVENT: 10
+
+----------------------------------------------------------------
+
+ Pedro's perspective
+
+ Events occured so far:
+ Id: 0 Event: Event(Action-End, Pedro, Party, x)
+ Id: 1 Event: Event(Action-End, Pedro, Workmates, x)
+ Id: 2 Event: Event(Action-End, Pedro, OtherWorks, x)
+ Id: 3 Event: Event(Action-End, Pedro, AnotherBye, Sarah)
+ Id: 4 Event: Event(Action-End, Pedro, Talk, Boss)
+ Id: 5 Event: Event(Action-End, Sarah, Hello, Pedro)
+ Id: 6 Event: Event(Action-End, Pedro, Conversation, Sarah)
+ Id: 7 Event: Event(Action-End, Pedro, Hug, Sarah)
+ Id: 8 Event: Event(Action-End, Pedro, Discussion, Others)
+ Id: 9 Event: Event(Action-End, Pedro, Congrat, Sarah)
+ Id: 10 Event: Event(Action-End, Pedro, Bye, Sarah)
+ Id: 11 Event: Event(Action-End, Pedro, Fired, Boss)
+ Id: 12 Event: Event(Action-End, Pedro, Crash, Car)
+ Id: 13 Event: Event(Action-End, Pedro, Profits, Cash)
+
+  Mood on tick '494': -3.1249645
+  Active Emotions
+  Distress: 3.1498027 Love: 1.0920041 Love: 1.7325954 Love: 3.5458095 Distress: 3.4589148 Joy: 1.587401 Distress: 5.670761 Hate: 4.6409445 Hate: 6.5647454 Joy: 6.177227

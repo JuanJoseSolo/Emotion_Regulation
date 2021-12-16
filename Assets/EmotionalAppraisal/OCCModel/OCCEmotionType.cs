@@ -11,16 +11,16 @@ namespace EmotionalAppraisal.OCCModel
 		private static readonly string[] WellBeing = { OCCAppraisalVariables.DESIRABILITY };
 
 		private static readonly string[] FortuneOfOthers = { OCCAppraisalVariables.DESIRABILITY,
-															   OCCAppraisalVariables.DESIRABILITY_FOR_OTHER};
+															   OCCAppraisalVariables.DESIRABILITY_FOR_OTHER}; //
 
-		private static readonly string[] Attraction = { OCCAppraisalVariables.LIKE };
+		private static readonly string[] Attraction = { OCCAppraisalVariables.LIKE }; //
 
 		private static readonly string[] Composed = { OCCAppraisalVariables.DESIRABILITY,
-														OCCAppraisalVariables.PRAISEWORTHINESS};
+														OCCAppraisalVariables.PRAISEWORTHINESS}; 
 
-		private static readonly string[] PositiveProspect = {  OCCAppraisalVariables.GOALSUCCESSPROBABILITY};
+		private static readonly string[] PositiveProspect = {  OCCAppraisalVariables.GOALSUCCESSPROBABILITY};//
 
-		private static readonly string[] NegativeProspect = { OCCAppraisalVariables.GOALSUCCESSPROBABILITY};
+		private static readonly string[] NegativeProspect = { OCCAppraisalVariables.GOALSUCCESSPROBABILITY};//
 
 		#endregion
 
@@ -52,7 +52,8 @@ namespace EmotionalAppraisal.OCCModel
 	    {
 	        switch (type)
 	        {
-                case "Admiration": return Admiration;
+               
+				case "Admiration": return Admiration;
                 case "Anger": return Anger;
                 case "Gratitude": return Gratitude;
                 case "Distress": return Distress;
@@ -61,7 +62,23 @@ namespace EmotionalAppraisal.OCCModel
                 case "Remorse": return Remorse;
                 case "Reproach": return Reproach;
                 case "Shame": return Shame;
-                default: return null;
+
+				//Emotions for Emotion Regulation Asset
+				case "Disappointment":return Disappointment;
+				case "Fear": return Fear;
+				case "Fears-Confirmed": return FearsConfirmed;
+				case "Gratification": return Gratification;
+				case "Gloating": return Gratification;
+				case "Happy-For": return HappyFor;
+				case "Hate": return Hate;
+				case "Hope": return Hope;
+				case "Love": return Love;
+				case "Relief": return Relief;
+				case "Pitty": return Pitty;
+				case "Resentment": return Resentment;
+				case "Satisfaction": return Resentment;	
+
+				default: return null;
 	        }
 	    }
 

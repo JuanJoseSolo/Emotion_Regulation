@@ -19,7 +19,7 @@ namespace EmotionalAppraisal
         private Mood mood;
         private EmotionalAppraisalConfiguration appraisalConfiguration;
         private ulong tick;
-
+        
         public ConcreteEmotionalState()
         {
             this.emotionPool = new Dictionary<string, ActiveEmotion>();
@@ -27,6 +27,7 @@ namespace EmotionalAppraisal
             this.mood = new Mood();
             this.appraisalConfiguration = new EmotionalAppraisalConfiguration();
         }
+
 
         private float DeterminePotential(IEmotion emotion)
         {

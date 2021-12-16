@@ -9,10 +9,6 @@ namespace ERconfiguration
 {
     public class ERutilities
     {
-        /*
-        public string RelatedEvent { get; private set; }
-        public string RelatedAction { get; private set; }
-        */
 
         public ERutilities()
         {
@@ -29,12 +25,5 @@ namespace ERconfiguration
             (string, string) EventsActions = (RelatedAction, RelatedEvent);
             return EventsActions;
         }
-
-        void EventRelatedEvent(Name Events)
-        {
-
-        }
-
-
     }
 }

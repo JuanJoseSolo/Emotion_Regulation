@@ -162,7 +162,7 @@ namespace EmotionalAppraisal.AppraisalRules
 			{
                 foreach(var appVar in rule.getAppraisalVariables())
                 {
-                     float des;
+                    float des;
                     if (!float.TryParse(appVar.Value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out des))
                     {
                         throw new ArgumentException(appVar.Name + " can only be a float value and it was " + appVar.Value.ToString());
