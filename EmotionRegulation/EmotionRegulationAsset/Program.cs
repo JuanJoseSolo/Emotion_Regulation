@@ -111,8 +111,8 @@ namespace EmotionRegulationAsset
             var Crash = Name.BuildName("Event(Action-End, Pedro, Crash, Car)");
             var Profits = Name.BuildName("Event(Action-End, Pedro, Profits, Cash)");
             var Fly = Name.BuildName("Event(Action-End, Pedro, Fly, Sky)");
-
-            var BecomeRich = EventHelper.ActionEnd((Name)"Pedro", (Name)"BecomeRich", (Name)"Pedro");
+            //Test emotion type 
+            var BecomeRich = EventHelper.ActionEnd((Name)"Pedro", (Name)"BecomeRich", (Name)"Boss");
 
             //SequenceEvents
             List<Name> PastCharacterEvents = new() { Party, Workmates, AnotherBye };
@@ -341,7 +341,7 @@ namespace EmotionRegulationAsset
                     new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
                     {
                         Name = OCCAppraisalVariables.DESIRABILITY,
-                        Value = (Name.BuildName(5)),
+                        Value = (Name.BuildName(-5)),
                         Target = (Name)"SELF",
                     }
                 };
@@ -378,7 +378,7 @@ namespace EmotionRegulationAsset
                 //Emotional Appraisal Events, Creates events in character memory
                 PedroEventEvaluation();
                 PastEventEvaluation();
-                //PastEventSimulation();
+                PastEventSimulation();
 
                 ///Para la primera estrategia: Selección de la situación.
                 ///
@@ -484,7 +484,7 @@ namespace EmotionRegulationAsset
                     Dictionary_relatedEvents.Add(DiccEventActionFired.relatedAction, DiccEventActionFired.eventName);
                     */
                 }
-                //ActionPedro_ER();
+                ActionPedro_ER();
 
                 //Events for alternative events (cognitive change strategy)
                 var Event1 = Name.BuildName("Event(Action-End, Pedro, FindNewJob, Fired)");
@@ -566,7 +566,7 @@ namespace EmotionRegulationAsset
                 EventReinterpret();
                 List<Name> LAlternativeEvents = new()
                 {
-                    // Event1, Event2, Event3, Event4, Event5, Event6
+                    Event1, Event2, Event3, Event4, Event5, Event6
                 };
 
                 //List of events for the Emotion Regulation Asset
@@ -574,12 +574,11 @@ namespace EmotionRegulationAsset
                 {
                     TalktoBoss_ER, Hello_ER, Conversation_ER, Hug_ER, Discussion_ER, Congrat_ER, 
                     Bye_ER, Fired_ER, Crash_ER, Profits_ER, Fly_ER, BecomeRich_ER
-
                 };
 
                 //Personalities
                 ///// C = 20, E = 25, N = 15, O = 12, A = 30; // max=95
-                float C = 100, E = 40, N = 15, O = 32, A = 30;
+                float C = 95, E = 25, N = 15, O = 12, A = 30;
                 PersonalityTraits personalityTraitsPedro = new(C, E, N, O, A);
                     personalityTraitsPedro.FuzzyAppliedStrategyTest();
                 
@@ -607,10 +606,10 @@ namespace EmotionRegulationAsset
                 //Events without ERA
                 path = Origen + "NormalEvents.xlsx";
 
-                //PastEventEvaluation();
+                PastEventEvaluation();
                 PedroEventEvaluation();
                 //Simulation
-                //PastEventSimulation();
+                PastEventSimulation();
                 EvaluationSeveralEvents();
             }
 
@@ -728,10 +727,12 @@ namespace EmotionRegulationAsset
                     Console.WriteLine("  Active Emotions \n  "
                     + string.Concat(emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
                     ea_Pedro.Save();
-                    Console.WriteLine("\n----------------------------------------------------------------");
+                    var EmotionName = "-";
+  
+                    EmotionName = emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType).LastOrDefault();
 
                     //writing in data frame
-                    var EmotionName = emotionalState_Pedro.GetAllEmotions().Select(e => e.EmotionType).LastOrDefault();
+       
                     var Toexcel = Results.Select(r => r.strategy);
                     var s = (Toexcel.Any());
 

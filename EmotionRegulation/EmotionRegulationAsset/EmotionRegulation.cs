@@ -405,11 +405,11 @@ namespace EmotionRegulationAsset
                     {
                         CauseEventId = ActiveEmotion.CauseId,
                         Type = ActiveEmotion.EmotionType,
-                        Intensity = ModifiedValue-1,
+                        Intensity = ModifiedValue - 1,
                         CauseEventName = events.GetNTerm(3).ToString(),
-                        Target = EventFatima.GetNTerm(4).ToString(),                
+                        Target = EventFatima.GetNTerm(4).ToString(),
                     };
-                    
+
                     var newConcreteEmotionCharacter = new ConcreteEmotionalState(); //EmotionalState Aux
                     this.NewEmotionalState_Character.RemoveEmotion(ActiveEmotion, this.NewAm_character); //Remove the emotion from agent
                     newConcreteEmotionCharacter.AddActiveEmotion(NewEmotion, this.NewAm_character); //Add new emotion in agent
@@ -419,8 +419,9 @@ namespace EmotionRegulationAsset
                     var tick = this.NewAm_character.Tick;//time in simulation
                     var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(//add new intensity emotion in the agent
                     NewActiveEmotion, this.NewAm_character, emoDisp, tick);
+                    var e = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault().Intensity;
                     if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Calculated Intensity = " + ModifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
+                        Console.WriteLine("\n Calculated Intensity = " + NewEmotionalIntensity.Intensity + "  New Intesity = " + e);
                     
                     //Update the Mood
                     var NewEmoValence = this.NewEmotionalState_Character.GetAllEmotions().Select(e => (float)e.Valence).LastOrDefault();
