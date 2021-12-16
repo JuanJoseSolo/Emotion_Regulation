@@ -55,14 +55,15 @@ namespace EmotionRegulationAsset
             EmotionalAppraisalAsset ea_Sarah = EmotionalAppraisalAsset.CreateInstance(new AssetStorage());
 
             //knowledgeBase Pedro
-            kb_Pedro.Tell(Name.BuildName("Like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
-            kb_Pedro.Tell(Name.BuildName("Dislike(Usuario)"), Name.BuildName("True"), Name.BuildName("SELF"), 1);
-            kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
+            kb_Pedro.Tell(Name.BuildName("Like(Sarah)"), Name.BuildName("True"), Name.BuildName("SELF"));
+            kb_Pedro.Tell(Name.BuildName("Dislike(Usuario)"), Name.BuildName("True"), Name.BuildName("SELF"));
+            kb_Pedro.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"));
+            kb_Pedro.Tell(Name.BuildName("Relation(True)"), Name.BuildName("Pedro"), Name.BuildName("SELF"));
             edm_Pedro.RegisterKnowledgeBase(kb_Pedro);
 
             //knowledgeBase Sarah
-            kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"), 1);
-            kb_Sarah.Tell(Name.BuildName("See(Someone)"), Name.BuildName("False"), Name.BuildName("SELF"), 1);
+            kb_Sarah.Tell(Name.BuildName("Current(Location)"), Name.BuildName("Office"), Name.BuildName("SELF"));
+            kb_Sarah.Tell(Name.BuildName("See(Someone)"), Name.BuildName("False"), Name.BuildName("SELF"));
             edm_Sarah.RegisterKnowledgeBase(kb_Sarah);
 
             //Show knowledge Base in console
@@ -111,12 +112,14 @@ namespace EmotionRegulationAsset
             var Profits = Name.BuildName("Event(Action-End, Pedro, Profits, Cash)");
             var Fly = Name.BuildName("Event(Action-End, Pedro, Fly, Sky)");
 
+            var BecomeRich = EventHelper.ActionEnd((Name)"Pedro", (Name)"BecomeRich", (Name)"Pedro");
+
             //SequenceEvents
             List<Name> PastCharacterEvents = new() { Party, Workmates, AnotherBye };
             List<Name> CharacterEvents = new() 
             {
-                TalktoBoss, Hello, Conversation, Hug, Discussion, Congrat, Bye, Fired, Crash, Profits,
-                Fly
+                TalktoBoss, Hello, Conversation, Hug, Discussion, Congrat, Bye, Fired, Crash, Profits, Fly,
+                BecomeRich
             };
 
             //Appraisal events and Action configuarations
@@ -178,7 +181,7 @@ namespace EmotionRegulationAsset
                     AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
                 };
                 ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-            }
+            }//for Attetional Deplyment
             void PedroEventEvaluation()
             {
                 /////// EVENT = ENTER //////
@@ -305,7 +308,7 @@ namespace EmotionRegulationAsset
                     AppraisalVariables = new AppraisalVariables(appraisalVariableDTO)
                 };
                 ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
-                ////// EVENT = Fly //////
+                ////// EVENT = FlyToSky //////
                 appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
                 {
                     new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
@@ -326,6 +329,28 @@ namespace EmotionRegulationAsset
                     AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
                 };
                 ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
+                ////// EVENT = BecomeRich\ test different emotions //////
+                appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
+                {
+                    new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+                    {
+                        Name = OCCAppraisalVariables.DESIRABILITY_FOR_OTHER,
+                        Value = (Name.BuildName(-1)),
+                        Target = (Name)"Other"
+                    },
+                    new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+                    {
+                        Name = OCCAppraisalVariables.DESIRABILITY,
+                        Value = (Name.BuildName(5)),
+                        Target = (Name)"SELF",
+                    }
+                };
+                rule_Pedro = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
+                {
+                    EventMatchingTemplate = (Name)"Event(Action-End, *,BecomeRich, *)",
+                    AppraisalVariables = new AppraisalVariables(appraisalVariableDTO),
+                };
+                ea_Pedro.AddOrUpdateAppraisalRule(rule_Pedro);
             }
             void PedroActions()
             {
@@ -339,7 +364,7 @@ namespace EmotionRegulationAsset
                 var idER_Enter = edm_Pedro.AddActionRule(Eat);
                 edm_Pedro.AddRuleCondition(idER_Enter, "Current(Location) = Office");
                 edm_Pedro.Save();
-            }
+            } //for Sitution Modification
             PedroActions();
 
             //--------------------//
@@ -390,6 +415,7 @@ namespace EmotionRegulationAsset
                 var Crash_ER = Name.BuildName("Event(Action-End, Pedro, Crash, Car, [False])");
                 var Profits_ER = Name.BuildName("Event(Action-End, Pedro, Profits, Cash, [False])");
                 var Fly_ER = Name.BuildName("Event(Action-End, Pedro, Fly, Sky, [False])");
+                var BecomeRich_ER = Name.BuildName("Event(Action-End, Pedro, BecomeRich, Pedro, [False])");
 
                 //Action for Emotion Regulation
                 Dictionary<string, string> Dictionary_relatedActionEvent = new();
@@ -547,13 +573,13 @@ namespace EmotionRegulationAsset
                 List<Name> List_EventsER = new()
                 {
                     TalktoBoss_ER, Hello_ER, Conversation_ER, Hug_ER, Discussion_ER, Congrat_ER, 
-                    Bye_ER, Fired_ER, Crash_ER, Profits_ER, Fly_ER
+                    Bye_ER, Fired_ER, Crash_ER, Profits_ER, Fly_ER, BecomeRich_ER
 
                 };
 
                 //Personalities
                 ///// C = 20, E = 25, N = 15, O = 12, A = 30; // max=95
-                float C = 100, E = 0, N = 15, O = 0, A = 30;
+                float C = 100, E = 40, N = 15, O = 32, A = 30;
                 PersonalityTraits personalityTraitsPedro = new(C, E, N, O, A);
                     personalityTraitsPedro.FuzzyAppliedStrategyTest();
                 
@@ -580,9 +606,11 @@ namespace EmotionRegulationAsset
             {
                 //Events without ERA
                 path = Origen + "NormalEvents.xlsx";
-                PastEventSimulation();
-                PastEventEvaluation();
-                PedroEventEvaluation();                
+
+                //PastEventEvaluation();
+                PedroEventEvaluation();
+                //Simulation
+                //PastEventSimulation();
                 EvaluationSeveralEvents();
             }
 
@@ -670,7 +698,7 @@ namespace EmotionRegulationAsset
 
                     if (!StrategyWasApplied && IsNegative < 0 && Decision == "y")
                     {
-                        StrategyWasApplied = emotionRegulationSimulated.Test4(Event);
+                        StrategyWasApplied = emotionRegulationSimulated.ResponseModulation(Event);
                         strategy = "Response Modulation";
                         result = (eventToevaluated, strategy);
                     }

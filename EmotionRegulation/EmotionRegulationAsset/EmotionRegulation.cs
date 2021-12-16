@@ -23,13 +23,9 @@ namespace EmotionRegulationAsset
         public EmotionalAppraisalAsset NewEA_character { get; private set; }
         public EmotionalDecisionMakingAsset NewEdm_character { get; private set; }
         public AM NewAm_character { get; private set; }
-        //public KB NewKB_character { get; private set; }
         public List<Name> LalternativeEvents { get; private set; }
-
         public bool AppliedStrategy { get; private set; }
-
         public ConcreteEmotionalState NewEmotionalState_Character { get; set; }
-
         private PersonalityTraits Personality { get; set; }
         public double ObjetiveEmotion { get; private set; }
         public Dictionary<string, string> Dic_RelatedActions { get; private set; }
@@ -56,9 +52,6 @@ namespace EmotionRegulationAsset
             this.ObjetiveEmotion = objetiveEmotion;
             this.LalternativeEvents = AlternativeEvents;
             this.Dic_RelatedActions = relatedActions;
-
-
-
 
             EventFatima = Name.NIL_SYMBOL;
             AppliedStrategy = false;
@@ -358,28 +351,19 @@ namespace EmotionRegulationAsset
         }
 
         //Response Modulation
-
-        /// <summary>
-        /// Se intetó crear instancias nuevas de EmoState, AutoBioMemori, EmoAppraisal, KBase
-        /// Se actulaliza el EmoState del agente junto con la nueva instancia
-        /// 
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool Test1(Name events)
+        public bool ResponseModulation(Name events)
         {
             Console.WriteLine("\n---------------------Response Modulation------------------------");
-
             AppliedStrategy = false;
 
-            //check personality
+            //check personality traits
             var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
                 (strategy, power) => strategy.Key == "Response Modulation");
             var ExistStrategy = DAttentionDeployment.Any();
             var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
             var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
 
-            //get event name and it construct the event
+            //get event name, construction of the event
             var eventName = events.GetNTerm(3);
             var NewEvent = ReName(events);
             EventFatima = NewEvent.EventTypeFatima;
@@ -388,494 +372,62 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\nEvent name: " + eventName +
                 "                          Target: " + target);
 
-            //finds the appraisal value of event
+            //Appraisal value of the event
             var Event = EventMatchingName(this.NewEA_character, eventName);
 
             if (ApplyStrategy && Event.AppraisalValue < 0)
             {
-
                 Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  ");
+                Console.WriteLine(" Evaluating emotion intensity...  \n");
 
-                //Evaluating event
-                var kbAux = new KB((Name)"Aux");
-                NewEA_character.AppraiseEvents(new[] { EventFatima }, NewEmotionalState_Character, NewAm_character, kbAux, null);
-                Console.WriteLine(" \n Pedro's perspective ");
-                Console.WriteLine(" \n Events occured so far: "
-                    + string.Concat(NewAm_character.RecallAllEvents().Select(e => "\n Id: "
-                    + e.Id + " Event: " + e.EventName.ToString())));
-                //am_Pedro.Tick++;
-                //emotionalState_Pedro.Decay(am_Pedro.Tick);
-                Console.WriteLine(" \n  Mood on tick '" + NewAm_character.Tick + "': " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  Active Emotions \n  "
-                        + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-
-
-
+                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
+                Console.WriteLine("  New Emotion: \n  "
+                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
+                e => e.EmotionType + ": " + e.Intensity + " ")));
 
                 var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-                
-                //var ActiveEmotionObject = new EmotionDTO() { Intensity = 7f };
 
-                var activEmotion = ActiveEmotion.ToDto(this.NewAm_character);
-
-                activEmotion.Intensity = 2f;
-
-                var ActiveEmotion2 = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-
-
-
-                //el valor máximo promedio de las personalidades contrarias es 35
+                //max averange contrary personality = 36
                 var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
                 var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh((2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
                 var ModifiedValue = tanh;
 
                 if (ModifiedValue < this.ObjetiveEmotion)
                 {
-                    //internal reappraisal
-                    var modifiedValue = (int)(Math.Round(ModifiedValue));
-                    var tick = this.NewAm_character.Tick;
-
-
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                    ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = modifiedValue }, tick);
-
-                    /*
-                    var emoValence = this.NewEmotionalState_Character.GetAllEmotions().Select(e => (float)e.Valence).LastOrDefault();
-                    var emoIntencity = this.NewEmotionalState_Character.GetAllEmotions().Select(e => e.Intensity).LastOrDefault();
-                    var config = new EmotionalAppraisalConfiguration();
-
-                    var NewMood = ERmood + emoValence * (emoIntencity * config.EmotionInfluenceOnMoodFactor);
-                    var value = NewMood < -10 ? -10 : (NewMood > 10 ? 10 : NewMood);
-                    if (Math.Abs(value) < config.MinimumMoodValueForInfluencingEmotions)
-                        value = 0;
-
-                    this.NewEmotionalState_Character.Mood = value;
-                    */
-                    AppliedStrategy = true;
-                }
-                else
-                {
-
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
-                }
-            }
-            else
-            {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
-            }
-            Console.WriteLine("\n Response Modulation could be applied: " + AppliedStrategy);
-            return AppliedStrategy;
-        }
-
-
-        /// <summary>
-        /// Agregando una nueva emoción desde cero, con EmotionDTo.
-        /// EmotionDispotition por defult (1,*,0)
-        /// Falla al reconocer la emocion "Hate"
-        /// Falla en decaimiento de la emoción
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool Test2(Name events)
-        {
-            Console.WriteLine("\n---------------------Response Modulation------------------------");
-
-            AppliedStrategy = false;
-
-            //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
-                (strategy, power) => strategy.Key == "Response Modulation");
-            var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
-
-            //get event name and it construct the event
-            var eventName = events.GetNTerm(3);
-            var NewEvent = ReName(events);
-            EventFatima = NewEvent.EventTypeFatima;
-            var target = EventFatima.GetNTerm(4).ToString();
-
-            Console.WriteLine("\nEvent name: " + eventName +
-                "                          Target: " + target);
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
-
-            if (ApplyStrategy && Event.AppraisalValue < 0)
-            {
-
-                Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  \n");
-
-                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  New Emotion: \n  "
-                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                Console.WriteLine(" \n");
-                var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-                //el valor máximo promedio de las personalidades contrarias es 35
-                var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
-                var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
-                var ModifiedValue = tanh;
-
-
-                /*
-                //Testing the threshold
-                var t = this.NewAm_character.Tick;
-                var Thresholds = new List<int>() 
-                { -12, -11, -10 , -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-                foreach(var threshold in Thresholds)
-                {
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                        ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = threshold }, t);
-                    if(change != null)
-                        Console.WriteLine("threshold = " + threshold+ "   Intesity = "+ change.Intensity);
-                }
-                */
-
-                if (ModifiedValue > this.ObjetiveEmotion)
-                {
-                    //opc 1 para evaluar la nueva intencidad cálculada 
-                    //ModifiedValue -= ActiveEmotion.Intensity;
-                    //ModifiedValue = Math.Abs(ModifiedValue);
-
-                    /*
-                    var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//valores constantes
-                    var MoodDueToEvent = (float)ActiveEmotion.Valence * (ActiveEmotion.Intensity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                    var valueMoodDueToEvent = MoodDueToEvent < -10 ? -10 : (MoodDueToEvent > 10 ? 10 : MoodDueToEvent);//rango
-                    //Mood acomulado actual 
-                    var CurrentMoodDueToEvent = this.NewEmotionalState_Character.Mood;
-                    //Mood acomulado previo
-                    var MoodWithoutEventValue = CurrentMoodDueToEvent - MoodDueToEvent;
-                    */
-                    //redondear valor para el threshold
-                    var modifiedValue = (int)(Math.Round(ModifiedValue)); //-1==3
-                    var tick = this.NewAm_character.Tick;//time in simulation
-
-
-                    //////TESTE NUEVA EMOCIÓN///////////////////////
-                    var emodisp = this.NewEA_character.GetEmotionDisposition(ActiveEmotion.EmotionType);
-                    var NewEmotion = new EmotionalAppraisal.DTOs.EmotionDTO
-                    {
-                        CauseEventId = ActiveEmotion.CauseId,
-                        Type = ActiveEmotion.EmotionType,
-                        Intensity = 0.7f,
-                        CauseEventName = events.GetNTerm(3).ToString(),
-                        Target = EventFatima.GetNTerm(4).ToString()
-                    };
-
-                    var newConcreteEmotionCharacter = new ConcreteEmotionalState();
-                    this.NewEmotionalState_Character.RemoveEmotion(ActiveEmotion, this.NewAm_character);
-                    //falla al agregar la emoción "hate"
-                    newConcreteEmotionCharacter.AddActiveEmotion(NewEmotion, this.NewAm_character);
-
-                    var NewActiveEmotion = newConcreteEmotionCharacter.GetAllEmotions().LastOrDefault();
-                    /////////////////////////////////////
-
-
-
-                    /////////////////////////////////////////////////
-                    //modificar el valor de la intensidad con el threshold cálculado**********************
-                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(
-                    NewActiveEmotion, this.NewAm_character, emodisp, tick);
-                    if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Threshold = " + modifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
-                    ///////////////////////////////////////////////  
-
-
-                    // Nuevo nivel y tipo de emoción cálculado
-                    var NewEmoValence = this.NewEmotionalState_Character.GetAllEmotions().Select(e => (float)e.Valence).LastOrDefault();
-                    var NewEmoIntencity = this.NewEmotionalState_Character.GetAllEmotions().Select(e => e.Intensity).LastOrDefault();
-                    /*
-                    //Mood que genera unicamente la nueva intensidad de la emoción
-                    var moodDouToNewIntensity = NewEmoValence * (NewEmoIntencity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                    var MoodDouToNewIntensity = moodDouToNewIntensity < -10 ? -10 : (moodDouToNewIntensity > 10 ? 10 : moodDouToNewIntensity);
-                    //nuevo mood con la intesidad de la emoción adecuada
-                    var NewMood = MoodWithoutEventValue + MoodDouToNewIntensity;
-                    //actualización del mood del agente
-                    this.NewEmotionalState_Character.Mood = NewMood;
-                    */
-                    Console.WriteLine(" \n  New Mood = " + NewEmotionalState_Character.Mood);
-                    Console.WriteLine("  New Emotion: \n  "
-                    + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                    e => e.EmotionType + ": " + e.Intensity + " ")));
-                    AppliedStrategy = true;
-                }
-                else
-                {
-
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
-                }
-            }
-            else
-            {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
-            }
-            Console.WriteLine("\n Response Modulation was applied: " + AppliedStrategy);
-            return AppliedStrategy;
-        }
-
-
-        /// <summary>
-        /// Al pasar varios eventos el threshold no se alcanza y no se regitra la emoción al agente
-        /// Aquí se está calculando el Mood, para que se actualize de acuerdo con la intensidad.
-        /// Falla en el decaimiento de la intensida, se queda igual.  #Se soliuciona con (Decay = 1, Threshold = x)
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool Test3(Name events)
-        {
-            Console.WriteLine("\n---------------------Response Modulation------------------------");
-
-            AppliedStrategy = false;
-
-            //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
-                (strategy, power) => strategy.Key == "Response Modulation");
-            var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
-
-            //get event name and it construct the event
-            var eventName = events.GetNTerm(3);
-            var NewEvent = ReName(events);
-            EventFatima = NewEvent.EventTypeFatima;
-            var target = EventFatima.GetNTerm(4).ToString();
-
-            Console.WriteLine("\nEvent name: " + eventName +
-                "                          Target: " + target);
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
-
-            if (ApplyStrategy && Event.AppraisalValue < 0)
-            {
-
-                Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  \n");
-
-                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  The Active Emotion could be: \n  "
-                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                Console.WriteLine(" \n");
-                var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-                //el valor máximo promedio de las personalidades contrarias es 35
-                var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
-                var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
-                var ModifiedValue = tanh;
-
-
-                /*
-                //Testing the threshold
-                var t = this.NewAm_character.Tick;
-                var Thresholds = new List<int>() 
-                { -12, -11, -10 , -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-                foreach(var threshold in Thresholds)
-                {
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                        ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = threshold }, t);
-                    if(change != null)
-                        Console.WriteLine("threshold = " + threshold+ "   Intesity = "+ change.Intensity);
-                }
-                */
-
-                if (ModifiedValue > this.ObjetiveEmotion)
-                {
-                    //opc 1 para evaluar la nueva intencidad cálculada 
-                    //ModifiedValue -= ActiveEmotion.Intensity;
-                    //ModifiedValue = Math.Abs(ModifiedValue);
-
-                    var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//valores constantes
-                    var MoodDueToEvent = (float)ActiveEmotion.Valence * (ActiveEmotion.Intensity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                    var valueMoodDueToEvent = MoodDueToEvent < -10 ? -10 : (MoodDueToEvent > 10 ? 10 : MoodDueToEvent);//rango
-                    //Mood acomulado actual 
-                    var CurrentMoodDueToEvent = this.NewEmotionalState_Character.Mood;
-                    //Mood acomulado previo
-                    var MoodWithoutEventValue = CurrentMoodDueToEvent - MoodDueToEvent;
-
-                    //redondear valor para el threshold
-                    var modifiedValue = (int)(Math.Round(ModifiedValue) - 1); //-1==3
-                    var tick = this.NewAm_character.Tick;//time in simulation
-
-                    //Falla el nivel del threshold cuando han pasado varias emociones y se tiene que restar una inidad para que
-                    //threshold sea superado y se registre la nueva emoción en en agente (probablemente)
-                    /////////////////////////////////////////////////
-                    //modificar el valor de la intensidad con el threshold cálculado
-                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(
-                    ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() {Decay = 1, Threshold = modifiedValue }, tick);
-                    if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Threshold = " + modifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
-                    ///////////////////////////////////////////////  
-
-
-                    // Nuevo nivel y tipo de emoción cálculado
-                    var NewEmoValence = this.NewEmotionalState_Character.GetAllEmotions().Select(e => (float)e.Valence).LastOrDefault();
-                    var NewEmoIntencity = this.NewEmotionalState_Character.GetAllEmotions().Select(e => e.Intensity).LastOrDefault();
-
-                    //Mood que genera unicamente la nueva intensidad de la emoción
-                    var moodDouToNewIntensity = NewEmoValence * (NewEmoIntencity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                    var MoodDouToNewIntensity = moodDouToNewIntensity < -10 ? -10 : (moodDouToNewIntensity > 10 ? 10 : moodDouToNewIntensity);
-                    //nuevo mood con la intesidad de la emoción adecuada
-                    var NewMood = MoodWithoutEventValue + MoodDouToNewIntensity;
-                    //actualización del mood del agente
-                    this.NewEmotionalState_Character.Mood = NewMood;
-
-                    Console.WriteLine("\n New Mood = " + this.NewEmotionalState_Character.Mood);
-
-                    AppliedStrategy = true;
-                }
-                else
-                {
-
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
-                }
-            }
-            else
-            {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
-            }
-            Console.WriteLine("\n Response Modulation was applied: " + AppliedStrategy);
-            return AppliedStrategy;
-        }
-
-        /// <summary>
-        /// Funciona el decaimiento pero no se puede registrar la emoción "hate"
-        /// otro metodo para agregar la emoción requiere interface IEmotion...
-        /// 
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool Test4(Name events)
-        {
-            Console.WriteLine("\n---------------------Response Modulation------------------------");
-
-            AppliedStrategy = false;
-
-            //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
-                (strategy, power) => strategy.Key == "Response Modulation");
-            var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
-
-            //get event name and it construct the event
-            var eventName = events.GetNTerm(3);
-            var NewEvent = ReName(events);
-            EventFatima = NewEvent.EventTypeFatima;
-            var target = EventFatima.GetNTerm(4).ToString();
-
-            Console.WriteLine("\nEvent name: " + eventName +
-                "                          Target: " + target);
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
-
-            if (ApplyStrategy && Event.AppraisalValue < 0)
-            {
-
-                Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  \n");
-
-                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  New Emotion: \n  "
-                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                Console.WriteLine(" \n");
-                var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-                //el valor máximo promedio de las personalidades contrarias es 35
-                var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
-                var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
-                var ModifiedValue = tanh;
-
-
-                /*
-                //Testing the threshold
-                var t = this.NewAm_character.Tick;
-                var Thresholds = new List<int>() 
-                { -12, -11, -10 , -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-                foreach(var threshold in Thresholds)
-                {
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                        ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = threshold }, t);
-                    if(change != null)
-                        Console.WriteLine("threshold = " + threshold+ "   Intesity = "+ change.Intensity);
-                }
-                */
-
-                if (ModifiedValue > this.ObjetiveEmotion)
-                {
-                    //opc 1 para evaluar la nueva intencidad cálculada 
-                    //ModifiedValue -= ActiveEmotion.Intensity;
-                    //ModifiedValue = Math.Abs(ModifiedValue);
-
-                    
-                    var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//valores constantes
+                    var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//Constant values
                     var MoodDueToEvent = (float)ActiveEmotion.Valence * (ActiveEmotion.Intensity * FAtiMAconfigs.MoodInfluenceOnEmotionFactor);
-                    var valueMoodDueToEvent = MoodDueToEvent < -10 ? -10 : (MoodDueToEvent > 10 ? 10 : MoodDueToEvent);//rango
-                    //Mood acomulado actual 
+                    var valueMoodDueToEvent = MoodDueToEvent < -10 ? -10 : (MoodDueToEvent > 10 ? 10 : MoodDueToEvent);
                     var CurrentMoodDueToEvent = this.NewEmotionalState_Character.Mood;
-                    //Mood acomulado previo
                     var MoodWithoutEventValue = CurrentMoodDueToEvent - MoodDueToEvent;
-                    
-                    //redondear valor para el threshold
-                    var modifiedValue = (int)(Math.Round(ModifiedValue)); //-1==3
-                    var tick = this.NewAm_character.Tick;//time in simulation
 
-
-                    //////TESTE NUEVA EMOCIÓN//////////
-                    ///////////////////////////////////
-                    var emodisp = this.NewEA_character.GetEmotionDisposition(ActiveEmotion.EmotionType);
+                    //To create and update the emotion
                     var NewEmotion = new EmotionalAppraisal.DTOs.EmotionDTO
                     {
                         CauseEventId = ActiveEmotion.CauseId,
                         Type = ActiveEmotion.EmotionType,
-                        Intensity = 0.7f,
+                        Intensity = ModifiedValue-1,
                         CauseEventName = events.GetNTerm(3).ToString(),
-                        Target = EventFatima.GetNTerm(4).ToString()
+                        Target = EventFatima.GetNTerm(4).ToString(),                
                     };
-
-                    var newConcreteEmotionCharacter = new ConcreteEmotionalState();
-                    this.NewEmotionalState_Character.RemoveEmotion(ActiveEmotion, this.NewAm_character);
-                    //falla al agregar la emoción "hate"
-                    newConcreteEmotionCharacter.AddActiveEmotion(NewEmotion, this.NewAm_character);
-                    var NewActiveEmotion = newConcreteEmotionCharacter.GetAllEmotions().LastOrDefault();
-                    ///////////////////////////////////
-                    //////////////////////////////////
-
-
-
-                    /////////////////////////////////////////////////
-                    //modificar el valor de la intensidad con el threshold cálculado
-                    emodisp.Threshold = -1;
-                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(
-                    NewActiveEmotion, this.NewAm_character, emodisp, tick);
-                    if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Threshold = " + modifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
-                    ///////////////////////////////////////////////  
-
-
                     
-                    // Nuevo nivel y tipo de emoción cálculado
+                    var newConcreteEmotionCharacter = new ConcreteEmotionalState(); //EmotionalState Aux
+                    this.NewEmotionalState_Character.RemoveEmotion(ActiveEmotion, this.NewAm_character); //Remove the emotion from agent
+                    newConcreteEmotionCharacter.AddActiveEmotion(NewEmotion, this.NewAm_character); //Add new emotion in agent
+                    var NewActiveEmotion = newConcreteEmotionCharacter.GetAllEmotions().LastOrDefault(); //gets the last emotion (that we already add)
+                    var emoDisp = this.NewEA_character.GetEmotionDisposition(ActiveEmotion.EmotionType); //Making new emotion
+                    emoDisp.Threshold = -1;
+                    var tick = this.NewAm_character.Tick;//time in simulation
+                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(//add new intensity emotion in the agent
+                    NewActiveEmotion, this.NewAm_character, emoDisp, tick);
+                    if (NewEmotionalIntensity != null)
+                        Console.WriteLine("\n Calculated Intensity = " + ModifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
+                    
+                    //Update the Mood
                     var NewEmoValence = this.NewEmotionalState_Character.GetAllEmotions().Select(e => (float)e.Valence).LastOrDefault();
                     var NewEmoIntencity = this.NewEmotionalState_Character.GetAllEmotions().Select(e => e.Intensity).LastOrDefault();
-                    
-                    //Mood que genera unicamente la nueva intensidad de la emoción
                     var moodDouToNewIntensity = NewEmoValence * (NewEmoIntencity * FAtiMAconfigs.MoodInfluenceOnEmotionFactor);
                     var MoodDouToNewIntensity = moodDouToNewIntensity < -10 ? -10 : (moodDouToNewIntensity > 10 ? 10 : moodDouToNewIntensity);
-                    //nuevo mood con la intesidad de la emoción adecuada
                     var NewMood = MoodWithoutEventValue + MoodDouToNewIntensity;
-                    //actualización del mood del agente
                     this.NewEmotionalState_Character.Mood = NewMood;
                     
                     Console.WriteLine(" \n  New Mood = " + NewEmotionalState_Character.Mood);
@@ -886,133 +438,6 @@ namespace EmotionRegulationAsset
                 }
                 else
                 {
-
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
-                }
-            }
-            else
-            {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
-            }
-            Console.WriteLine("\n Response Modulation was applied: " + AppliedStrategy);
-            return AppliedStrategy;
-        }
-
-        /// <summary>
-        /// Intento de actualizar el mood
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool Test5(Name events)
-        {
-            Console.WriteLine("\n---------------------Response Modulation------------------------");
-
-            AppliedStrategy = false;
-
-            //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
-                (strategy, power) => strategy.Key == "Response Modulation");
-            var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
-
-            //get event name and it construct the event
-            var eventName = events.GetNTerm(3);
-            var NewEvent = ReName(events);
-            EventFatima = NewEvent.EventTypeFatima;
-            var target = EventFatima.GetNTerm(4).ToString();
-
-            Console.WriteLine("\nEvent name: " + eventName +
-                "                          Target: " + target);
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
-
-            if (ApplyStrategy && Event.AppraisalValue < 0)
-            {
-
-                Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  \n");
-
-                Console.WriteLine(" \n");
-                var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-                //el valor máximo promedio de las personalidades contrarias es: 35
-                var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
-                var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
-                var ModifiedValue = tanh;
-
-                /*
-                //Testing the threshold
-                var t = this.NewAm_character.Tick;
-                var Thresholds = new List<int>() 
-                { -12, -11, -10 , -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-                foreach(var threshold in Thresholds)
-                {
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                        ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = threshold }, t);
-                    if(change != null)
-                        Console.WriteLine("threshold = " + threshold+ "   Intesity = "+ change.Intensity);
-                }
-                */
-
-                //SetMoodValue(this._intensity + scale * (emotion.Intensity * config.EmotionInfluenceOnMoodFactor), config);
-                var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//valores constantes
-                var MoodDueToEvent = (float)ActiveEmotion.Valence * (ActiveEmotion.Intensity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                var valueMoodDueToEvent = MoodDueToEvent < -10 ? -10 : (MoodDueToEvent > 10 ? 10 : MoodDueToEvent);//rango
-                                                                                                                   //Mood acomulado actual 
-                var CurrentMoodDueToEvent = this.NewEmotionalState_Character.Mood;
-                //Mood acomulado previo
-                var MoodWithoutEventValue = CurrentMoodDueToEvent - MoodDueToEvent;
-
-                
-
-                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  Old Active Emotion: \n  "
-                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                    e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                if (ModifiedValue > this.ObjetiveEmotion)
-                {
-                    //opc 1 para evaluar la nueva intencidad cálculada 
-                    //ModifiedValue -= ActiveEmotion.Intensity;
-                    //ModifiedValue = Math.Abs(ModifiedValue);
-
-                    var modifiedValue = (int)(Math.Round(ModifiedValue) - 1);
-                    var tick = this.NewAm_character.Tick;
-
-
-                    /////////////////////////////////////////////////
-                    //Add new intensity
-                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(
-                    ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Decay = 1, Threshold = modifiedValue }, tick);
-                    if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Threshold = " + modifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
-                    ///////////////////////////////////////////////  
-                    ///
-
-
-                    var NewEmo = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-                    
-                    //Mood que genera unicamente la nueva intensidad de la emoción
-                    var moodDueToNewIntensity = (float)NewEmo.Valence * (NewEmo.Intensity * FAtiMAconfigs.EmotionInfluenceOnMoodFactor);
-                    var MoodDueToNewIntensity = moodDueToNewIntensity < -10 ? -10 : (moodDueToNewIntensity > 10 ? 10 : moodDueToNewIntensity);
-                    //nuevo mood con la intesidad de la emoción adecuada
-                    var NewMood = MoodWithoutEventValue + MoodDueToNewIntensity;
-                    //actualización del mood del agente
-                    this.NewEmotionalState_Character.Mood = NewMood;
-
-                    Console.WriteLine(" \n  New Mood = " + NewEmotionalState_Character.Mood);
-                    Console.WriteLine("  New Emotion: \n  "
-                    + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                        e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                    AppliedStrategy = true;
-                }
-                else
-                {
-
                     Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
                     Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
                 }
@@ -1027,111 +452,7 @@ namespace EmotionRegulationAsset
 
 
 
-        /// <summary>
-        /// No se actuliza el Mood de acuerdo con la nueva intensidad.
-        /// No se actualiza el Deacaimiento de la emoción, se queda igual. #Se soliuciona con (Decay = 1, Threshold = x)
-        /// Se tiene que restar una unidad al Threshold cálculado para que la potencia de la emoción lo supere y se
-        /// registre la emoción en el agente.
-        /// </summary>
-        /// <param name="events"></param>
-        /// <returns></returns>
-        public bool ResponseModulation(Name events)
-        {
-            Console.WriteLine("\n---------------------Response Modulation------------------------");
 
-            AppliedStrategy = false;
-
-            //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
-                (strategy, power) => strategy.Key == "Response Modulation");
-            var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
-
-            //get event name and it construct the event
-            var eventName = events.GetNTerm(3);
-            var NewEvent = ReName(events);
-            EventFatima = NewEvent.EventTypeFatima;
-            var target = EventFatima.GetNTerm(4).ToString();
-
-            Console.WriteLine("\nEvent name: " + eventName +
-                "                          Target: " + target);
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
-
-            if (ApplyStrategy && Event.AppraisalValue < 0)
-            {
-
-                Console.WriteLine(" \n In progress...  ");
-                Console.WriteLine(" Evaluating emotion intensity...  \n");
-                
-                Console.WriteLine(" \n");
-                var ActiveEmotion = this.NewEmotionalState_Character.GetAllEmotions().LastOrDefault();
-
-                //el valor máximo promedio de las personalidades contrarias es: 35
-                var avg = ((this.Personality.Extraversion + this.Personality.Openness) / 2);
-                var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
-                var ModifiedValue = tanh;
-
-
-                /*
-                //Testing the threshold
-                var t = this.NewAm_character.Tick;
-                var Thresholds = new List<int>() 
-                { -12, -11, -10 , -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
-                foreach(var threshold in Thresholds)
-                {
-                    var change = this.NewEmotionalState_Character.AddEmotion(
-                        ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Threshold = threshold }, t);
-                    if(change != null)
-                        Console.WriteLine("threshold = " + threshold+ "   Intesity = "+ change.Intensity);
-                }
-                */
-
-                Console.WriteLine(" \n  Mood with old intensity  = " + NewEmotionalState_Character.Mood);
-                Console.WriteLine("  Old Active Emotion: \n  "
-                + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                    e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                if (ModifiedValue > this.ObjetiveEmotion)
-                {
-                    //opc 1 para evaluar la nueva intencidad cálculada 
-                    //ModifiedValue -= ActiveEmotion.Intensity;
-                    //ModifiedValue = Math.Abs(ModifiedValue);
-
-                    var modifiedValue = (int)(Math.Round(ModifiedValue)); 
-                    var tick = this.NewAm_character.Tick;
-
-                    /////////////////////////////////////////////////
-                    //Add new intensity
-                    var NewEmotionalIntensity = this.NewEmotionalState_Character.AddEmotion(
-                    ActiveEmotion, this.NewAm_character, new EmotionDispositionDTO() { Decay=1, Threshold = modifiedValue -1 }, tick);
-                    if (NewEmotionalIntensity != null)
-                        Console.WriteLine("\n Threshold = " + modifiedValue + "  New Intesity = " + NewEmotionalIntensity.Intensity);
-                    ///////////////////////////////////////////////  
-
-                    Console.WriteLine(" \n  New Mood = " + NewEmotionalState_Character.Mood);
-                    Console.WriteLine("  New Emotion: \n  "
-                    + string.Concat(NewEmotionalState_Character.GetAllEmotions().Select(
-                        e => e.EmotionType + ": " + e.Intensity + " ")));
-
-                    AppliedStrategy = true;
-                }
-                else
-                {
-
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
-                }
-            }
-            else
-            {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
-            }
-            Console.WriteLine("\n Response Modulation was applied: " + AppliedStrategy);
-            return AppliedStrategy;
-        }
 
         //Utilities
         internal void UpdateEmotionalAppraisal(EmotionalAppraisalAsset character, string TypeAppraisal, float ValueAppraisal, Name EventMatchingTemplate, int index)
@@ -1172,19 +493,11 @@ namespace EmotionRegulationAsset
 
             if (events.NumberOfTerms > 5)
             {
-
-
                 var EReventsVariables = events.GetTerms();
                 var EventValues = string.Join(
                     "", EReventsVariables.Last().ToString().Split('[', ']')).Split("-");
 
                 dataName.IsAvoided = bool.Parse(EventValues[0]);
-
-                //EventRelatedEvent = EventValues[1].FirstOrDefault().ToString(); part [True-(False)*]
-
-
-                //dataName.IsAvoided = bool.Parse(events.GetNTerm(5).ToString());
-
                 var ListEvent = events.GetLiterals().ToList();
                 for (int j = 5; j <= ListEvent.Count; j++)
                 {
@@ -1217,7 +530,7 @@ namespace EmotionRegulationAsset
             var AppraisalVariable = SplitAppraisalVar.ToString().Split("=");
             if (NumAppVar.Count >= 2) //REVISAR CUANDO ES MÁS DE UNA VARIABLE DE VALORACIÓN
             { 
-
+                //no se tenia configurafo para más de una variable de valoración
                 EventAppraisal.AppraisalType  = NumAppVar[0].Name.Trim();
                 EventAppraisal.AppraisalValue = float.Parse(NumAppVar[0].Value.ToString().Trim());
             }

@@ -68,7 +68,7 @@ namespace EmotionalAppraisal.OCCModel
 				case "Fear": return Fear;
 				case "Fears-Confirmed": return FearsConfirmed;
 				case "Gratification": return Gratification;
-				case "Gloating": return Gratification;
+				case "Gloating": return Gloating;
 				case "Happy-For": return HappyFor;
 				case "Hate": return Hate;
 				case "Hope": return Hope;
@@ -76,7 +76,7 @@ namespace EmotionalAppraisal.OCCModel
 				case "Relief": return Relief;
 				case "Pitty": return Pitty;
 				case "Resentment": return Resentment;
-				case "Satisfaction": return Resentment;	
+				case "Satisfaction": return Satisfaction;	
 
 				default: return null;
 	        }

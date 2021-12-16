@@ -554,7 +554,7 @@ namespace Tests.RolePlayCharacter
             SocialImportanceAsset si =  new SocialImportanceAsset();
             CommeillFautAsset cfa = new CommeillFautAsset();
 
-             rpc.m_emotionalAppraisalAsset = ea;
+            rpc.m_emotionalAppraisalAsset = ea;
             rpc.m_emotionalDecisionMakingAsset = edm;
             rpc.m_socialImportanceAsset = si;
             rpc.m_commeillFautAsset = cfa;
