@@ -18,7 +18,7 @@ namespace EmotionalAppraisal.OCCModel
 		private static readonly string[] Composed = { OCCAppraisalVariables.DESIRABILITY,
 														OCCAppraisalVariables.PRAISEWORTHINESS}; 
 
-		private static readonly string[] PositiveProspect = {  OCCAppraisalVariables.GOALSUCCESSPROBABILITY};//
+		private static readonly string[] PositiveProspect = { OCCAppraisalVariables.GOALSUCCESSPROBABILITY};//
 
 		private static readonly string[] NegativeProspect = { OCCAppraisalVariables.GOALSUCCESSPROBABILITY};//
 
@@ -38,7 +38,7 @@ namespace EmotionalAppraisal.OCCModel
 		public static readonly OCCEmotionType Hope = new OCCEmotionType("Hope", EmotionValence.Positive, false, PositiveProspect);
 		public static readonly OCCEmotionType Joy = new OCCEmotionType("Joy", EmotionValence.Positive, true, WellBeing);
 		public static readonly OCCEmotionType Love = new OCCEmotionType("Love", EmotionValence.Positive, true, Attraction);
-		public static readonly OCCEmotionType Pitty = new OCCEmotionType("Pitty", EmotionValence.Negative, true, FortuneOfOthers);
+		public static readonly OCCEmotionType Pity = new OCCEmotionType("Pity", EmotionValence.Negative, true, FortuneOfOthers);
 		public static readonly OCCEmotionType Pride = new OCCEmotionType("Pride", EmotionValence.Positive, true, Attribution);
 		public static readonly OCCEmotionType Relief = new OCCEmotionType("Relief", EmotionValence.Positive, true, NegativeProspect);
 		public static readonly OCCEmotionType Remorse = new OCCEmotionType("Remorse", EmotionValence.Negative, true, Composed);
@@ -48,54 +48,64 @@ namespace EmotionalAppraisal.OCCModel
 		public static readonly OCCEmotionType Shame = new OCCEmotionType("Shame", EmotionValence.Negative, true, Attribution);
 
 
-	    public static OCCEmotionType Parse(string type)
-	    {
-	        switch (type)
-	        {
-               
+		public static OCCEmotionType Parse(string type)
+		{
+			switch (type)
+			{
 				case "Admiration": return Admiration;
-                case "Anger": return Anger;
-                case "Gratitude": return Gratitude;
-                case "Distress": return Distress;
-                case "Joy": return Joy;
-                case "Pride": return Pride;
-                case "Remorse": return Remorse;
-                case "Reproach": return Reproach;
-                case "Shame": return Shame;
-
-				//Emotions for Emotion Regulation Asset
-				case "Disappointment":return Disappointment;
-				case "Fear": return Fear;
-				case "Fears-Confirmed": return FearsConfirmed;
-				case "Gratification": return Gratification;
-				case "Gloating": return Gloating;
-				case "Happy-For": return HappyFor;
-				case "Hate": return Hate;
-				case "Hope": return Hope;
-				case "Love": return Love;
-				case "Relief": return Relief;
-				case "Pitty": return Pitty;
+				case "Anger": return Anger;
+				case "Gratitude": return Gratitude;
+				case "Distress": return Distress;
+				case "Joy": return Joy;
+				case "Pride": return Pride;
+				case "Remorse": return Remorse;
+				case "Reproach": return Reproach;
+				case "Shame": return Shame;
+				case "Pity": return Pity;
+				case "Disappointment": return Disappointment;
+				case "Satisfaction": return Satisfaction;
 				case "Resentment": return Resentment;
-				case "Satisfaction": return Satisfaction;	
-
+				case "Love": return Love;
+				case "Hate": return Hate;
+				case "Gloating": return Gloating;
+				case "Fear": return Fear;
+				case "FearsConfirmed": return FearsConfirmed;
+				case "Relief": return Relief;
+				case "Hope": return Hope;
+				case "HappyFor": return HappyFor;
+				case "Gratification": return Gratification;
 				default: return null;
-	        }
-	    }
+			}
+		}
 
-	    public static string[] Types =
-	    {
-	        Admiration.Name,
-            Anger.Name,
-            Gratitude.Name,
-            Distress.Name,
-            Gratification.Name,
-            Joy.Name,
-            Pride.Name,
-            Reproach.Name,
-            Shame.Name
-        };
+		public static string[] Types =
+		{
+			Admiration.Name,
+			Anger.Name,
+			Gratitude.Name,
+			Distress.Name,
+			Gratification.Name,
+			Joy.Name,
+			Pride.Name,
+			Reproach.Name,
+			Shame.Name,
+			Gratification.Name,
+			HappyFor.Name,
+			Hope.Name,
+			Relief.Name,
+			FearsConfirmed.Name,
+			Fear.Name,
+			Gloating.Name,
+			Love.Name,
+			Hate.Name,
+			Resentment.Name,
+			Satisfaction.Name,
+			Disappointment.Name,
+			Pity.Name
 
-        
+		};
+
+
 		#region Class Definition
 
 		public readonly string Name;

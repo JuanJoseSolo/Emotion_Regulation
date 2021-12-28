@@ -27,7 +27,7 @@ namespace EmotionRegulationAsset
         public bool AppliedStrategy { get; private set; }
         public ConcreteEmotionalState NewEmotionalState_Character { get; set; }
         private PersonalityTraits Personality { get; set; }
-        public double ObjetiveEmotion { get; private set; }
+        public double ObjectiveIntensityEmotion { get; private set; }
         public Dictionary<string, string> Dic_RelatedActions { get; private set; }
         private float ERmood;
 
@@ -37,7 +37,6 @@ namespace EmotionRegulationAsset
             EmotionalDecisionMakingAsset edm_character,
             AM am_character,
             ConcreteEmotionalState emotionalEstate_character,
-            //KB kb_character,
             PersonalityTraits personalityTraits,
             Dictionary<string, string> relatedActions,
             List<Name> AlternativeEvents,
@@ -47,9 +46,8 @@ namespace EmotionRegulationAsset
             this.NewEdm_character = edm_character;
             this.NewAm_character = am_character;
             this.NewEmotionalState_Character = emotionalEstate_character;
-            //this.NewKB_character = kb_character;
             this.Personality = personalityTraits;
-            this.ObjetiveEmotion = objetiveEmotion;
+            this.ObjectiveIntensityEmotion = objetiveEmotion;
             this.LalternativeEvents = AlternativeEvents;
             this.Dic_RelatedActions = relatedActions;
 
@@ -66,9 +64,9 @@ namespace EmotionRegulationAsset
         }
         public struct EventAppraisalValues
         {
-            public string AppraisalType { get; set; }
-            public float AppraisalValue { get; set; }
+            public Dictionary<string,(float value, Name target)> DAppraisalVariblesData { get; set; }
             public int index { get; set; }
+            public bool IsEventNegative { get; set; }
         }
 
         //Situation Selection 
@@ -77,10 +75,10 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\n---------------------Situation Selection-------------------------");
             //Personality
             AppliedStrategy = false;
-            var DSituationSelection = this.Personality.DStrategyAndPower.Where((strategy, power) => strategy.Key == "Situation Selection");
+            var DSituationSelection = this.Personality.DStrategyPower.Where((strategy, power) => strategy.Key == "Situation Selection");
             var ExistStrategy = DSituationSelection.Any();
-            var StronglyStrategyPower = DSituationSelection.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
+            var StrategyPower = DSituationSelection.Select(p => p.Value.Trim() == "Strongly"|| p.Value.Trim() == "Lightly").FirstOrDefault();
+            var ApplyStrategy = ExistStrategy && StrategyPower;
             //Event
             var NewEvent = ReName(events);
             EventFatima = NewEvent.EventTypeFatima;
@@ -95,21 +93,29 @@ namespace EmotionRegulationAsset
                 Console.WriteLine(" \n In progress...  ");
                 Console.WriteLine(" Evaluating new event...  ");
                 var eventName = NewEvent.EventTypeFatima.GetNTerm(3);
-                var Event = EventMatchingName(this.NewEA_character, eventName);
-                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(Event.index).EventMatchingTemplate;
+                var EventData = EventMatchingAppraisal(this.NewEA_character, eventName);
+                var EventMatchingAppRule = this.NewEA_character.GetAllAppraisalRules().ElementAt(EventData.index).EventMatchingTemplate;
                 var ListEvent = NewEvent.EventTypeFatima.GetLiterals().ToList();
 
-                //Build new eventTemplate with a word NOT
-                var EmotionMatchTemplate_list = EventTemplate.GetTerms().ToList();
+                //Building new eventTemplate adding word NOT at the event
+                var LEmotionMatchTemplate = EventMatchingAppRule.GetTerms().ToList(); //Elements of Event matching of the event
                 ListEvent.RemoveAt(3);
-                EmotionMatchTemplate_list.RemoveAt(3);
+                LEmotionMatchTemplate.RemoveAt(3);
                 var NewEventName = Name.BuildName("Not-" + eventName);
-                EmotionMatchTemplate_list.Insert(3, NewEventName);
+                LEmotionMatchTemplate.Insert(3, NewEventName);
                 ListEvent.Insert(3, NewEventName);
-                var NewEventMatchingTemplate = Name.BuildName(EmotionMatchTemplate_list);
-                EventFatima = Name.BuildName(ListEvent);
+                var NewEventMatchingTemplate = Name.BuildName(LEmotionMatchTemplate); //new EventMatchingTemplate with NOT word
+                EventFatima = Name.BuildName(ListEvent); //new event with NOT word
 
-                UpdateEmotionalAppraisal(this.NewEA_character, Event.AppraisalType, 0, NewEventMatchingTemplate, Event.index);
+                //modifíca las variables de valoración y las vulve cero para no generar ninguna emoción en el agente.
+                var NameVariable = EventData.DAppraisalVariblesData.Select(e => e.Key);
+                foreach (var name in NameVariable)
+                {
+                    var target = EventData.DAppraisalVariblesData[name].target;
+                    EventData.DAppraisalVariblesData[name] = (0, target); //convert to cero the appraisal value
+                }
+
+                UpdateEmotionalAppraisalRules(this.NewEA_character, EventData.DAppraisalVariblesData, NewEventMatchingTemplate, EventData.index);
                 AppliedStrategy = true;
                 Console.WriteLine(" \nNew event: " + EventFatima.GetNTerm(3));
             }
@@ -124,11 +130,11 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\n--------------------Situation Modification-----------------------");
             //get the personality 
             AppliedStrategy = false;
-            var DSituationSelection = this.Personality.DStrategyAndPower.Where((strategy, power) => strategy.Key == "Situation Modification");
+            var DSituationSelection = this.Personality.DStrategyPower.Where((strategy, power) => strategy.Key == "Situation Modification");
             var ExistStrategy = DSituationSelection.Any();
-            var StronglyStrategyPower = DSituationSelection.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var LightlyStrategyPower = DSituationSelection.Select(p => p.Value.Trim() == "Lightly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && (StronglyStrategyPower || LightlyStrategyPower);
+            var StrategyPower = DSituationSelection.Select(p => p.Value.Trim() == "Strongly"|| p.Value.Trim() == "Lightly").FirstOrDefault();
+            var ApplyStrategy = ExistStrategy && StrategyPower;
+
 
             //Event
             var newEvent = ReName(events);
@@ -138,14 +144,48 @@ namespace EmotionRegulationAsset
             var existRelatedActions = Dic_RelatedActions.Where(e => e.Value == eventName).Any();
 
             //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, (Name)eventName);
+            var EventData = EventMatchingAppraisal(this.NewEA_character, (Name)eventName);
 
             Console.WriteLine("\nEvent name: " + eventName +
                 "                          Target: " + target);
             Console.WriteLine("\nCould do any actions ? : " + existRelatedActions);
+            
+            //Variables de valoración compuestas?
+            bool GreaterPower = false;
+            if (EventData.DAppraisalVariblesData.Count>1)
+            {
+                if (EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.DESIRABILITY_FOR_OTHER).Any()) 
+                {
+                    var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value);
+                    GreaterPower = (Math.Abs(AppValues.Sum() * 0.5)) > 4; //get the final intensity of emotion 
+                }
+                else
+                {
+                    //ToDo: Test the rest compound emotions 
+                }
+            }
+            else
+            {
+                if (EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.LIKE).Any())
+                {
+                    var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value).FirstOrDefault(); // get the level of app. var. 
+                    const float magicFactor = -0.7f;
+                    AppValues *= magicFactor;
+                    GreaterPower = (AppValues > 4);
+                }
+                else
+                {
+                    //If OCCAppraisalVariables == DESIRABILITY ...
+                    var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value).FirstOrDefault(); // get the level of app. var. 
+                    const float Factor = -1f;
+                    AppValues *= Factor;
+                    GreaterPower = (AppValues > 4);
+                }
+
+            }
 
             //Conditions
-            if (ApplyStrategy && existRelatedActions && Event.AppraisalValue <= -5)//*-5
+            if (ApplyStrategy && existRelatedActions && GreaterPower)//*-4
             {
                 var DRelatedActions = Dic_RelatedActions.Where(e => e.Value == eventName);
                 var LRelatedActions = DRelatedActions.Select(a => a.Key).ToList();
@@ -163,44 +203,77 @@ namespace EmotionRegulationAsset
                 Console.WriteLine(" \n In progress...  ");
                 Console.WriteLine(" Evaluating actions value...  ");
 
-                foreach (var AedmCharacter in LActionsEDM)
+                var avg = ((this.Personality.Neuroticism + this.Personality.Agreeableness) / 2);
+                foreach (var AedmCharacter in LActionsEDM) 
                 {
-                    var avg = ((this.Personality.Neuroticism + this.Personality.Agreeableness) / 2);
-                    var tanh = (Math.Abs((Event.AppraisalValue / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) - (Math.Abs(Event.AppraisalValue / 2));
-                    var ModifiedValue = (float)tanh;
+                    //ToDo: check when we have more than one related action to the event
+                    var ModifiedValue = 0f;
+                    var NameVariable = EventData.DAppraisalVariblesData.Select(e => e.Key);
+                    foreach (var name in NameVariable)
+                    {
 
-                    var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(Event.index).EventMatchingTemplate;
+                        avg = ((this.Personality.Neuroticism + this.Personality.Agreeableness) / 2);
+                        var tanh = (float)((Math.Abs((EventData.DAppraisalVariblesData[name].value / 2)) * (Math.Tanh(-(2 * avg - 100) / 40))) - (Math.Abs(EventData.DAppraisalVariblesData[name].value / 2)));
+                        var t = EventData.DAppraisalVariblesData[name].target;
+                        EventData.DAppraisalVariblesData[name] = (tanh, t); 
 
-                    if (ModifiedValue >= -this.ObjetiveEmotion)
+                    }
+
+                    var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(EventData.index).EventMatchingTemplate;
+
+                    
+                    if (EventData.DAppraisalVariblesData.Count > 1 & EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.DESIRABILITY_FOR_OTHER).Any())
+                    {
+                        var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value);
+                        ModifiedValue = (Math.Abs(AppValues.Sum() * 0.5f));
+                    }
+                    else
+                    {
+                        if (EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.LIKE).Any())
+                        {
+                            var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value).FirstOrDefault();
+                            const float magicFactor = -0.7f;
+                            ModifiedValue =  AppValues = magicFactor;
+                        }
+                        else
+                        {
+                            //If OCCAppraisalVariables == DESIRABILITY ...
+                            //ToDo: Test the rest of the compound emotions, this is for the other strategies too
+                        }
+                    }
+
+                    if (ModifiedValue <= this.ObjectiveIntensityEmotion)
                     {
                         var actionTo = AedmCharacter.Action.ToString();
                         Console.WriteLine(" Would decide: " + actionTo);
-                        UpdateEmotionalAppraisal(this.NewEA_character, Event.AppraisalType, ModifiedValue, EventTemplate, Event.index);
+                        UpdateEmotionalAppraisalRules(this.NewEA_character, EventData.DAppraisalVariblesData, EventTemplate, EventData.index);
                         AppliedStrategy = true;
                     }
                     else
                     {
-                        Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjetiveEmotion));
-                        Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjetiveEmotion);
+                        Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjectiveIntensityEmotion));
+                        Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjectiveIntensityEmotion);
                     }
                 }
             }
-            else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
-                ", or : Exist Related Actions is ===> " + existRelatedActions + ", or :\n " +
-                "Defined Event Appraisal Value is greater than -5 : " + (Event.AppraisalValue < -5) + ", is " + Event.AppraisalValue); }
-            Console.WriteLine("\nSituation Modification could be applied: " + AppliedStrategy);
+                else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
+                    ", or : Exist Related Actions is ===> " + existRelatedActions + ", or :\n " +
+                    "Defined Event Appraisal Value is greater than -5 : "+ GreaterPower); }
+                Console.WriteLine("\nSituation Modification could be applied: " + AppliedStrategy);
+        
             return AppliedStrategy;
         }
+        
         //Attention Deployment 
         public bool AttentionDeployment(Name events)
         {
             Console.WriteLine("\n---------------------Attention Deployment------------------------");
 
             AppliedStrategy = false;
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where((strategy, power) => strategy.Key == "Attention Deployment");
+            var DAttentionDeployment = this.Personality.DStrategyPower.Where((strategy, power) => strategy.Key == "Attention Deployment");
             var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
+            var StrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly"|| p.Value.Trim() == "Lightly").FirstOrDefault();
+            var ApplyStrategy = ExistStrategy && StrategyPower;
 
             var target = events.GetNTerm(4);
             var eventName = events.GetNTerm(3);
@@ -212,20 +285,18 @@ namespace EmotionRegulationAsset
                 "                           Target: " + this.EventFatima.GetNTerm(4));
 
             //Only when the current event is negative
-            var CurrentEventValue = EventMatchingName(this.NewEA_character, events);
+            var EventData = EventMatchingAppraisal(this.NewEA_character, eventName);
             IEnumerable<Name> RelatedEvent = Enumerable.Empty<Name>();
-            if (CurrentEventValue.AppraisalValue < 0)
+            bool ExistEventRelated = false;
+            if (EventData.IsEventNegative)
             {
                 var EventNameAM = this.NewAm_character.RecallAllEvents().Select(ep => ep.EventName);
                 RelatedEvent = EventNameAM.Where(e => e.GetNTerm(4) == target).Select(a => a.GetNTerm(3));
-
-                var ExistEvent = RelatedEvent.Any();
-                Console.WriteLine("Does Exist any event related ? : " + ExistEvent);
+                ExistEventRelated = RelatedEvent.Any();
+                Console.WriteLine("Does Exist any event related ? : " + ExistEventRelated);
                 foreach (var e in RelatedEvent)
                     Console.WriteLine("Related events : " + e);
             }
-            var ExistEventRelated = RelatedEvent.Any();
-
 
             //Conditions
             if (ApplyStrategy && ExistEventRelated)
@@ -233,31 +304,68 @@ namespace EmotionRegulationAsset
                 List<float> ListEventsValue = new();
                 Console.WriteLine(" \n In progress...  ");
                 Console.WriteLine(" Evaluating past events...  ");
-
+                
                 foreach (var n in RelatedEvent)
                 {
-                    var EventValues = EventMatchingName(this.NewEA_character, n);
-                    ListEventsValue.Add(EventValues.AppraisalValue);
+                    var EventValues = EventMatchingAppraisal(this.NewEA_character, n); //get the values of the events past
+                    //ToDo: evaluating among different appraisal variables, which are compound appraisals.
+                    ///Qué pasa cuando hay eventos pasados con emiciones compuestas?
+                    ///Actualmente se esta tomando la primera appraisal variable (porque es la unica que hay en los eventos pasados de prueba),
+                    ///pero cuando existan más variables de valoración esto no va a funcionar, se debe de considerar el tipo de valance de la
+                    ///emoción que se va a generar.
+
+                    ListEventsValue.Add(EventValues.DAppraisalVariblesData.Values.FirstOrDefault().value);
                 }
 
-                var average = ListEventsValue.Average();
-
-                var EventToER = EventMatchingName(this.NewEA_character, eventName);
-                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(
-                    EventToER.index).EventMatchingTemplate;
-
-                var tanh = (Math.Abs((EventToER.AppraisalValue / 2)) * (Math.Tanh((2 * average - 10) / 5))) - (Math.Abs(EventToER.AppraisalValue / 2));
-
-                var ModifiedValue = (float)tanh;
-                if (ModifiedValue >= -this.ObjetiveEmotion)
+                var avg = ListEventsValue.Average();
+                var ModifiedValue = 0f;
+                var NameVariable = EventData.DAppraisalVariblesData.Select(e => e.Key);
+                foreach (var name in NameVariable)
                 {
-                    UpdateEmotionalAppraisal(this.NewEA_character, EventToER.AppraisalType, ModifiedValue, EventTemplate, EventToER.index);
+                        var tanh = (float)((Math.Abs((EventData.DAppraisalVariblesData[name].value / 2)) * (Math.Tanh((2 * avg - 10) / 4))) - (Math.Abs(EventData.DAppraisalVariblesData[name].value / 2)));
+                        var t = EventData.DAppraisalVariblesData[name].target;
+                        EventData.DAppraisalVariblesData[name] = (tanh, t);
+                }
+                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(EventData.index).EventMatchingTemplate;
+
+                if (EventData.DAppraisalVariblesData.Count > 1)
+                {
+                    if (EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.DESIRABILITY_FOR_OTHER).Any())
+                    {
+                        var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value);
+                        ModifiedValue = (Math.Abs(AppValues.Sum() * 0.5f));
+                    }
+                    else
+                    {
+
+                    }
+
+
+                }
+                else
+                {
+                    if (EventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.LIKE).Any())
+                    {
+                        var AppValues = EventData.DAppraisalVariblesData.Select(e => e.Value.value).FirstOrDefault();
+                        const float magicFactor = -0.7f;
+                        ModifiedValue = AppValues * magicFactor; //get the intensity of emotion
+                    }
+                    else
+                    {
+                        //If OCCAppraisalVariables == DESIRABILITY ...
+                    }
+                }
+
+
+                if (ModifiedValue <= this.ObjectiveIntensityEmotion)
+                {
+                    UpdateEmotionalAppraisalRules(this.NewEA_character, EventData.DAppraisalVariblesData, EventTemplate, EventData.index);
                     AppliedStrategy = true;
                 }
                 else
                 {
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjetiveEmotion);
+                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjectiveIntensityEmotion));
+                    Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjectiveIntensityEmotion);
                 }
             }
             else { Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> " + ApplyStrategy +
@@ -267,7 +375,7 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\n Attention Deployment could be applied : " + AppliedStrategy);
             return AppliedStrategy;
         }
-
+        
         // Cognitive Change
         public bool CognitiveChange(Name events)
         {
@@ -277,11 +385,11 @@ namespace EmotionRegulationAsset
 
             AppliedStrategy = false;
             //check personality
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
+            var DAttentionDeployment = this.Personality.DStrategyPower.Where(
                 (strategy, power) => strategy.Key == "Cognitive Change");
             var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
+            var StrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly" || p.Value.Trim() == "Lightly").FirstOrDefault();
+            var ApplyStrategy = ExistStrategy && StrategyPower;
 
             //get event name and it construct the event
             var eventName = events.GetNTerm(3);
@@ -304,40 +412,59 @@ namespace EmotionRegulationAsset
                 Console.WriteLine(" \n In progress...  ");
                 Console.WriteLine(" reinterpreting the event...  ");
                 //Obtiene el valor de la valoracion de los eventos relacionados
-                foreach (var AE in AlternativeEventsName)
+                foreach (var alternativeEvent in AlternativeEventsName)
                 {
-                    /*var AlternativeEvents = this.NewEA_character.GetAllAppraisalRules().Select(
-                    e => e.EventMatchingTemplate).Where(eM => eM.GetNTerm(3) == AE.GetNTerm(3)).FirstOrDefault().GetNTerm(3);
-                    */
-                    var EventValueAlternative = EventMatchingName(this.NewEA_character, AE.GetNTerm(3));
-                    Console.WriteLine("\n '" + AE.GetNTerm(3) + "'");
-                    LAlternativeEventsValue.Add(EventValueAlternative.AppraisalValue);
+                    var AlternativeEventData = EventMatchingAppraisal(this.NewEA_character, alternativeEvent.GetNTerm(3));
+                    Console.WriteLine("\n '" + alternativeEvent.GetNTerm(3) + "'");
+                    LAlternativeEventsValue.Add(AlternativeEventData.DAppraisalVariblesData.Values.FirstOrDefault().value);
+                }
+                var avg = LAlternativeEventsValue.Average();//Promedio de los nuevos eventos
+                //var ContraryPersonality = (this.Personality.Openness - this.Personality.Neuroticism);
+                var MoodAndAvg = ((ERmood+8) + avg);
+                
+                var CurrentEventData = EventMatchingAppraisal(this.NewEA_character, eventName);//valoración del evento actual
+
+                var ModifiedValue = 0f;
+                var NameVariable = CurrentEventData.DAppraisalVariblesData.Select(e => e.Key);
+                foreach (var name in NameVariable)
+                {
+                    var Valance = (CurrentEventData.DAppraisalVariblesData[name].value / Math.Abs(CurrentEventData.DAppraisalVariblesData[name].value));
+                    var tanh1 = (float)(((CurrentEventData.DAppraisalVariblesData[name].value / 2) * (Math.Tanh((Valance) * (2 * this.Personality.Neuroticism - 100) / 40))) + (CurrentEventData.DAppraisalVariblesData[name].value / 2));
+                    var tanh2 = (float)(((CurrentEventData.DAppraisalVariblesData[name].value / 2) * (Math.Tanh((Valance) * (2 * MoodAndAvg - 20) / 8))) + (CurrentEventData.DAppraisalVariblesData[name].value / 2));
+                    ModifiedValue = (float)((tanh1 + tanh2) / 2); var t = CurrentEventData.DAppraisalVariblesData[name].target;
+                    CurrentEventData.DAppraisalVariblesData[name] = (ModifiedValue, t);
+                }
+                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(CurrentEventData.index).EventMatchingTemplate;
+
+                if (CurrentEventData.DAppraisalVariblesData.Count>1 & CurrentEventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.DESIRABILITY_FOR_OTHER).Any())
+                {
+                    var AppValues = CurrentEventData.DAppraisalVariblesData.Select(e => e.Value.value);
+                    ModifiedValue = (Math.Abs(AppValues.Sum() * 0.5f));
+                    //If OCCAppraisalVariables == DESIRABILITY_FOR_OTHER ...
+                }
+                else
+                {
+                    if (CurrentEventData.DAppraisalVariblesData.Select(v => v.Key == OCCAppraisalVariables.LIKE).Any())
+                    {
+                        var AppValues = CurrentEventData.DAppraisalVariblesData.Select(e => e.Value.value).FirstOrDefault();
+                        const float magicFactor = -0.7f;
+                        ModifiedValue = AppValues * magicFactor; //get the intensity of emotion
+                    }
+                    else
+                    {
+                        //If OCCAppraisalVariables == DESIRABILITY ...
+                    }
                 }
 
-                var averange = LAlternativeEventsValue.Average();//Promedio de los nuevos eventos
-
-                var Personality = (this.Personality.Openness - this.Personality.Neuroticism);
-                var MoodAndAvg = (ERmood + averange);
-
-                var CurrentEventValue = EventMatchingName(this.NewEA_character, eventName);//valoración del evento actual
-
-                var tanh1 = (Math.Abs((CurrentEventValue.AppraisalValue / 2)) * (Math.Tanh(-(2 * this.Personality.Neuroticism - 100) / 40))) - (Math.Abs(CurrentEventValue.AppraisalValue / 2));
-                var tanh2 = (Math.Abs((CurrentEventValue.AppraisalValue / 2)) * (Math.Tanh((2 * Personality - 20) / 8))) - (Math.Abs(CurrentEventValue.AppraisalValue / 2));
-
-                var ModifiedValue = (float)((tanh1 + tanh2) / 2);
-
-                var EventTemplate = this.NewEA_character.GetAllAppraisalRules().ElementAt(
-                                    CurrentEventValue.index).EventMatchingTemplate;
-
-                if (ModifiedValue >= -this.ObjetiveEmotion)
+                if (ModifiedValue <= this.ObjectiveIntensityEmotion)
                 {
-                    UpdateEmotionalAppraisal(this.NewEA_character, CurrentEventValue.AppraisalType, ModifiedValue, EventTemplate, CurrentEventValue.index);
+                    UpdateEmotionalAppraisalRules(this.NewEA_character, CurrentEventData.DAppraisalVariblesData, EventTemplate, CurrentEventData.index);
                     AppliedStrategy = true;
                 }
                 else
                 {
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjetiveEmotion);
+                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= -this.ObjectiveIntensityEmotion));
+                    Console.WriteLine("\n New possible value = " + Math.Abs(ModifiedValue) + " -User defined limit = " + this.ObjectiveIntensityEmotion);
                 }
             }
             else
@@ -349,7 +476,7 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\n Cognitive Change could be applied : " + AppliedStrategy);
             return AppliedStrategy;
         }
-
+        
         //Response Modulation
         public bool ResponseModulation(Name events)
         {
@@ -357,11 +484,11 @@ namespace EmotionRegulationAsset
             AppliedStrategy = false;
 
             //check personality traits
-            var DAttentionDeployment = this.Personality.DStrategyAndPower.Where(
+            var DAttentionDeployment = this.Personality.DStrategyPower.Where(
                 (strategy, power) => strategy.Key == "Response Modulation");
             var ExistStrategy = DAttentionDeployment.Any();
-            var StronglyStrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly").FirstOrDefault();
-            var ApplyStrategy = ExistStrategy && StronglyStrategyPower;
+            var StrategyPower = DAttentionDeployment.Select(p => p.Value.Trim() == "Strongly" || p.Value.Trim() == "Lightly").FirstOrDefault();
+            var ApplyStrategy = ExistStrategy && StrategyPower;
 
             //get event name, construction of the event
             var eventName = events.GetNTerm(3);
@@ -373,9 +500,9 @@ namespace EmotionRegulationAsset
                 "                          Target: " + target);
 
             //Appraisal value of the event
-            var Event = EventMatchingName(this.NewEA_character, eventName);
+            var EventData = EventMatchingAppraisal(this.NewEA_character, eventName);
 
-            if (ApplyStrategy && Event.AppraisalValue < 0)
+            if (ApplyStrategy && EventData.IsEventNegative)
             {
                 Console.WriteLine(" \n In progress...  ");
                 Console.WriteLine(" Evaluating emotion intensity...  \n");
@@ -392,7 +519,7 @@ namespace EmotionRegulationAsset
                 var tanh = (float)(((Math.Abs(ActiveEmotion.Intensity / 2)) * (Math.Tanh((2 * avg - 100) / 40))) + (Math.Abs(ActiveEmotion.Intensity / 2)));
                 var ModifiedValue = tanh;
 
-                if (ModifiedValue < this.ObjetiveEmotion)
+                if (ModifiedValue < this.ObjectiveIntensityEmotion)
                 {
                     var FAtiMAconfigs = new EmotionalAppraisalConfiguration();//Constant values
                     var MoodDueToEvent = (float)ActiveEmotion.Valence * (ActiveEmotion.Intensity * FAtiMAconfigs.MoodInfluenceOnEmotionFactor);
@@ -439,33 +566,34 @@ namespace EmotionRegulationAsset
                 }
                 else
                 {
-                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue >= this.ObjetiveEmotion));
-                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjetiveEmotion);
+                    Console.WriteLine("\n Strategy not applied due to : Emotion limit was achieved ===> " + (ModifiedValue <= this.ObjectiveIntensityEmotion));
+                    Console.WriteLine("\n New possible value = " + ModifiedValue + " -User defined limit = " + this.ObjectiveIntensityEmotion);
                 }
             }
             else
             {
-                Console.WriteLine("\n Strategy not applied due to :\n Agent's personality can apply the strategy ===> positive emotion = +" + Event.AppraisalValue);
+                Console.WriteLine("\n Strategy not applied due to :\n  Agent's personality can apply the strategy ====> " + AppliedStrategy);
             }
             Console.WriteLine("\n Response Modulation was applied: " + AppliedStrategy);
             return AppliedStrategy;
         }
 
-
-
-
-
         //Utilities
-        internal void UpdateEmotionalAppraisal(EmotionalAppraisalAsset character, string TypeAppraisal, float ValueAppraisal, Name EventMatchingTemplate, int index)
+        internal void UpdateEmotionalAppraisalRules(EmotionalAppraisalAsset character, Dictionary<string,(float value, Name target)> DTypeAppraisal, Name EventMatchingTemplate, int index)
         {
             //New Appraisal variables
-            var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>()
+            var appraisalVariableDTO = new List<EmotionalAppraisal.DTOs.AppraisalVariableDTO>();
+            foreach (var AppEvent in DTypeAppraisal)
             {
-                new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
+
+                appraisalVariableDTO.Add(new EmotionalAppraisal.DTOs.AppraisalVariableDTO()
                 {
-                    Name = TypeAppraisal, Value = (Name.BuildName(ValueAppraisal))
-                }
-            };
+                    Name = AppEvent.Key,
+                    Value = (Name.BuildName(AppEvent.Value.value)),
+                    Target = (Name)AppEvent.Value.target
+                });
+            }
+
             var rule = new EmotionalAppraisal.DTOs.AppraisalRuleDTO()
             {
                 EventMatchingTemplate = EventMatchingTemplate,
@@ -486,6 +614,8 @@ namespace EmotionRegulationAsset
             {
                 character.AddOrUpdateAppraisalRule(ea_CharacterList[i]);
             }
+            
+
         }
 
         public DataName ReName(Name events)
@@ -498,7 +628,7 @@ namespace EmotionRegulationAsset
                 var EventValues = string.Join(
                     "", EReventsVariables.Last().ToString().Split('[', ']')).Split("-");
 
-                dataName.IsAvoided = bool.Parse(EventValues[0]);
+                dataName.IsAvoided = bool.Parse(EventValues[0].ToLower());
                 var ListEvent = events.GetLiterals().ToList();
                 for (int j = 5; j <= ListEvent.Count; j++)
                 {
@@ -512,53 +642,92 @@ namespace EmotionRegulationAsset
             return dataName;
         }
 
-        public EventAppraisalValues EventMatchingName(EmotionalAppraisalAsset ea_character, Name eventName)
+        public EventAppraisalValues EventMatchingAppraisal(EmotionalAppraisalAsset ea_character, Name eventName)
         {
+            //ToDo: check when is used, because in many lines we use them to different proposes, mainly to know the level of appraisal.
+            //An example is on the line 419
             EventAppraisalValues EventAppraisal = new();
-            for (int j = 0; j < ea_character.GetAllAppraisalRules().ToList().Count; j++) //find a specific event
+            for (int j = 0; j < ea_character.GetAllAppraisalRules().ToList().Count; j++) //find a specific index eevent
             {
                 var EventTemplate = ea_character.GetAllAppraisalRules().ElementAt(j).EventMatchingTemplate;
                 //match the event 
-                if ((EventTemplate.GetNTerm(3).Equals(eventName)))
+                if (EventTemplate.GetNTerm(3).Equals(eventName))
                 {
-                    EventAppraisal.index = j;                                      
+                    EventAppraisal.index = j;
                 }
             }
-            
+
+
+            ///////////////////////////////////////////////////////////////
+            ///  OCCAppraisalVariables.DESIRABILITY
+            ///  OCCAppraisalVariables.DESIRABILITY_FOR_OTHER
+            ///  
+            ///             #### OCCAppraiseFortuneOfOthers #####
+            ///             
+            ///  Lo que hace que una emición sea negativa es la variable 'Desirability for Otrher'.
+            ///  Ejemplo del código:
+            ///  
+            ///         float potential = (Math.Abs(desirabilityForOther) + Math.Abs(desirability)) * 0.5f;
+            ///         if (desirability >= 0)
+            ///                 emoType = (desirabilityForOther >= 0) ? OCCEmotionType.HappyFor : OCCEmotionType.Gloating;
+            ///         else
+            ///                 emoType = (desirabilityForOther >= 0) ? OCCEmotionType.Resentment : OCCEmotionType.Pity;
+            ///
+            /// Class: OCCAffectDerivationComponent
+            //////////////////////////////////////////////////////////////
+
+
+            /////////////////////////////////////////////////////////////
+            ///  OCCAppraisalVariables.DESIRABILITY
+            ///  OCCAppraisalVariables.PRAISEWORTHINESS
+            ///          
+            ///             #### OCCAppraiseCompoundEmotions ####
+            ///             
+            /// Lo que hace que una emición sea negativa es la variable 'Desirability'.
+            /// Ejemplo del código:
+            /// 
+            ///         float potential = Math.Abs(desirability + praiseworthiness) * 0.5f;
+            ///         if (target == "" || target == Name.SELF_STRING)
+            ///         {
+            ///             direction = Name.SELF_SYMBOL;
+            ///             emoType = (desirability > 0) ? OCCEmotionType.Gratification : OCCEmotionType.Remorse;
+            ///         }
+            ///         else
+            ///         {
+            ///             direction = Name.BuildName(target);
+            ///             emoType = (desirability > 0) ? OCCEmotionType.Gratitude : OCCEmotionType.Anger;
+            ///         }
+            ///         
+            /// Class: OCCAffectDerivationComponent
+            ////////////////////////////////////////////////////////////
+
+
+
+
             //Apraisal variable and value
+
+            Dictionary<string, (float value, Name target)> DAuxDataEvent = new();
             var SplitAppraisalVar = ea_character.GetAllAppraisalRules().ElementAt(EventAppraisal.index).AppraisalVariables;
-            var NumAppVar = SplitAppraisalVar.appraisalVariables;
-            var AppraisalVariable = SplitAppraisalVar.ToString().Split("=");
-            if (NumAppVar.Count >= 2) //REVISAR CUANDO ES MÁS DE UNA VARIABLE DE VALORACIÓN
-            { 
-                //no se tenia configurafo para más de una variable de valoración
-                EventAppraisal.AppraisalType  = NumAppVar[0].Name.Trim();
-                EventAppraisal.AppraisalValue = float.Parse(NumAppVar[0].Value.ToString().Trim());
+            var ListAppVar = SplitAppraisalVar.appraisalVariables;
+            foreach (var AppVar in ListAppVar)
+            {
+                var NameVariable = AppVar.Name.ToString().Trim();
+                var ValueVariable = float.Parse(AppVar.Value.ToString());
+                var target = AppVar.Target;
+                DAuxDataEvent.Add(NameVariable, (ValueVariable, target));
             }
+            EventAppraisal.DAppraisalVariblesData = DAuxDataEvent;
+            float valDes = 0f;
+            if (EventAppraisal.DAppraisalVariblesData.Count > 1)
+                valDes = EventAppraisal.DAppraisalVariblesData.Where(e => e.Key == OCCAppraisalVariables.DESIRABILITY).Select(r => r.Value.value).Sum();
             else
             {
-                EventAppraisal.AppraisalType = AppraisalVariable[0].Trim();
-                EventAppraisal.AppraisalValue = float.Parse(AppraisalVariable[1].Trim());
+                valDes = EventAppraisal.DAppraisalVariblesData.Values.FirstOrDefault().value;
             }
+            if (valDes < 0)
+                EventAppraisal.IsEventNegative = true;
             return EventAppraisal;
         }
-
-        public bool negativeAppraisal(Name events)
-        {
-            //Event
-            bool IsNegative = false;
-            var newEvent = ReName(events);
-            EventFatima = newEvent.EventTypeFatima;
-            var eventName = EventFatima.GetNTerm(3).ToString();
-
-            //finds the appraisal value of event
-            var Event = EventMatchingName(this.NewEA_character, (Name)eventName);
-            if (Event.AppraisalValue < 0)
-                IsNegative = true;
-
-            return IsNegative;
-        }
-
 
     }
 }
