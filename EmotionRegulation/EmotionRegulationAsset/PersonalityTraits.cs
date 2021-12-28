@@ -545,7 +545,7 @@ namespace EmotionRegulationAsset
             var DominantTraits = SplitPersonality.Select(h => h[1]).ToList();
 
             ///if there is more than one dominant personality, 
-            ///then personality chosen will be the last one within highest numerical value
+            ///then personality chosen will be the last one within highest numerical value. 
             Dictionary<string, float> numericalPersonality = new()
             {
                 { "Conscientiousness", (float)this.Conscientiousness },
