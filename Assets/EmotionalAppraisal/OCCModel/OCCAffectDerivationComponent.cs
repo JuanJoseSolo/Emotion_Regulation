@@ -197,7 +197,7 @@ namespace EmotionalAppraisal.OCCModel
 
                     var previousValue = g.Likelihood;
                     
-                    g.Likelihood += goalSuccessProbability; //es el segundo parametro g.Likelihood
+                    g.Likelihood += goalSuccessProbability; 
 
                     if (g.Likelihood < 0)
                         g.Likelihood = 0;

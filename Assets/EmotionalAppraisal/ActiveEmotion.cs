@@ -128,6 +128,10 @@ namespace EmotionalAppraisal
 			Intensity = intensityATt0 * decay;
 		}
 
+		///
+		///double lambda = Math.Log(configuration.HalfLifeDecayConstant) / configuration.EmotionalHalfLifeDecayTime;
+		///float decay = (float)Math.Exp(lambda);
+		///Intensity = intensityATt0 * decay;
 		/// <summary>
 		/// Reforces the intensity of the emotion by a given potential
 		/// </summary>

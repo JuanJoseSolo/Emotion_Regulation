@@ -14,5 +14,6 @@ namespace EmotionalAppraisal
 		float GetAppraisalVariable(string appraisalVariable);
 		bool ContainsAppraisalVariable(string appraisalVariable);
         void SetAppraisalVariable(string appraisalVariableName, float value);
+
     }
 }

@@ -10,7 +10,7 @@ using WellFormedNames.Collections;
 
 namespace AutobiographicMemory
 {
-	//TODO improve LastEventId efficiency, by caching the last recorded events (cache should be dumped, if a new event is recorded with a greater timestamp that the ones in cache)
+	///TOD improve LastEventId efficiency, by caching the last recorded events (cache should be dumped, if a new event is recorded with a greater timestamp that the ones in cache)
 
 	[Serializable]
 	public sealed partial class AM : ICustomSerialization
