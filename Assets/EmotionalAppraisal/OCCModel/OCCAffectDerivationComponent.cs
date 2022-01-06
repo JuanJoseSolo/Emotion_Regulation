@@ -41,9 +41,6 @@ namespace EmotionalAppraisal.OCCModel
             return new OCCBaseEmotion(OCCEmotionType.Distress, -desirability, evtId, eventName);
         }
 
-
-
-
         private static OCCBaseEmotion OCCAppraiseFortuneOfOthers(IBaseEvent evt, float desirability, float desirabilityForOther, string target)
         {
             float potential = (Math.Abs(desirabilityForOther) + Math.Abs(desirability)) * 0.5f;
@@ -59,9 +56,6 @@ namespace EmotionalAppraisal.OCCModel
 
             return new OCCBaseEmotion(emoType, potential, evt.Id, (Name)target, evt.EventName);
         }
-
-
-
 
         private static OCCBaseEmotion OCCAppraisePraiseworthiness(IBaseEvent evt, float praiseworthiness, string target)
         {
@@ -89,12 +83,8 @@ namespace EmotionalAppraisal.OCCModel
             return new OCCBaseEmotion(emoType, Math.Abs(like) * magicFactor, evt.Id, evt.Subject == null ? Name.UNIVERSAL_SYMBOL : evt.Subject, evt.EventName);
         }
 
-
-
-
         private static OCCBaseEmotion AppraiseGoalSuccessProbability(IBaseEvent evt, float goalProbability, float previousProbabilityValue, float significance)
         {
-
 
             //Significante is too low
             var potential = significance;
@@ -127,7 +117,6 @@ namespace EmotionalAppraisal.OCCModel
                 else return new OCCBaseEmotion(OCCEmotionType.Fear, (1 - goalProbability) * potential, evt.Id, evt.EventName);
             }
         }
-
     
         public IEnumerable<IEmotion> AffectDerivation(EmotionalAppraisalAsset emotionalModule, Dictionary<string, Goal> goals, IAppraisalFrame frame)
         {
@@ -166,9 +155,6 @@ namespace EmotionalAppraisal.OCCModel
                 }
 
             }
-
-
-
             if (!returnedEmotion)
                 foreach (string variable in frame.AppraisalVariables.Where(v => v.StartsWith(OCCAppraisalVariables.PRAISEWORTHINESS)))
                 {
@@ -211,7 +197,7 @@ namespace EmotionalAppraisal.OCCModel
 
                     var previousValue = g.Likelihood;
                     
-                    g.Likelihood += goalSuccessProbability;
+                    g.Likelihood += goalSuccessProbability; //es el segundo parametro g.Likelihood
 
                     if (g.Likelihood < 0)
                         g.Likelihood = 0;

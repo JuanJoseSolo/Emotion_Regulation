@@ -18,6 +18,10 @@ namespace EmotionalAppraisal
             this.Likelihood = goalDto.Likelihood;
         }
 
+        public Goal()
+        {
+        }
+
         public GoalDTO ToDto()
         {
             return new GoalDTO

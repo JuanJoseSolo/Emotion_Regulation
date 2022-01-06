@@ -39,16 +39,16 @@ namespace Tests.AutobiographicMemory
             {
                 eventList= new List<string>()
                 {
-                EventHelper.ActionEnd("Matt", "EntersRoom", "Sarah").ToString(),
-                EventHelper.ActionEnd("Matt", "Speak(Start, S1, -, -)", "Sarah").ToString(),
-                EventHelper.ActionEnd("Matt", "Speak(Start, S1, -, Polite)", "Sarah").ToString(),
-                EventHelper.ActionEnd("Matt", "Speak(Start, S1, Silly, Polite)", "Sarah").ToString(),
-                EventHelper.PropertyChange("Has(Floor)", "Sarah", "Matt").ToString(),
-                //THIS SHOULD BE THE LAST EVENT
-                EventHelper.ActionEnd("Matt", "Speak(Start, S1, SE(Flirt, Initiate), Positive)", "Sarah").ToString(),
+                    EventHelper.ActionEnd("Matt", "EntersRoom", "Sarah").ToString(),
+                    EventHelper.ActionEnd("Matt", "Speak(Start, S1, -, -)", "Sarah").ToString(),
+                    EventHelper.ActionEnd("Matt", "Speak(Start, S1, -, Polite)", "Sarah").ToString(),
+                    EventHelper.ActionEnd("Matt", "Speak(Start, S1, Silly, Polite)", "Sarah").ToString(),
+                    EventHelper.PropertyChange("Has(Floor)", "Sarah", "Matt").ToString(),
+                    //THIS SHOULD BE THE LAST EVENT
+                    EventHelper.ActionEnd("Matt", "Speak(Start, S1, SE(Flirt, Initiate), Positive)", "Sarah").ToString(),
                     EventHelper.ActionEnd("Matt", "Speak(Start, S3, -, -)", "Sarah").ToString()
     
-            };
+                };
             
             }
 

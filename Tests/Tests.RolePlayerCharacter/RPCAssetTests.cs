@@ -635,7 +635,9 @@ namespace Tests.RolePlayCharacter
 
             var edm = new EmotionalDecisionMakingAsset();
 
-            edm.AddActionRule(new ActionLibrary.DTOs.ActionRuleDTO() { Action = (Name)"EnterRoom", Priority = Name.BuildName(3), Target = (Name)"[x]", Conditions = new Conditions.DTOs.ConditionSetDTO() { ConditionSet = new string[] { "[x]!=SELF" } } });
+            edm.AddActionRule(new ActionLibrary.DTOs.ActionRuleDTO() {
+                Action = (Name)"EnterRoom", Priority = Name.BuildName(3), Target = (Name)"[x]", 
+                Conditions = new Conditions.DTOs.ConditionSetDTO() { ConditionSet = new string[] { "[x]!=SELF" } } });
 
             rpc.m_emotionalDecisionMakingAsset = edm;
 

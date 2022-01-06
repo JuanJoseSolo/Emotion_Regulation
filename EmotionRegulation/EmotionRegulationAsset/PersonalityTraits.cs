@@ -5,11 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using FLS;
 
-//ToDo: applying the new diffuse rules according to the new table of correlation personality traits
-
 namespace EmotionRegulationAsset
 {
-    class PersonalityTraits
+    public class PersonalityTraits
     {
         public string StrategyName { get; private set; }
         public double Conscientiousness { get; private set; }
@@ -39,7 +37,6 @@ namespace EmotionRegulationAsset
         public FLS.LinguisticVariable LVneuroticism { get; private set; }
         public FLS.LinguisticVariable LVopenness { get; private set; }
         public FLS.LinguisticVariable LVagreeableness { get; private set; }
-
 
         public FLS.MembershipFunctions.IMembershipFunction lowConscientiousness { get; private set; }
         public FLS.MembershipFunctions.IMembershipFunction middleConscientiousness { get; private set; }
@@ -106,6 +103,7 @@ namespace EmotionRegulationAsset
 
             StrategyName = string.Empty;
             OutputDefuzzify = 0.0f;
+            FuzzyAppliedStrategyTest();
 
         }
 
@@ -250,8 +248,6 @@ namespace EmotionRegulationAsset
             DstrategyLinguisticResult.Add("Lightly", LightlyApplied.Fuzzify((double)this.OutputDefuzzify));
             DstrategyLinguisticResult.Add("Strongly", StronglyApplied.Fuzzify((double)this.OutputDefuzzify));
             
-            ///ToDo: la forma de elegir con que intensidad se aplica la estrategia falla cuando el tipo de personalidad 
-            ///es alta en los cinco tipos, por lo que habrá que revisar cómo abordar este bug.
             this.StrategyPower = DstrategyLinguisticResult.Aggregate(
                 (LinguisticVariableName, r) => LinguisticVariableName.Value > r.Value ? LinguisticVariableName : r).Key;
             this.List_StrategyPower.Add(this.StrategyPower);
@@ -531,6 +527,7 @@ namespace EmotionRegulationAsset
             Console.WriteLine("\n------------------------Strategy selection------------------------\n");
             
             var LpersonalityType = PersonalitiesTraits();
+
             var (_, _, _) = FuzzySituationSelection();
             var (_, _, _) = FuzzySituationModification();
             var (_, _, _) = FuzzyAttentionalDeployment();

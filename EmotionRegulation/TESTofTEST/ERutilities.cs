@@ -14,8 +14,6 @@ namespace ERconfiguration
         {
 
         }
-
-
         public (string relatedAction, string eventName) SplitAction(string actionEvent)
         {
             

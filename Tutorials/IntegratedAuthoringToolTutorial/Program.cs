@@ -21,17 +21,7 @@ namespace IntegratedAuthoringToolTutorial
                          //Loading the asset
                          var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText(
                    @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\EmotionRegulation\EscenarioRobo.json"), storage);
-    /*      
-            var storage = AssetStorage.FromJson(File.ReadAllText(
-         @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\Tutorials\Examples\IAT-Tutorial\Scenarios\storage.json"));
 
-             //C: \Users\JuanJoseAsus\source\repos\FAtiMA - Toolkit - master\EmotionRegulation
-
-             //Loading the asset
-             var iat = IntegratedAuthoringToolAsset.FromJson(File.ReadAllText("" +
-         @"C:\Users\JuanJoseAsus\source\repos\FAtiMA-Toolkit-master\Tutorials\Examples\IAT-Tutorial\Scenarios\scenario.json"), storage);
-
-*/
             var currentState = IATConsts.INITIAL_DIALOGUE_STATE;
             var rpc = iat.Characters.ElementAt(0);
             while (currentState != IATConsts.TERMINAL_DIALOGUE_STATE)

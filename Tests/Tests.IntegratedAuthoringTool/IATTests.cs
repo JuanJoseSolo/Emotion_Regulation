@@ -27,12 +27,9 @@ namespace IATTests
             {
                 ScenarioName = "Test",
                 ScenarioDescription = "default"
-
             };
 
             return iat;
-
-
         }
 
         private static RolePlayCharacterAsset BuildRPCAsset()
@@ -388,8 +385,7 @@ namespace IATTests
 
             // Initializing
             var condSet = new ConditionSet();
-
-            
+        
 
             var cond = Condition.Parse("[x] = True");
             IEnumerable<SubstitutionSet> resultingConstraints = new List<SubstitutionSet>();
@@ -397,7 +393,6 @@ namespace IATTests
             if (context != "")
             {
                 var conditions = context.Split(',');
-
 
                 cond = Condition.Parse(conditions[0]);
 
