@@ -20,6 +20,9 @@ namespace EmotionRegulationAsset
     /// 06/enero/2022
     /// Limpieza de código y nueva forma de crear los agentes, aún falta conocer más sobre el asset de AuthoringToolkit
     /// para generar agentes y escenarios, así como para crear metas, acciones y que se vean reflejados en el agente.
+    /// Backup/Jan/06/2022
+    /// Funcionando las cinco estrategias de acuerdo con los cinco tipos de personalidad.
+
 
     #endregion
 
