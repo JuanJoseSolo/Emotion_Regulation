@@ -16,12 +16,9 @@ using FLS;
 
 namespace EmotionRegulationAsset
 {
-    #region backup
-    /// 06/enero/2022
-    /// Limpieza de código y nueva forma de crear los agentes, aún falta conocer más sobre el asset de AuthoringToolkit
-    /// para generar agentes y escenarios, así como para crear metas, acciones y que se vean reflejados en el agente.
-    #endregion
-
+    /// <summary>
+    /// Falta descargar la nueva versión de FAtiMA e incorparar el asset y verificar que funcione todo igual.
+    /// </summary>
     class Program
     {
         static string path;
